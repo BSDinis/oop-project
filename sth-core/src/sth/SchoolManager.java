@@ -1,9 +1,11 @@
 package sth;
 
 import java.io.IOException;
+import java.util.SortedMap;
 import sth.exceptions.BadEntryException;
 import sth.exceptions.ImportFileException;
 import sth.exceptions.NoSuchPersonIdException;
+import sth.exceptions.NoPersonLoggedIn;
 
 //FIXME import other classes if needed
 
@@ -11,17 +13,14 @@ import sth.exceptions.NoSuchPersonIdException;
  * The façade class.
  */
 public class SchoolManager {
-
   //FIXME add object attributes if needed
-  School _school = new School();
-
+  private School _school = new School();
 
   //FIXME implement constructors if needed
   
   /**
    * @param datafile
    * @throws ImportFileException
-   * @throws InvalidCourseSelectionException
    */
   public void importFile(String datafile) throws ImportFileException {
     try {
@@ -29,6 +28,13 @@ public class SchoolManager {
     } catch (IOException | BadEntryException e) {
       throw new ImportFileException(e);
     }
+  }
+
+  /**
+   * @param datafile
+   */
+  public void saveToFile(String datafile) throws IOException {
+    _school.saveToFile(datafile);
   }
 
   /**
@@ -72,5 +78,32 @@ public class SchoolManager {
   }
 
   //FIXME implement other methods (in general, one for each command in sth-app)
-  
+
+  public void changePhoneNumber(int newNumber) throws UnsupportedOperationException {
+    throw new UnsupportedOperationException();
+  }
+
+  public Person searchPerson(String name) throws UnsupportedOperationException {
+    throw new UnsupportedOperationException();
+  }
+
+  public Person[] allPersons(String name) {
+    return _school.people(); // TODO
+  }
+
+  // missing project description ?
+  public void createProject(String discipline, String projectName) throws UnsupportedOperationException {
+    throw new UnsupportedOperationException();
+  }
+
+  // string or projectSubmission ??? FIXME
+  public SortedMap<Student, String> projectSubmissions(String discipline, String projectName) throws UnsupportedOperationException, NoSuchProjectException {
+    throw new UnsupportedOperationException();
+  }
+
+  public void closeProject(String discipline, String projectName) throws UnsupportedOperationException, NoSuchProjectException {
+    throw new UnsupportedOperationException();
+  }
+
+  // more to do
 }
