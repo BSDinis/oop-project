@@ -24,7 +24,7 @@ public class DoShowPerson extends Command<SchoolManager> {
     if (p == null)
       throw new NoSuchPersonException(); // FIXME
 
-    _display.popup(p);
+    _display.addline(p);
   }
 
 }
