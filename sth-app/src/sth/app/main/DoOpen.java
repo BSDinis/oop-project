@@ -6,6 +6,7 @@ import java.lang.ClassNotFoundException;
 
 import pt.tecnico.po.ui.Command;
 import pt.tecnico.po.ui.Input;
+import pt.tecnico.po.ui.Form;
 import sth.SchoolManager;
 import sth.exceptions.ImportFileException;
 
@@ -25,14 +26,18 @@ public class DoOpen extends Command<SchoolManager> {
   @Override
   public final void execute() {
     Form f = new Form();
-    InputString filename = new InputString(f, Message.openFile());
+    Input<String> filename = f.addStringInput(Message.openFile());
     f.parse();
     try {
       _receiver.importFile(filename.value());
     }
+    /*
     catch (FileNotFoundException e) {
-      _display.popup(fileNotFound(filename.value());
+      _display.popup(Message.fileNotFound(filename.value()));
     }
+
+    FIXME ????
+    */
     catch (ImportFileException e) {
       _display.popup(e.getMessage());
     }
