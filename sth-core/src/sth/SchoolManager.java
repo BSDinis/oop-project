@@ -1,7 +1,10 @@
 package sth;
 
 import java.io.IOException;
+import java.lang.UnsupportedOperationException;
 import java.util.SortedMap;
+import java.util.List;
+
 import sth.exceptions.BadEntryException;
 import sth.exceptions.ImportFileException;
 import sth.exceptions.NoSuchPersonIdException;
@@ -87,7 +90,7 @@ public class SchoolManager {
     throw new UnsupportedOperationException();
   }
 
-  public Person[] allPersons(String name) {
+  public List<Person> allPersons(String name) {
     return _school.people(); // TODO
   }
 
