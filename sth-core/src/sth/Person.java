@@ -12,5 +12,7 @@ public class Person implements Serializable {
   private static final long serialVersionUID = 201810051538L;
 
   // FIXME
+  
+  public String toString() { return "<<Project :: to implement>>"; }
 
 }

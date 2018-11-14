@@ -2,13 +2,12 @@ package sth;
 
 import java.io.IOException;
 import java.lang.UnsupportedOperationException;
-import java.util.SortedMap;
-import java.util.List;
+import java.util.Collection;
+import java.util.Map;
 
 import sth.exceptions.BadEntryException;
 import sth.exceptions.ImportFileException;
 import sth.exceptions.NoSuchPersonIdException;
-import sth.exceptions.NoSuchPersonNameException;
 import sth.exceptions.NoSuchProjectException;
 
 //FIXME import other classes if needed
@@ -87,11 +86,11 @@ public class SchoolManager {
     throw new UnsupportedOperationException();
   }
 
-  public Person searchPerson(String name) throws UnsupportedOperationException {
+  public Collection<Person> searchPerson(String name) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
-  public List<Person> allPersons(String name) {
+  public Collection<Person> allPersons() {
     return _school.people(); // TODO
   }
 
@@ -101,13 +100,82 @@ public class SchoolManager {
   }
 
   // string or projectSubmission ??? FIXME
-  public SortedMap<Student, String> projectSubmissions(String discipline, String projectName) throws UnsupportedOperationException, NoSuchProjectException {
+  public Map<Student, String> projectSubmissions(String discipline, String projectName) throws UnsupportedOperationException, NoSuchProjectException {
     throw new UnsupportedOperationException();
   }
 
   public void closeProject(String discipline, String projectName) throws UnsupportedOperationException, NoSuchProjectException {
     throw new UnsupportedOperationException();
   }
+
+  public Collection<Student> getDisciplineStudents(String discipline) throws UnsupportedOperationException {
+    throw new UnsupportedOperationException();
+  }
+
+  public void answerSurvey(String discipline, String project, int hours, String comment)
+    throws UnsupportedOperationException {
+    throw new UnsupportedOperationException();
+  }
+
+  public void deliverProject(String discipline, String project, String comment)
+    throws UnsupportedOperationException {
+    throw new UnsupportedOperationException();
+  }
+
+  public Survey getSurvey(String discipline, String project) 
+    throws UnsupportedOperationException {
+    throw new UnsupportedOperationException();
+  }
+
+  public Project getProject(String discipline, String project) 
+    throws UnsupportedOperationException {
+    throw new UnsupportedOperationException();
+  }
+
+  public Collection<Survey> getProjectSurveys(String discipline, String project) 
+    throws UnsupportedOperationException {
+    throw new UnsupportedOperationException();
+  }
+
+  public Collection<Survey> getDisciplineSurveys(String discipline) 
+    throws UnsupportedOperationException {
+    throw new UnsupportedOperationException();
+  }
+
+  public String getFilename() 
+    throws UnsupportedOperationException {
+    throw new UnsupportedOperationException();
+  }
+
+  public Person getLoggedIn()
+    throws UnsupportedOperationException {
+    throw new UnsupportedOperationException();
+  }
+
+  public void createSurvey(String discipline, String project)
+    throws UnsupportedOperationException {
+    throw new UnsupportedOperationException();
+  }
+
+  public void finishSurvey(String discipline, String project)
+    throws UnsupportedOperationException {
+      throw new UnsupportedOperationException();
+    }
+
+  public void openSurvey(String discipline, String project)
+    throws UnsupportedOperationException {
+      throw new UnsupportedOperationException();
+    }
+
+  public void closeSurvey(String discipline, String project)
+    throws UnsupportedOperationException {
+      throw new UnsupportedOperationException();
+    }
+
+  public void cancelSurvey(String discipline, String project)
+    throws UnsupportedOperationException {
+      throw new UnsupportedOperationException();
+    }
 
   // more to do
 }
