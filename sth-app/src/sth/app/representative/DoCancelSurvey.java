@@ -19,14 +19,20 @@ public class DoCancelSurvey extends Command<SchoolManager> {
    */
   public DoCancelSurvey(SchoolManager receiver) {
     super(Label.CANCEL_SURVEY, receiver);
-    //_disciplineName = new InputString(requestDisciplineName()); // FIXME
-    //_projectName = new InputString(requestProjectName()); // FIXME
+    _disciplineName = _form.addStringInput(Message.requestDisciplineName());
+    _projectName = _form.addStringInput(Message.requestProjectName());
   }
 
   /** @see pt.tecnico.po.ui.Command#execute() */
   @Override
   public final void execute() throws DialogException {
-    //FIXME implement command
+    _form.parse();
+    try {
+      _receiver.cancelSurvey(_disciplineName.value(), _projectName.value()); 
+    }
+    catch (UnsuportedOperationException e) {
+      _display.popup("Operação não suportada");
+    }
   }
 
 }

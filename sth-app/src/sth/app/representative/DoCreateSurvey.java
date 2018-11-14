@@ -12,20 +12,28 @@ import sth.SchoolManager;
  */
 public class DoCreateSurvey extends Command<SchoolManager> {
 
-  //FIXME add input fields if needed
+  private Input<String> _disciplineName;
+  private Input<String> _projectName;
 
   /**
    * @param receiver
    */
   public DoCreateSurvey(SchoolManager receiver) {
     super(Label.CREATE_SURVEY, receiver);
-    //FIXME initialize input fields if needed
+    _disciplineName = _form.addStringInput(Message.requestDisciplineName());
+    _projectName = _form.addStringInput(Message.requestProjectName());
   }
 
   /** @see pt.tecnico.po.ui.Command#execute() */
   @Override
   public final void execute() throws DialogException {
-    //FIXME implement command
+    _form.parse();
+    try {
+      _receiver.createSurvey(_disciplineName.value(), _projectName.value()); 
+    }
+    catch (UnsuportedOperationException e) {
+      _display.popup("Operação não suportada");
+    }
   }
 
 }
