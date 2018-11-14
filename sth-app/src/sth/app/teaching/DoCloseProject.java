@@ -1,9 +1,12 @@
 package sth.app.teaching;
 
+import java.lang.UnsupportedOperationException;
+
 import pt.tecnico.po.ui.Command;
 import pt.tecnico.po.ui.DialogException;
 import pt.tecnico.po.ui.Input;
 import sth.SchoolManager;
+import sth.exceptions.NoSuchProjectException;
 
 /**
  * 4.3.2. Close project.
@@ -29,8 +32,11 @@ public class DoCloseProject extends Command<SchoolManager> {
     try {
       _receiver.closeProject(_disciplineName.value(), _projectName.value()); 
     }
-    catch (UnsuportedOperationException e) {
+    catch (UnsupportedOperationException e) {
       _display.popup("Operação não suportada");
+    }
+    catch (NoSuchProjectException e) {
+      //FIXME
     }
     // FIXME : other exceptions
   }

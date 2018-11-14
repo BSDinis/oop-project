@@ -23,7 +23,7 @@ public class DoShowAllPersons extends Command<SchoolManager> {
   public final void execute() {
     Collection<Person> people = _receiver.allPersons();
     for (Person p : people) {
-      _display.addline(p); // FIXME
+      _display.addLine(""+p); // FIXME
     }
   }
 

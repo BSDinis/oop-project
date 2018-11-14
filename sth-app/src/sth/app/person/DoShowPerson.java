@@ -2,6 +2,7 @@ package sth.app.person;
 
 import pt.tecnico.po.ui.Command;
 import sth.SchoolManager;
+import sth.Person;
 
 import sth.app.exceptions.NoSuchPersonException;
 
@@ -22,9 +23,9 @@ public class DoShowPerson extends Command<SchoolManager> {
   public final void execute() throws NoSuchPersonException {
     Person p = _receiver.getLoggedIn();
     if (p == null)
-      throw new NoSuchPersonException(); // FIXME
+      throw new NoSuchPersonException(0); // FIXME
 
-    _display.addline(p);
+    _display.addLine(""+p);
   }
 
 }

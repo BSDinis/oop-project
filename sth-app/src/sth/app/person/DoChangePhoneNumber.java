@@ -9,22 +9,23 @@ import sth.SchoolManager;
  */
 public class DoChangePhoneNumber extends Command<SchoolManager> {
 
+  Input<Integer> _phoneNumber;
+
   /**
    * @param receiver
    */
   public DoChangePhoneNumber(SchoolManager receiver) {
     super(Label.CHANGE_PHONE_NUMBER, receiver);
+    _phoneNumber = _form.addIntegerInput(Message.requestPhoneNumber());
   }
 
   /** @see pt.tecnico.po.ui.Command#execute() */
   @Override
   public final void execute() {
-    Form f = new Form();
-    Input<Int> phoneNumber = f.addIntegerInput(Message.requestPhoneNumber());
-    f.parse();
+    _form.parse();
 
     try {
-      _receiver.changePhoneNumber(phoneNumber.value());
+      _receiver.changePhoneNumber(_phoneNumber.value());
     }
     catch (UnsupportedOperationException e) {
       _display.popup("Operação não suportada.");

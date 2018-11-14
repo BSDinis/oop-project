@@ -5,6 +5,7 @@ import java.io.IOException;
 import pt.tecnico.po.ui.Command;
 import pt.tecnico.po.ui.Input; 
 import sth.SchoolManager;
+import sth.exceptions.ImportFileException;
 
 /**
  * 4.1.1. Save to file under current name (if unnamed, query for name).
@@ -23,9 +24,8 @@ public class DoSave extends Command<SchoolManager> {
     String filename = _receiver.getFilename();
 
     if (filename == null) {
-      Form f = new Form();
-      Input<String> inputFilename = f.addStringInput(Message.newSaveAs());
-      f.parse();
+      Input<String> inputFilename = _form.addStringInput(Message.newSaveAs());
+      _form.parse();
       filename = inputFilename.value();
     }
 
@@ -38,7 +38,7 @@ public class DoSave extends Command<SchoolManager> {
     }
     FIXME ????
     */
-    catch (ImportFileException e) {
+    catch (IOException e) {
       _display.popup(e.getMessage());
     }
     catch (UnsupportedOperationException e) {

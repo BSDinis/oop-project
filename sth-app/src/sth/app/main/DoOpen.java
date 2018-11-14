@@ -14,22 +14,23 @@ import sth.exceptions.ImportFileException;
  * 4.1.1. Open existing document.
  */
 public class DoOpen extends Command<SchoolManager> {
-
+  
+  
+  private Input<String> _filename;
   /**
    * @param receiver
    */
   public DoOpen(SchoolManager receiver) {
     super(Label.OPEN, receiver);
+    _filename = _form.addStringInput(Message.openFile());
   }
 
   /** @see pt.tecnico.po.ui.Command#execute() */
   @Override
   public final void execute() {
-    Form f = new Form();
-    Input<String> filename = f.addStringInput(Message.openFile());
-    f.parse();
+    _form.parse();
     try {
-      _receiver.importFile(filename.value());
+      _receiver.importFile(_filename.value());
     }
     /*
     catch (FileNotFoundException e) {

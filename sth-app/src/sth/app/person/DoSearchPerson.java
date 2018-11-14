@@ -19,7 +19,7 @@ public class DoSearchPerson extends Command<SchoolManager> {
    */
   public DoSearchPerson(SchoolManager receiver) {
     super(Label.SEARCH_PERSON, receiver);
-    _form = _form.addStringInput(Message.requestPersonName());
+    _name = _form.addStringInput(Message.requestPersonName());
   }
 
   /** @see pt.tecnico.po.ui.Command#execute() */
@@ -30,7 +30,7 @@ public class DoSearchPerson extends Command<SchoolManager> {
     searchResult = _receiver.searchPerson(_name.value());
 
     for (Person p : searchResult) {
-      _display.addline(p); // FIXME
+      _display.addLine(""+p); // FIXME 
     }
   }
 }

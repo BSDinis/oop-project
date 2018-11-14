@@ -2,6 +2,7 @@ package sth.app.teaching;
 
 import java.util.Collection;
 
+import java.lang.UnsupportedOperationException;
 import pt.tecnico.po.ui.Command;
 import pt.tecnico.po.ui.DialogException;
 import pt.tecnico.po.ui.Input;
@@ -31,11 +32,11 @@ public class DoShowSurveyResults extends Command<SchoolManager> {
     _form.parse();
     try {
       Collection<Survey> surveys = _receiver.getProjectSurveys(_disciplineName.value(), _projectName.value()); 
-      for (Survey s : survey) {
-        _display.addline(s); // FIXME
+      for (Survey s : surveys) {
+        _display.addLine(""+s); // FIXME
       }
     }
-    catch (UnsuportedOperationException e) {
+    catch (UnsupportedOperationException e) {
       _display.popup("Operação não suportada");
     }
     // FIXME : other exceptions

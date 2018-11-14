@@ -1,5 +1,7 @@
 package sth.app.student;
 
+import java.lang.UnsupportedOperationException;
+
 import pt.tecnico.po.ui.Command;
 import pt.tecnico.po.ui.DialogException;
 import pt.tecnico.po.ui.Input;
@@ -21,7 +23,7 @@ public class DoDeliverProject extends Command<SchoolManager> {
     super(Label.DELIVER_PROJECT, receiver);
     _disciplineName = _form.addStringInput(Message.requestDisciplineName());
     _projectName = _form.addStringInput(Message.requestProjectName());
-    _delivery = _form.addIntegerInput(Message.requestDeliveryMessage());
+    _delivery = _form.addStringInput(Message.requestDeliveryMessage());
   }
 
   /** @see pt.tecnico.po.ui.Command#execute() */
@@ -35,7 +37,7 @@ public class DoDeliverProject extends Command<SchoolManager> {
           _delivery.value()
           ); 
     }
-    catch (UnsuportedOperationException e) {
+    catch (UnsupportedOperationException e) {
       _display.popup("Operação não suportada");
     }
     // FIXME : other exceptions

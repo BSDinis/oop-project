@@ -1,5 +1,7 @@
 package sth.app.teaching;
 
+import java.lang.UnsupportedOperationException;
+
 import java.util.Collection;
 import pt.tecnico.po.ui.Command;
 import pt.tecnico.po.ui.DialogException;
@@ -27,9 +29,12 @@ public class DoShowDisciplineStudents extends Command<SchoolManager> {
   public final void execute() throws DialogException {
     _form.parse();
     try {
-      Collection<Student> _receiver.getDisciplineStudents(_disciplineName.value()); 
+      Collection<Student> students = _receiver.getDisciplineStudents(_disciplineName.value()); 
+      for (Student s : students) {
+        _display.addLine(""+s);
+      }
     }
-    catch (UnsuportedOperationException e) {
+    catch (UnsupportedOperationException e) {
       _display.popup("Operação não suportada");
     }
     // FIXME : other exceptions

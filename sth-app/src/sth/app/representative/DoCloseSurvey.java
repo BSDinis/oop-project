@@ -29,7 +29,7 @@ public class DoCloseSurvey extends Command<SchoolManager> {
     try {
       _receiver.closeSurvey(_disciplineName.value(), _projectName.value()); 
     }
-    catch (UnsuportedOperationException e) {
+    catch (UnsupportedOperationException e) {
       _display.popup("Operação não suportada");
     }
   }

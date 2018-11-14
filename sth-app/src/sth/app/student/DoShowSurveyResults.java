@@ -1,5 +1,7 @@
 package sth.app.student;
 
+import java.lang.UnsupportedOperationException;
+
 import pt.tecnico.po.ui.Command;
 import pt.tecnico.po.ui.DialogException;
 import pt.tecnico.po.ui.Input;
@@ -28,10 +30,10 @@ public class DoShowSurveyResults extends Command<SchoolManager> {
   public final void execute() throws DialogException {
     _form.parse();
     try {
-      Survey s = _receiver.answerSurvey( _disciplineName.value(), _projectName.value()); 
-      _display.addline(s);
+      Survey s = _receiver.getSurvey( _disciplineName.value(), _projectName.value()); 
+      _display.addLine(""+s);
     }
-    catch (UnsuportedOperationException e) {
+    catch (UnsupportedOperationException e) {
       _display.popup("Operação não suportada");
     }
     // FIXME : other exceptions

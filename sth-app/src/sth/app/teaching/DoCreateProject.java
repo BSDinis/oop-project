@@ -1,5 +1,7 @@
 package sth.app.teaching;
 
+import java.lang.UnsupportedOperationException;
+
 import pt.tecnico.po.ui.Command;
 import pt.tecnico.po.ui.DialogException;
 import pt.tecnico.po.ui.Input;
@@ -29,7 +31,7 @@ public class DoCreateProject extends Command<SchoolManager> {
     try {
       _receiver.createProject(_disciplineName.value(), _projectName.value()); 
     }
-    catch (UnsuportedOperationException e) {
+    catch (UnsupportedOperationException e) {
       _display.popup("Operação não suportada");
     }
     // FIXME : other exceptions

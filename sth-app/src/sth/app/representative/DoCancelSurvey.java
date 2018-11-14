@@ -1,9 +1,12 @@
 package sth.app.representative;
 
+import java.lang.UnsupportedOperationException;
+
 import pt.tecnico.po.ui.Command;
 import pt.tecnico.po.ui.DialogException;
 import pt.tecnico.po.ui.Input;
 import sth.SchoolManager;
+import sth.Survey;
 
 
 /**
@@ -30,7 +33,7 @@ public class DoCancelSurvey extends Command<SchoolManager> {
     try {
       _receiver.cancelSurvey(_disciplineName.value(), _projectName.value()); 
     }
-    catch (UnsuportedOperationException e) {
+    catch (UnsupportedOperationException e) {
       _display.popup("Operação não suportada");
     }
   }

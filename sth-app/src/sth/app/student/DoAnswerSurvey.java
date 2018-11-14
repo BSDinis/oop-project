@@ -1,5 +1,7 @@
 package sth.app.student;
 
+import java.lang.UnsupportedOperationException;
+
 import pt.tecnico.po.ui.Command;
 import pt.tecnico.po.ui.DialogException;
 import pt.tecnico.po.ui.Input;
@@ -23,7 +25,7 @@ public class DoAnswerSurvey extends Command<SchoolManager> {
     _disciplineName = _form.addStringInput(Message.requestDisciplineName());
     _projectName = _form.addStringInput(Message.requestProjectName());
     _hoursSpent = _form.addIntegerInput(Message.requestProjectHours());
-    _comment = _form.addIntegerInput(Message.requestComment());
+    _comment = _form.addStringInput(Message.requestComment());
   }
 
   /** @see pt.tecnico.po.ui.Command#execute() */
@@ -34,11 +36,11 @@ public class DoAnswerSurvey extends Command<SchoolManager> {
       _receiver.answerSurvey(
           _disciplineName.value(),
           _projectName.value(),
-          _hoursSpent.valuer(),
+          _hoursSpent.value(),
           _comment.value()
           ); 
     }
-    catch (UnsuportedOperationException e) {
+    catch (UnsupportedOperationException e) {
       _display.popup("Operação não suportada");
     }
     // FIXME : other exceptions

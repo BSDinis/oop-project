@@ -31,7 +31,7 @@ public class DoCreateSurvey extends Command<SchoolManager> {
     try {
       _receiver.createSurvey(_disciplineName.value(), _projectName.value()); 
     }
-    catch (UnsuportedOperationException e) {
+    catch (UnsupportedOperationException e) {
       _display.popup("Operação não suportada");
     }
   }

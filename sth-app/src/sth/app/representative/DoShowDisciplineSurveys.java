@@ -1,9 +1,13 @@
 package sth.app.representative;
 
+import java.lang.UnsupportedOperationException;
+import java.util.Collection;
+
 import pt.tecnico.po.ui.Command;
 import pt.tecnico.po.ui.DialogException;
 import pt.tecnico.po.ui.Input;
 import sth.SchoolManager;
+import sth.Survey;
 
 /**
  * 4.5.6. Show discipline surveys.
@@ -27,14 +31,12 @@ public class DoShowDisciplineSurveys extends Command<SchoolManager> {
     Collection<Survey> surveys; 
     try {
       surveys = _receiver.getDisciplineSurveys(_disciplineName.value()); 
+        for (Survey s : surveys) {
+          _display.addLine(""+s); // FIXME
+        }
     }
-    catch (UnsuportedOperationException e) {
+    catch (UnsupportedOperationException e) {
       _display.popup("Operação não suportada");
-    }
-
-
-    for (Survey s : surveys) {
-      _display.addline(s); // FIXME
     }
   }
 
