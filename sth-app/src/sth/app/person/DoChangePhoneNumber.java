@@ -9,22 +9,25 @@ import sth.SchoolManager;
  */
 public class DoChangePhoneNumber extends Command<SchoolManager> {
 
-  // FIXME
-  //private InputInteger _phoneNumber;
-
-
   /**
    * @param receiver
    */
   public DoChangePhoneNumber(SchoolManager receiver) {
     super(Label.CHANGE_PHONE_NUMBER, receiver);
-    //_phoneNumber = new InputInteger(requestPersonId());
   }
 
   /** @see pt.tecnico.po.ui.Command#execute() */
   @Override
   public final void execute() {
-    //FIXME implement command
-  }
+    Form f = new Form();
+    Input<Int> phoneNumber = f.addIntegerInput(Message.requestPhoneNumber());
+    f.parse();
 
+    try {
+      _receiver.changePhoneNumber(phoneNumber.value());
+    }
+    catch (UnsupportedOperationException e) {
+      _display.popup("Operação não suportada.");
+    }
+  }
 }
