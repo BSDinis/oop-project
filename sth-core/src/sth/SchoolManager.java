@@ -8,6 +8,7 @@ import java.util.List;
 import sth.exceptions.BadEntryException;
 import sth.exceptions.ImportFileException;
 import sth.exceptions.NoSuchPersonIdException;
+import sth.exceptions.NoSuchPersonNameException;
 import sth.exceptions.NoSuchProjectException;
 
 //FIXME import other classes if needed
