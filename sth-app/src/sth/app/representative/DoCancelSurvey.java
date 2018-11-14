@@ -3,7 +3,6 @@ package sth.app.representative;
 import pt.tecnico.po.ui.Command;
 import pt.tecnico.po.ui.DialogException;
 import pt.tecnico.po.ui.Input;
-import pt.tecnico.po.ui.InputString;
 import sth.SchoolManager;
 
 
@@ -20,8 +19,8 @@ public class DoCancelSurvey extends Command<SchoolManager> {
    */
   public DoCancelSurvey(SchoolManager receiver) {
     super(Label.CANCEL_SURVEY, receiver);
-    _disciplineName = new InputString(requestDisciplineName())
-    _projectName = new InputString(requestProjectName())
+    //_disciplineName = new InputString(requestDisciplineName()); // FIXME
+    //_projectName = new InputString(requestProjectName()); // FIXME
   }
 
   /** @see pt.tecnico.po.ui.Command#execute() */

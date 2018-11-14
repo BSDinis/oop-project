@@ -6,7 +6,6 @@ import java.lang.ClassNotFoundException;
 
 import pt.tecnico.po.ui.Command;
 import pt.tecnico.po.ui.Input;
-import pt.tecnico.po.ui.InputString;
 import sth.SchoolManager;
 
 /**
@@ -15,13 +14,13 @@ import sth.SchoolManager;
 public class DoOpen extends Command<SchoolManager> {
 
 
-  private InputString _filename;
+  //private InputString _filename;
   /**
    * @param receiver
    */
   public DoOpen(SchoolManager receiver) {
     super(Label.OPEN, receiver);
-    _filename = new InputString(Message.openFile())
+    // _filename = new InputString(Message.openFile()); // FIXME
   }
 
   /** @see pt.tecnico.po.ui.Command#execute() */

@@ -3,7 +3,7 @@ package sth;
 import java.io.IOException;
 import java.io.Serializable;
 import sth.exceptions.BadEntryException;
-import sth.exceptions.InvalidCourseSelectionException;
+//import sth.exceptions.InvalidCourseSelectionException;
 import sth.exceptions.NoSuchPersonIdException;
 
 /**

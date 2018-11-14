@@ -1,7 +1,7 @@
 package sth.app.person;
 
 import pt.tecnico.po.ui.Command;
-import pt.tecnico.po.ui.Input;
+import pt.tecnico.po.ui.Input; 
 import sth.SchoolManager;
 
 /**
@@ -9,14 +9,14 @@ import sth.SchoolManager;
  */
 public class DoSearchPerson extends Command<SchoolManager> {
 
-  private Input<String> _requestedPerson;
+  //private Input<String> _requestedPerson;
   
   /**
    * @param receiver
    */
   public DoSearchPerson(SchoolManager receiver) {
     super(Label.SEARCH_PERSON, receiver);
-    _requestedPerson = new InputString(requestPersonName());
+    //_requestedPerson = new InputString(requestPersonName());
   }
 
   /** @see pt.tecnico.po.ui.Command#execute() */
