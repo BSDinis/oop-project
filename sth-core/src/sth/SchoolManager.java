@@ -5,7 +5,7 @@ import java.util.SortedMap;
 import sth.exceptions.BadEntryException;
 import sth.exceptions.ImportFileException;
 import sth.exceptions.NoSuchPersonIdException;
-import sth.exceptions.NoPersonLoggedIn;
+import sth.exceptions.NoSuchProjectException;
 
 //FIXME import other classes if needed
 
