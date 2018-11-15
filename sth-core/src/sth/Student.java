@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.Serializable;
 
 /**
- * Person implementation.
+ * Student implementation.
  */
 public class Student 
   extends Person 
