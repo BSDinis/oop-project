@@ -48,5 +48,7 @@ public class Survey
     throw new UnsupportedOperationException();
   }
 
-  public String toString() { return "<<Survey :: to implement>>"; }
+  public String toString() { 
+    return "<<Survey :: to implement>>"; 
+  }
 }

@@ -3,9 +3,13 @@ package sth;
 import java.io.Serializable;
 
 import java.lang.IllegalArgumentException;
+import sth.exceptions.StudentAlreadyEnrolledException;
+import sth.exceptions.ProfessorAlreadyTeachingException;
+import sth.exceptions.DisciplineLimitReachedException;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -15,28 +19,38 @@ import java.util.TreeMap;
 public class Discipline 
   implements Serializable {
 
-  /** Serial number for serialization. */
-  private static final long serialVersionUID = 201811151044L;
-
   private String _name;
   private int _capacity;
-  private List<Student> _students;
-  private List<Professor> _professors;
+  private List<Student> _students = new LinkedList<Student>();
+  private List<Professor> _professors = new LinkedList<Professor>();
   private Map<String, Project> _projects = new TreeMap<String, Project>();
 
-  Discipline(String name, int cap, List<Student> students, List<Professor> profs) {
-    if (students.size() > cap) throw new IllegalArgumentException();
+  Discipline(String name, int cap) {
     _name = name;
     _capacity = cap;
-    _students = students;
-    _professors = profs;
   }
   
   public String name() { return _name; }
+
+  public void enrollStudent(Student s) 
+    throws StudentAlreadyEnrolledException, DisciplineLimitReachedException {
+    if (_students.contains(s)) throw new StudentAlreadyEnrolledException();
+    if (_students.size() == _capacity) throw new DisciplineLimitReachedException();
+    _students.add(s);
+  }
+  public Collection<Student> getStudents() { return _students; }
+
   public void addProject(String name) { _projects.put(name, new Project(name)); }
   public boolean hasProject(String name) { return _projects.containsKey(name); }
   public Project getProject(String name) { return _projects.get(name); }
-  public Collection<Student> getStudents() { return _students; }
+
+  public void addProfessor(Professor p) 
+    throws ProfessorAlreadyTeachingException {
+    if (_professors.contains(p))
+      throw new ProfessorAlreadyTeachingException();
+
+    _professors.add(p);
+  }
 
   public String toString() { return "<<Discipline :: to implement>>"; }
 

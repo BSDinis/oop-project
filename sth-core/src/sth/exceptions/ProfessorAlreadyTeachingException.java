@@ -1,3 +1,3 @@
 package sth.exceptions;
 
-public class ProfessorAlreadyTeachingException.java extends Exception { }
+public class ProfessorAlreadyTeachingException extends Exception { }
