@@ -28,6 +28,8 @@ public class Discipline
   
   public void addProject(String name) { _projects.put(name, new Project(name)); }
   public boolean hasProject(String name) { return _projects.containsKey(name); }
+  public Project getProject(String name) { return _projects.get(name); }
+  public Collection<Student> getStudents() { return _students; }
 
   public String toString() { return "<<Discipline :: to implement>>"; }
 
