@@ -1,7 +1,9 @@
 package sth.app.person;
 
+import java.util.Collection;
 import pt.tecnico.po.ui.Command;
 import sth.SchoolManager;
+import sth.Person;
 
 /**
  * 4.2.3. Show all persons.
@@ -19,7 +21,10 @@ public class DoShowAllPersons extends Command<SchoolManager> {
   /** @see pt.tecnico.po.ui.Command#execute() */
   @Override
   public final void execute() {
-    //FIXME implement command
+    Collection<Person> people = _receiver.allPersons();
+    for (Person p : people) {
+      _display.addLine(""+p); // FIXME
+    }
   }
 
 }

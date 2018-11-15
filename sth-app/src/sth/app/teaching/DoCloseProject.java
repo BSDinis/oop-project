@@ -1,31 +1,52 @@
 package sth.app.teaching;
 
+import java.lang.UnsupportedOperationException;
+
 import pt.tecnico.po.ui.Command;
 import pt.tecnico.po.ui.DialogException;
 import pt.tecnico.po.ui.Input;
 import sth.SchoolManager;
 
-//FIXME import other classes if needed
+import sth.app.exceptions.NoSuchProjectException;
+import sth.app.exceptions.NoSuchDisciplineException;
+
+import sth.exceptions.ProjectNotFoundException;
+import sth.exceptions.DisciplineNotFoundException;
 
 /**
  * 4.3.2. Close project.
  */
 public class DoCloseProject extends Command<SchoolManager> {
 
-  //FIXME add input fields if needed
+  private Input<String> _disciplineName;
+  private Input<String> _projectName;
 
   /**
    * @param receiver
    */
   public DoCloseProject(SchoolManager receiver) {
     super(Label.CLOSE_PROJECT, receiver);
-    //FIXME initialize input fields if needed
+    _disciplineName = _form.addStringInput(Message.requestDisciplineName());
+    _projectName = _form.addStringInput(Message.requestProjectName());
   }
 
   /** @see pt.tecnico.po.ui.Command#execute() */
   @Override
   public final void execute() throws DialogException {
-    //FIXME implement command
+    _form.parse();
+    try {
+      _receiver.closeProject(_disciplineName.value(), _projectName.value()); 
+    }
+    catch (UnsupportedOperationException e) {
+      _display.popup("Operação não suportada");
+    }
+    catch (DisciplineNotFoundException e) {
+      new NoSuchDisciplineException(e.getName());
+    }
+    catch (ProjectNotFoundException e) {
+      new NoSuchProjectException(e.getName(), _disciplineName.value());
+    }
+
   }
 
 }
