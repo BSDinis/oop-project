@@ -9,14 +9,14 @@ import sth.SchoolManager;
  */
 public class DoChangePhoneNumber extends Command<SchoolManager> {
 
-  Input<Integer> _phoneNumber;
+  Input<String> _phoneNumber;
 
   /**
    * @param receiver
    */
   public DoChangePhoneNumber(SchoolManager receiver) {
     super(Label.CHANGE_PHONE_NUMBER, receiver);
-    _phoneNumber = _form.addIntegerInput(Message.requestPhoneNumber());
+    _phoneNumber = _form.addStringInput(Message.requestPhoneNumber());
   }
 
   /** @see pt.tecnico.po.ui.Command#execute() */

@@ -107,13 +107,10 @@ public class SchoolManager {
       return false;
   }
 
-  public void changePhoneNumber(String newNumber)
-    throws NoSuchPersonIdException {
+  public void changePhoneNumber(String newNumber) {
     Person p = getLoggedIn();
     if (p != null) // in principle, the logged in person exists; this is being over cautious
       p.changePhoneNumber(newNumber);
-    else
-      throw new NoSuchPersonIdException(getLoggedId()); 
   }
 
   public Collection<Person> searchPerson(String name)
