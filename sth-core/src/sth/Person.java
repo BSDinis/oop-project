@@ -1,14 +1,11 @@
 package sth;
 
-import java.io.IOException;
 import java.io.Serializable;
 
 /**
  * Person implementation.
  */
 public class Person implements Serializable {
-
-  /** Serial number for serialization. */
   private static final long serialVersionUID = 201811151238L;
 
   private String _name;

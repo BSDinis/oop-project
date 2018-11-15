@@ -52,15 +52,14 @@ class School implements Serializable {
    * @throws IOException
    */
   void importFile(String filename)
-    throws IOException, BadEntryException, UnsupportedOperationException {
-    //FIXME implement text file reader
-    throw new UnsupportedOperationException();
+    throws IOException, BadEntryException {
+    
+
+
   }
   
   void saveToFile(String filename)
     throws IOException, UnsupportedOperationException  {
-    //FIXME implement text file writer
-    throw new UnsupportedOperationException();
   }
 
   public boolean lookupId(int id) {

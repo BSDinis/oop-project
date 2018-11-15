@@ -1,10 +1,14 @@
 package sth;
 
+import java.io.Serializable;
+
 import java.util.Map;
 import java.util.TreeMap;
 import java.lang.UnsupportedOperationException;
 
-public class Survey {
+public class Survey 
+  implements Serializable {
+
   private Map<Student, IncompleteSurveyResponse> _responses = new TreeMap<Student, IncompleteSurveyResponse>();
   private boolean _open;
 
