@@ -4,8 +4,6 @@ import pt.tecnico.po.ui.Command;
 import sth.SchoolManager;
 import sth.Person;
 
-import sth.app.exceptions.NoSuchPersonException;
-
 /**
  * 4.2.1. Show person.
  */
@@ -20,12 +18,12 @@ public class DoShowPerson extends Command<SchoolManager> {
 
   /** @see pt.tecnico.po.ui.Command#execute() */
   @Override
-  public final void execute() throws NoSuchPersonException {
+  public final void execute() {
     Person p = _receiver.getLoggedIn();
     if (p == null)
-      throw new NoSuchPersonException(0); // FIXME
-
-    _display.addLine(""+p);
+      _display.addLine(""+p);
+    else
+      _display.addLine("No person logged in");
   }
 
 }
