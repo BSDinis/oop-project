@@ -6,6 +6,8 @@ import pt.tecnico.po.ui.DialogException;
 import pt.tecnico.po.ui.Input;
 import sth.SchoolManager;
 import sth.Project;
+import sth.exceptions.ProjectNotFoundException;
+import sth.exceptions.DisciplineNotFoundException;
 
 /**
  * 4.3.3. Show project submissions.
@@ -35,7 +37,12 @@ public class DoShowProjectSubmissions extends Command<SchoolManager> {
     catch (UnsupportedOperationException e) {
       _display.popup("Operação não suportada");
     }
-    // FIXME : other exceptions
+    catch (DisciplineNotFoundException e) {
+      new NoSuchDisciplineException(e.getName());
+    }
+    catch (ProjectNotFoundException e) {
+      new NoSuchProjectException(e.getName());
+    }
   }
 
 }

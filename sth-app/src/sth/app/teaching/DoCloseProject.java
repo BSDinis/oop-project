@@ -6,7 +6,9 @@ import pt.tecnico.po.ui.Command;
 import pt.tecnico.po.ui.DialogException;
 import pt.tecnico.po.ui.Input;
 import sth.SchoolManager;
-import sth.exceptions.NoSuchProjectException;
+
+import sth.exceptions.ProjectNotFoundException;
+import sth.exceptions.DisciplineNotFoundException;
 
 /**
  * 4.3.2. Close project.
@@ -35,10 +37,12 @@ public class DoCloseProject extends Command<SchoolManager> {
     catch (UnsupportedOperationException e) {
       _display.popup("Operação não suportada");
     }
-    catch (NoSuchProjectException e) {
-      //FIXME
+    catch (DisciplineNotFoundException e) {
+      new NoSuchDisciplineException(e.getName());
     }
-    // FIXME : other exceptions
+    catch (ProjectNotFoundException e) {
+      new NoSuchProjectException(e.getName());
+    }
   }
 
 }

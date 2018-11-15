@@ -8,6 +8,8 @@ import pt.tecnico.po.ui.DialogException;
 import pt.tecnico.po.ui.Input;
 import sth.SchoolManager;
 import sth.Student;
+import sth.exceptions.ProjectNotFoundException;
+import sth.exceptions.DisciplineNotFoundException;
 
 /**
  * 4.3.4. Show course students.
@@ -37,7 +39,12 @@ public class DoShowDisciplineStudents extends Command<SchoolManager> {
     catch (UnsupportedOperationException e) {
       _display.popup("Operação não suportada");
     }
-    // FIXME : other exceptions
+    catch (DisciplineNotFoundException e) {
+      new NoSuchDisciplineException(e.getName());
+    }
+    catch (ProjectNotFoundException e) {
+      new NoSuchProjectException(e.getName());
+    }
   }
 
 }
