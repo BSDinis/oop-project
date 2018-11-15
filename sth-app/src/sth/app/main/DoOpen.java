@@ -36,7 +36,6 @@ public class DoOpen extends Command<SchoolManager> {
     catch (FileNotFoundException e) {
       _display.popup(Message.fileNotFound(filename.value()));
     }
-
     FIXME ????
     */
     catch (ImportFileException e) {
@@ -44,7 +43,7 @@ public class DoOpen extends Command<SchoolManager> {
     }
     catch (UnsupportedOperationException e) {
       _display.popup("Operação não suportada");
-    }
+    } // FIXME: remove
   }
 
 }
