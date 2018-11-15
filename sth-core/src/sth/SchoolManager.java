@@ -8,8 +8,8 @@ import java.util.Map;
 import sth.exceptions.BadEntryException;
 import sth.exceptions.ImportFileException;
 import sth.exceptions.NoSuchPersonIdException;
-import sth.exceptions.NoSuchProjectException;
-import sth.exceptions.NoSuchDisciplineException;
+import sth.exceptions.ProjectNotFoundException;
+import sth.exceptions.DisciplineNotFoundException;
 
 //FIXME import other classes if needed
 
@@ -128,47 +128,47 @@ public class SchoolManager {
 
   // missing project description ?
   public void createProject(String discipline, String projectName)
-    throws NoSuchDisciplineException {
+    throws DisciplineNotFoundException {
     Discipline d = _school.getDiscipline(discipline);
-    if (d == null) throw new NoSuchDisciplineException(discipline);
+    if (d == null) throw new DisciplineNotFoundException(discipline);
     d.addProject(projectName);
   }
 
   public Collection<Student> getDisciplineStudents(String discipline)
-    throws NoSuchDisciplineException {
+    throws DisciplineNotFoundException {
     Discipline d = _school.getDiscipline(discipline);
-    if (d == null) throw new NoSuchDisciplineException(discipline);
+    if (d == null) throw new DisciplineNotFoundException(discipline);
     return d.getStudents();
   }
 
   // string or projectSubmission ??? FIXME
   public Map<Student, String> projectSubmissions(String discipline, String projectName)
-    throws NoSuchProjectException, NoSuchDisciplineException {
+    throws ProjectNotFoundException, DisciplineNotFoundException {
 
     Discipline d = _school.getDiscipline(discipline);
-    if (d == null) throw new NoSuchDisciplineException(discipline);
+    if (d == null) throw new DisciplineNotFoundException(discipline);
     Project p = d.getProject(projectName);
-    if (p == null) throw new NoSuchProjectException(projectName);
+    if (p == null) throw new ProjectNotFoundException(projectName);
 
     return p.getSubmissions();
   }
 
   public void closeProject(String discipline, String projectName)
-    throws NoSuchProjectException, NoSuchDisciplineException {
+    throws ProjectNotFoundException, DisciplineNotFoundException {
 
     Discipline d = _school.getDiscipline(discipline);
-    if (d == null) throw new NoSuchDisciplineException(discipline);
+    if (d == null) throw new DisciplineNotFoundException(discipline);
     Project p = d.getProject(projectName);
-    if (p == null) throw new NoSuchProjectException(projectName);
+    if (p == null) throw new ProjectNotFoundException(projectName);
     p.close();
   }
 
   public void answerSurvey(String discipline, String projectName, int hours, String comment)
-    throws NoSuchProjectException, NoSuchDisciplineException {
+    throws ProjectNotFoundException, DisciplineNotFoundException {
     Discipline d = _school.getDiscipline(discipline);
-    if (d == null) throw new NoSuchDisciplineException(discipline);
+    if (d == null) throw new DisciplineNotFoundException(discipline);
     Project p = d.getProject(projectName);
-    if (p == null) throw new NoSuchProjectException(projectName);
+    if (p == null) throw new ProjectNotFoundException(projectName);
 
     if (p.hasSurvey()) {
       Survey s = p.getSurvey();
