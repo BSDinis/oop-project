@@ -38,10 +38,9 @@ public class School implements Serializable {
     throw new UnsupportedOperationException();
   }
 
-  public boolean lookupId(int id)
-    throws UnsupportedOperationException {
+  public boolean lookupId(int id) {
     // FIXME
-    throw new UnsupportedOperationException();
+    return false;
   }
   
   public boolean isAdministrative(int id)
@@ -74,23 +73,28 @@ public class School implements Serializable {
     throw new UnsupportedOperationException();
   }
 
-  public Person getPersonById(int id)
-    throws UnsupportedOperationException {
+  public Person getPersonById(int id) {
     // FIXME
-    throw new UnsupportedOperationException();
+    return null;
   }
 
-  public Collection<Person> getPersonByName(String name) 
-    throws UnsupportedOperationException {
+  public Student getStudentById(int id) {
     // FIXME
-    throw new UnsupportedOperationException();
+    return null;
   }
 
-  public Discipline getDiscipline(String name)
-    throws UnsupportedOperationException {
+  public Professor getProfessorById(int id) {
     // FIXME
-    throw new UnsupportedOperationException();
-    //return <some data structure>[0]
+    return null;
+  }
+
+  public Collection<Person> getPersonByName(String name) {
+    return null;
+  }
+
+  public Discipline getDiscipline(String name) {
+    // FIXME
+    return null;
   }
 
   //FIXME implement other methods

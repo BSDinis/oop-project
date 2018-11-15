@@ -9,6 +9,7 @@ import sth.exceptions.BadEntryException;
 import sth.exceptions.ImportFileException;
 import sth.exceptions.NoSuchPersonIdException;
 import sth.exceptions.NoSuchProjectException;
+import sth.exceptions.NoSuchDisciplineException;
 
 //FIXME import other classes if needed
 
@@ -24,9 +25,10 @@ public class SchoolManager {
   
   private int getLoggedId() { return _loggedId; }
   private void setLoggedId(int id) { _loggedId = id; }
-  private Person getLoggedIn() { return _school.getPersonById(getLoggedId()); }
 
-  
+  private Student getStudentLoggedIn() { return _school.getStudentById(getLoggedId()); }
+  private Professor getProfessorLoggedIn() { return _school.getProfessorById(getLoggedId()); }
+
   /**
    * @param datafile
    * @throws ImportFileException
@@ -58,12 +60,10 @@ public class SchoolManager {
     if (_school.lookupId(id))
       setLoggedId(id);
     else 
-      throw new NoSuchPersonIdException();
+      throw new NoSuchPersonIdException(id);
   }
 
-  public void logout()
-    throws NoSuchPersonIdException {
-
+  public void logout() {
     setLoggedId(-1);
   }
 
@@ -72,7 +72,7 @@ public class SchoolManager {
    */
   public boolean hasAdministrative() {
     if (getLoggedId() != -1)
-      return _school.isAdministrative(login());
+      return _school.isAdministrative(getLoggedId());
     else
       return false;
   }
@@ -107,13 +107,13 @@ public class SchoolManager {
       return false;
   }
 
-  public void changePhoneNumber(int newNumber)
-    throws UnsupportedOperationException {
+  public void changePhoneNumber(String newNumber)
+    throws NoSuchPersonIdException {
     Person p = getLoggedIn();
     if (p != null) // in principle, the logged in person exists; this is being over cautious
-      p.changePhoneNumer(newNumber);
+      p.changePhoneNumber(newNumber);
     else
-      throw new RuntimeException(); // FIXME
+      throw new NoSuchPersonIdException(getLoggedId()); 
   }
 
   public Collection<Person> searchPerson(String name)
@@ -121,58 +121,58 @@ public class SchoolManager {
     return _school.getPersonByName(name);
   }
 
-  public Collection<Person> allPersons() {
+  public Collection<Person> allPersons() 
+    throws UnsupportedOperationException {
     return _school.people(); 
   }
 
   // missing project description ?
   public void createProject(String discipline, String projectName)
-    throws UnsupportedOperationException {
-    Discipline d = getDiscipline(discipline);
-    if (d == null) throw new RuntimeException(); // FIXME
+    throws NoSuchDisciplineException {
+    Discipline d = _school.getDiscipline(discipline);
+    if (d == null) throw new NoSuchDisciplineException(discipline);
     d.addProject(projectName);
   }
 
   public Collection<Student> getDisciplineStudents(String discipline)
-    throws UnsupportedOperationException {
-    Discipline d = getDiscipline(discipline);
-    if (d == null) throw new RuntimeException(); // FIXME
+    throws NoSuchDisciplineException {
+    Discipline d = _school.getDiscipline(discipline);
+    if (d == null) throw new NoSuchDisciplineException(discipline);
     return d.getStudents();
   }
 
   // string or projectSubmission ??? FIXME
   public Map<Student, String> projectSubmissions(String discipline, String projectName)
-    throws UnsupportedOperationException, NoSuchProjectException {
+    throws NoSuchProjectException, NoSuchDisciplineException {
 
-    Discipline d = getDiscipline(discipline);
-    if (d == null) throw new RuntimeException(); // FIXME
+    Discipline d = _school.getDiscipline(discipline);
+    if (d == null) throw new NoSuchDisciplineException(discipline);
     Project p = d.getProject(projectName);
-    if (p == null) throw new NoSuchProjectException();
+    if (p == null) throw new NoSuchProjectException(projectName);
 
-    return p.getSumbissions();
+    return p.getSubmissions();
   }
 
   public void closeProject(String discipline, String projectName)
-    throws UnsupportedOperationException, NoSuchProjectException {
+    throws NoSuchProjectException, NoSuchDisciplineException {
 
-    Discipline d = getDiscipline(discipline);
-    if (d == null) throw new RuntimeException(); // FIXME
+    Discipline d = _school.getDiscipline(discipline);
+    if (d == null) throw new NoSuchDisciplineException(discipline);
     Project p = d.getProject(projectName);
-    if (p == null) throw new NoSuchProjectException();
+    if (p == null) throw new NoSuchProjectException(projectName);
     p.close();
   }
 
-  public void answerSurvey(String discipline, String project, int hours, String comment)
-    throws UnsupportedOperationException {
-
-    Discipline d = getDiscipline(discipline);
-    if (d == null) throw new RuntimeException(); // FIXME
+  public void answerSurvey(String discipline, String projectName, int hours, String comment)
+    throws NoSuchProjectException, NoSuchDisciplineException {
+    Discipline d = _school.getDiscipline(discipline);
+    if (d == null) throw new NoSuchDisciplineException(discipline);
     Project p = d.getProject(projectName);
-    if (p == null) throw new NoSuchProjectException();
+    if (p == null) throw new NoSuchProjectException(projectName);
 
-    if (p.hasSurvey) {
+    if (p.hasSurvey()) {
       Survey s = p.getSurvey();
-      s.addResponse(new SurveyResponse(getLoggedIn(), hours, comment));
+      s.addResponse(getStudentLoggedIn(), hours, comment);
     }
   }
 
@@ -208,7 +208,7 @@ public class SchoolManager {
 
   public Person getLoggedIn()
     throws UnsupportedOperationException {
-    throw new UnsupportedOperationException();
+    return _school.getPersonById(getLoggedId()); 
   }
 
   public void createSurvey(String discipline, String project)

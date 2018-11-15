@@ -2,7 +2,7 @@ package sth;
 
 import java.util.Map;
 import java.util.TreeMap;
-import sth.exception.ProjectNotOpenException;
+import sth.exceptions.ProjectNotOpenException;
 
 public class Project {
   private String _name;
@@ -35,6 +35,10 @@ public class Project {
       _submissions.put(student, submission);
     else 
       throw new ProjectNotOpenException(_name);
+  }
+
+  public Map<Student, String> getSubmissions() {
+    return _submissions;
   }
 
   public String toString() { return "<<Project :: to implement>>"; }

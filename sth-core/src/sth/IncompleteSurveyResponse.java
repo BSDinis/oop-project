@@ -10,5 +10,5 @@ class IncompleteSurveyResponse {
   }
 
   public int getHours() { return _hours; }
-  public int getComment() { return _comment; }
+  public String getComment() { return _comment; }
 }

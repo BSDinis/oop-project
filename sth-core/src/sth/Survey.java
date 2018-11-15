@@ -6,10 +6,11 @@ import java.lang.UnsupportedOperationException;
 
 public class Survey {
   private Map<Student, IncompleteSurveyResponse> _responses = new TreeMap<Student, IncompleteSurveyResponse>();
+  private boolean _open;
 
   Survey(boolean isProjectOpen) {
-    if (isProjectOpen) open = false;
-    else open = true;
+    if (isProjectOpen) _open = false;
+    else _open = true;
   }
 
   public void close() 

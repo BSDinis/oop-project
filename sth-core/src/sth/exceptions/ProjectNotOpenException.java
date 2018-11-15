@@ -16,7 +16,7 @@ public class ProjectNotOpenException extends Exception {
   }
 
   /** @return name */
-  public int getName() {
+  public String getName() {
     return _name;
   }
 

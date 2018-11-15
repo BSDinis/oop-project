@@ -3,7 +3,12 @@ package sth;
 import java.io.IOException;
 import java.io.Serializable;
 
+import java.lang.IllegalArgumentException;
+
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Discipline implementation.
@@ -20,7 +25,7 @@ public class Discipline
   private Map<String, Project> _projects = new TreeMap<String, Project>();
 
   Discipline(int cap, List<Student> students, List<Professor> profs) {
-    if (students.size() > cap) throw IllegalArgumentException();
+    if (students.size() > cap) throw new IllegalArgumentException();
     _capacity = cap;
     _students = students;
     _professors = profs;
