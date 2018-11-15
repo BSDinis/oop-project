@@ -34,10 +34,10 @@ public class DoOpen extends Command<SchoolManager> {
     }
     /*
     catch (FileNotFoundException e) {
-      _display.popup(Message.fileNotFound(filename.value()));
+      _display.popup(Message.fileNotFound(_filename.value()));
     }
-    FIXME ????
-    */
+
+    FIXME */
     catch (ImportFileException e) {
       _display.popup(e.getMessage());
     }
