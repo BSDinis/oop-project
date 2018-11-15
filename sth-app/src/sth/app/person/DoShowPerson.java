@@ -20,10 +20,12 @@ public class DoShowPerson extends Command<SchoolManager> {
   @Override
   public final void execute() {
     Person p = _receiver.getLoggedIn();
-    if (p == null)
+    if (p != null)
       _display.addLine(""+p);
     else
       _display.addLine("No person logged in");
+
+    _display.display();
   }
 
 }

@@ -32,9 +32,10 @@ public class DoShowDisciplineStudents extends Command<SchoolManager> {
     _form.parse();
     try {
       Collection<Student> students = _receiver.getDisciplineStudents(_disciplineName.value()); 
-      for (Student s : students) {
+      for (Student s : students) 
         _display.addLine(""+s);
-      }
+
+      _display.display();
     }
     catch (UnsupportedOperationException e) {
       _display.popup("Operação não suportada");

@@ -1,11 +1,16 @@
 package sth.app.teaching;
 
 import java.lang.UnsupportedOperationException;
+import java.util.Map;
+
 import pt.tecnico.po.ui.Command;
 import pt.tecnico.po.ui.DialogException;
 import pt.tecnico.po.ui.Input;
+
 import sth.SchoolManager;
+import sth.Student;
 import sth.Project;
+
 import sth.exceptions.ProjectNotFoundException;
 import sth.exceptions.DisciplineNotFoundException;
 import sth.app.exceptions.NoSuchProjectException;
@@ -33,20 +38,21 @@ public class DoShowProjectSubmissions extends Command<SchoolManager> {
   public final void execute() throws DialogException {
     _form.parse();
     try {
-      Project p = _receiver.getProject(_disciplineName.value(), _projectName.value()); 
-      _display.addLine(""+p);
+      Map<Student, String> submissions = _receiver.getProjectSubmissions(_disciplineName.value(), _projectName.value()); 
+      for (Map.Entry<Student, String> submission : submissions.entrySet())
+        _display.addLine("* " + submission.getKey().id() + " - " + submission.getValue());
+
+      _display.display();
     }
     catch (UnsupportedOperationException e) {
       _display.popup("Operação não suportada");
     }
-    /* FIXME
     catch (DisciplineNotFoundException e) {
       new NoSuchDisciplineException(e.getName());
     }
     catch (ProjectNotFoundException e) {
       new NoSuchProjectException(e.getName(), _disciplineName.value());
     }
-    */
   }
 
 }

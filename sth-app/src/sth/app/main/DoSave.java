@@ -43,9 +43,7 @@ public class DoSave extends Command<SchoolManager> {
     }
     catch (UnsupportedOperationException e) {
       _display.popup("Operação não suportada");
-    }
-
-
+    } // FIXME: remove
   }
 
 }

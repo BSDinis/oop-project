@@ -82,7 +82,7 @@ public class SchoolManager {
    */
   public boolean hasProfessor() {
     if (getLoggedId() != -1)
-      return _school.isAdministrative(getLoggedId());
+      return _school.isProfessor(getLoggedId());
     else
       return false;
   }
@@ -139,12 +139,10 @@ public class SchoolManager {
   }
 
   // string or projectSubmission ??? FIXME
-  public Map<Student, String> projectSubmissions(String discipline, String projectName)
+  public Map<Student, String> getProjectSubmissions(String discipline, String projectName)
     throws ProjectNotFoundException, DisciplineNotFoundException {
 
-    Discipline d = _school.getDiscipline(discipline);
-    if (d == null) throw new DisciplineNotFoundException(discipline);
-    Project p = d.getProject(projectName);
+    Project p = _school.getProject(discipline, projectName);
     if (p == null) throw new ProjectNotFoundException(projectName);
 
     return p.getSubmissions();
@@ -153,18 +151,14 @@ public class SchoolManager {
   public void closeProject(String discipline, String projectName)
     throws ProjectNotFoundException, DisciplineNotFoundException {
 
-    Discipline d = _school.getDiscipline(discipline);
-    if (d == null) throw new DisciplineNotFoundException(discipline);
-    Project p = d.getProject(projectName);
+    Project p = _school.getProject(discipline, projectName);
     if (p == null) throw new ProjectNotFoundException(projectName);
     p.close();
   }
 
   public void answerSurvey(String discipline, String projectName, int hours, String comment)
     throws ProjectNotFoundException, DisciplineNotFoundException {
-    Discipline d = _school.getDiscipline(discipline);
-    if (d == null) throw new DisciplineNotFoundException(discipline);
-    Project p = d.getProject(projectName);
+    Project p = _school.getProject(discipline, projectName);
     if (p == null) throw new ProjectNotFoundException(projectName);
 
     if (p.hasSurvey()) {

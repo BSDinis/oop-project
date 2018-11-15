@@ -3,13 +3,13 @@ package sth;
 import java.io.Serializable;
 
 /**
- * Professor implementation.
+ * Staffer implementation.
  */
-public class Professor 
+public class Staffer 
   extends Person 
   implements Serializable {
 
-  Professor(String n, String pN, int id) { super(n, pN, id); }
+  Staffer(String n, String pN, int id) { super(n, pN, id); }
 
   /** Serial number for serialization. */
   private static final long serialVersionUID = 201811151230L;

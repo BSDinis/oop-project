@@ -33,17 +33,18 @@ public class DoShowSurveyResults extends Command<SchoolManager> {
   /** @see pt.tecnico.po.ui.Command#execute() */
   @Override
   public final void execute() throws DialogException {
+    /*
     _form.parse();
     try {
       Collection<Survey> surveys = _receiver.getProjectSurveys(_disciplineName.value(), _projectName.value()); 
-      for (Survey s : surveys) {
+      for (Survey s : surveys) 
         _display.addLine(""+s); // FIXME
-      }
+
+      _display.display();
     }
     catch (UnsupportedOperationException e) {
       _display.popup("Operação não suportada");
     }
-    /* FIXME
     catch (DisciplineNotFoundException e) {
       new NoSuchDisciplineException(e.getName());
     }
