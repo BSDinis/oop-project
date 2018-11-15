@@ -8,6 +8,8 @@ import pt.tecnico.po.ui.Input;
 
 import sth.SchoolManager;
 
+import sth.app.exceptions.NoSuchProjectException;
+import sth.app.exceptions.NoSuchDisciplineException;
 import sth.exceptions.ProjectNotFoundException;
 import sth.exceptions.DisciplineNotFoundException;
 
@@ -51,7 +53,7 @@ public class DoAnswerSurvey extends Command<SchoolManager> {
       throw new NoSuchDisciplineException(e.getName());
     }
     catch (ProjectNotFoundException e) {
-      throw new NoSuchProjectException(e.getName());
+      throw new NoSuchProjectException(_disciplineName.value(), e.getName());
     }
 
   }
