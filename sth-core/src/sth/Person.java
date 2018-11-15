@@ -9,10 +9,16 @@ import java.io.Serializable;
 public class Person implements Serializable {
 
   /** Serial number for serialization. */
-  private static final long serialVersionUID = 201810051538L;
+  private static final long serialVersionUID = 201811151238L;
 
-  // FIXME
-  
-  public String toString() { return "<<Project :: to implement>>"; }
+  private String _name;
+  private String _phoneNumber;
+  private int _id;
+
+  Person(String n, String pN, int id) { _name = n; _phoneNumber = pN; _id = id; }
+
+  public void changePhoneNumber(String pN) { _phoneNumber = pN; }
+
+  public String toString() { return "<<Person :: to implement>>"; }
 
 }
