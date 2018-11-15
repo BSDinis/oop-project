@@ -4,8 +4,6 @@ import pt.tecnico.po.ui.Command;
 import pt.tecnico.po.ui.DialogException;
 import pt.tecnico.po.ui.Input;
 import sth.SchoolManager;
-import sth.app.exceptions.NoSuchPersonException;
-import sth.exceptions.NoSuchPersonIdException;
 
 /**
  * 4.2.1. Show person.
