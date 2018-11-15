@@ -25,6 +25,7 @@ public class DoShowAllPersons extends Command<SchoolManager> {
     for (Person p : people) {
       _display.addLine(""+p); // FIXME
     }
+    _display.display();
   }
 
 }

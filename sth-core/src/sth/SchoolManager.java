@@ -82,7 +82,7 @@ public class SchoolManager {
    */
   public boolean hasProfessor() {
     if (getLoggedId() != -1)
-      return _school.isAdministrative(getLoggedId());
+      return _school.isProfessor(getLoggedId());
     else
       return false;
   }
@@ -139,7 +139,7 @@ public class SchoolManager {
   }
 
   // string or projectSubmission ??? FIXME
-  public Map<Student, String> projectSubmissions(String discipline, String projectName)
+  public Map<Student, String> getProjectSubmissions(String discipline, String projectName)
     throws ProjectNotFoundException, DisciplineNotFoundException {
 
     Project p = _school.getProject(discipline, projectName);

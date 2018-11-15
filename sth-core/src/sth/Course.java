@@ -1,17 +1,17 @@
 package sth;
 
-import java.io.IOException;
 import java.io.Serializable;
-
-import java.lang.IllegalArgumentException;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
 
+import sth.exceptions.TooManyRepresentativesException;
+
 /**
- * Discipline implementation.
+ * Course implementation.
  */
 public class Course 
   implements Serializable {
@@ -22,20 +22,16 @@ public class Course
   private String _name;
 
   private int _maxRepresentatives;
-  private List<Student> _representatives;
+  private List<Student> _representatives = new ArrayList<Student>();
   private Map<String, Discipline> _disciplines = new TreeMap<String, Discipline>();
 
-  Course(String name, int maxRepresentatives, List<Student> reps, List<Discipline> disciplines) {
-    if (reps.size() > maxRepresentatives) throw new IllegalArgumentException();
+  Course(String name, int maxRepresentatives) {
     _maxRepresentatives = maxRepresentatives;
     _name = name;
-    _representatives = reps;
-
-    for (Discipline d : disciplines)
-      _disciplines.put(d.name(), d);
   }
-  
+
   public String name() { return _name; }
+  public Discipline addDiscipline(Discipline d) { _disciplines.put(d.name(), d); return d; } 
   public boolean hasDiscipline(String name) { return _disciplines.containsKey(name); }
   public Discipline getDiscipline(String name) { return _disciplines.get(name); } 
 
@@ -50,6 +46,18 @@ public class Course
       if (s.id() == id) return s;
 
     return null;
+  }
+
+  void electRepresentative(Student newRep) 
+    throws TooManyRepresentativesException {
+    if (_representatives.size() != _maxRepresentatives)
+      _representatives.add(newRep);
+    else
+      throw new TooManyRepresentativesException();
+  }
+  
+  void demoteRepresentative(Student oldRep) {
+    _representatives.remove(oldRep);
   }
 
   public String toString() { return "<<Course :: to implement>>"; }

@@ -1,6 +1,10 @@
 package sth;
 
-class SurveyResponse {
+import java.io.Serializable;
+
+class SurveyResponse 
+  implements Serializable {
+
   private Student _student;
   private int _hours;
   private String _comment;

@@ -3,8 +3,9 @@ package sth;
 import java.util.Map;
 import java.util.TreeMap;
 import sth.exceptions.ProjectNotOpenException;
+import java.io.Serializable;
 
-public class Project {
+public class Project implements Serializable {
   private String _name;
   private String _description;
   private Map<Student, String> _submissions = new TreeMap<Student, String>();

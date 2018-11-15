@@ -31,9 +31,10 @@ public class DoShowDisciplineSurveys extends Command<SchoolManager> {
     Collection<Survey> surveys; 
     try {
       surveys = _receiver.getDisciplineSurveys(_disciplineName.value()); 
-        for (Survey s : surveys) {
-          _display.addLine(""+s); // FIXME
-        }
+      for (Survey s : surveys) 
+        _display.addLine(""+s); // FIXME
+
+      _display.display();
     }
     catch (UnsupportedOperationException e) {
       _display.popup("Operação não suportada");

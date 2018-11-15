@@ -12,6 +12,9 @@ import java.util.List;
 import java.util.LinkedList;
 import java.util.ArrayList;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+
 import sth.exceptions.BadEntryException;
 import sth.exceptions.DisciplineNotFoundException;
 
@@ -30,21 +33,26 @@ class School implements Serializable {
   private Map<Integer, Staffer> _staffers = new TreeMap<Integer, Staffer>();
   private List<Course> _courses = new LinkedList<Course>();
 
-  public void addStudent(Student s) {
+  public Student addStudent(Student s) {
     _students.put(s.id(), s);
+    return s;
   }
 
-  public void addProfessor(Professor p) {
+  public Professor addProfessor(Professor p) {
     _professors.put(p.id(), p);
+    return p;
   }
 
-  public void addStaffer(Staffer s) {
+  public Staffer addStaffer(Staffer s) {
     _staffers.put(s.id(), s);
+    return s;
   }
 
-  public void addCourse(Course c) {
+  public Course addCourse(Course c) {
     _courses.add(c);
+    return c;
   }
+
 
   /**
    * @param filename
@@ -52,15 +60,15 @@ class School implements Serializable {
    * @throws IOException
    */
   void importFile(String filename)
-    throws IOException, BadEntryException, UnsupportedOperationException {
-    //FIXME implement text file reader
-    throw new UnsupportedOperationException();
+    throws IOException, BadEntryException {
+
+    BufferedReader in = new BufferedReader(new FileReader(filename));
+    PersonParser p = new PersonParser(this, in);
+    while (p.parsePerson()); // parse all people
   }
   
   void saveToFile(String filename)
     throws IOException, UnsupportedOperationException  {
-    //FIXME implement text file writer
-    throw new UnsupportedOperationException();
   }
 
   public boolean lookupId(int id) {
@@ -117,6 +125,24 @@ class School implements Serializable {
 
   public Professor getProfessorById(int id) {
     return _professors.get(id);
+  }
+
+  boolean hasCourse(String name) {
+    for (Course c : _courses) {
+      if (c.name().equals(name))
+        return true;
+    }
+
+    return false;
+  }
+
+  Course getCourseByName(String name) {
+    for (Course c : _courses) {
+      if (c.name().equals(name))
+        return c;
+    }
+
+    return null;
   }
 
   public Collection<Person> getPersonByName(String name) {

@@ -32,5 +32,6 @@ public class DoSearchPerson extends Command<SchoolManager> {
     for (Person p : searchResult) {
       _display.addLine(""+p); // FIXME 
     }
+    _display.display();
   }
 }
