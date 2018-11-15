@@ -7,6 +7,9 @@ import pt.tecnico.po.ui.DialogException;
 import pt.tecnico.po.ui.Input;
 import sth.SchoolManager;
 
+import sth.app.exceptions.NoSuchProjectException;
+import sth.app.exceptions.NoSuchDisciplineException;
+
 import sth.exceptions.ProjectNotFoundException;
 import sth.exceptions.DisciplineNotFoundException;
 
@@ -41,8 +44,9 @@ public class DoCloseProject extends Command<SchoolManager> {
       new NoSuchDisciplineException(e.getName());
     }
     catch (ProjectNotFoundException e) {
-      new NoSuchProjectException(e.getName());
+      new NoSuchProjectException(e.getName(), _disciplineName.value());
     }
+
   }
 
 }

@@ -8,8 +8,8 @@ import pt.tecnico.po.ui.DialogException;
 import pt.tecnico.po.ui.Input;
 import sth.SchoolManager;
 import sth.Student;
-import sth.exceptions.ProjectNotFoundException;
 import sth.exceptions.DisciplineNotFoundException;
+import sth.app.exceptions.NoSuchDisciplineException;
 
 /**
  * 4.3.4. Show course students.
@@ -41,9 +41,6 @@ public class DoShowDisciplineStudents extends Command<SchoolManager> {
     }
     catch (DisciplineNotFoundException e) {
       new NoSuchDisciplineException(e.getName());
-    }
-    catch (ProjectNotFoundException e) {
-      new NoSuchProjectException(e.getName());
     }
   }
 
