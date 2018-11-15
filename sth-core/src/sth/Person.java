@@ -19,6 +19,10 @@ public class Person implements Serializable {
 
   public void changePhoneNumber(String pN) { _phoneNumber = pN; }
 
+  public int id() { return _id; }
+  public String name() { return _name; }
+  public String phoneNumber() { return _phoneNumber; }
+
   public String toString() { return "<<Person :: to implement>>"; }
 
 }
