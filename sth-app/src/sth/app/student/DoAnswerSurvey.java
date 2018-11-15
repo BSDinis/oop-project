@@ -5,7 +5,11 @@ import java.lang.UnsupportedOperationException;
 import pt.tecnico.po.ui.Command;
 import pt.tecnico.po.ui.DialogException;
 import pt.tecnico.po.ui.Input;
+
 import sth.SchoolManager;
+
+import sth.exceptions.ProjectNotFoundException;
+import sth.exceptions.DisciplineNotFoundException;
 
 /**
  * 4.4.2. Answer survey.
@@ -43,7 +47,12 @@ public class DoAnswerSurvey extends Command<SchoolManager> {
     catch (UnsupportedOperationException e) {
       _display.popup("Operação não suportada");
     }
-    // FIXME : other exceptions
+    catch (DisciplineNotFoundException e) {
+      throw new NoSuchDisciplineException(e.getName());
+    }
+    catch (ProjectNotFoundException e) {
+      throw new NoSuchProjectException(e.getName());
+    }
 
   }
 
