@@ -142,9 +142,7 @@ public class SchoolManager {
   public Map<Student, String> projectSubmissions(String discipline, String projectName)
     throws ProjectNotFoundException, DisciplineNotFoundException {
 
-    Discipline d = _school.getDiscipline(discipline);
-    if (d == null) throw new DisciplineNotFoundException(discipline);
-    Project p = d.getProject(projectName);
+    Project p = _school.getProject(discipline, projectName);
     if (p == null) throw new ProjectNotFoundException(projectName);
 
     return p.getSubmissions();
@@ -153,18 +151,14 @@ public class SchoolManager {
   public void closeProject(String discipline, String projectName)
     throws ProjectNotFoundException, DisciplineNotFoundException {
 
-    Discipline d = _school.getDiscipline(discipline);
-    if (d == null) throw new DisciplineNotFoundException(discipline);
-    Project p = d.getProject(projectName);
+    Project p = _school.getProject(discipline, projectName);
     if (p == null) throw new ProjectNotFoundException(projectName);
     p.close();
   }
 
   public void answerSurvey(String discipline, String projectName, int hours, String comment)
     throws ProjectNotFoundException, DisciplineNotFoundException {
-    Discipline d = _school.getDiscipline(discipline);
-    if (d == null) throw new DisciplineNotFoundException(discipline);
-    Project p = d.getProject(projectName);
+    Project p = _school.getProject(discipline, projectName);
     if (p == null) throw new ProjectNotFoundException(projectName);
 
     if (p.hasSurvey()) {

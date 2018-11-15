@@ -19,18 +19,21 @@ public class Discipline
   /** Serial number for serialization. */
   private static final long serialVersionUID = 201811151044L;
 
+  private String _name;
   private int _capacity;
   private List<Student> _students;
   private List<Professor> _professors;
   private Map<String, Project> _projects = new TreeMap<String, Project>();
 
-  Discipline(int cap, List<Student> students, List<Professor> profs) {
+  Discipline(String name, int cap, List<Student> students, List<Professor> profs) {
     if (students.size() > cap) throw new IllegalArgumentException();
+    _name = name;
     _capacity = cap;
     _students = students;
     _professors = profs;
   }
   
+  public String name() { return _name; }
   public void addProject(String name) { _projects.put(name, new Project(name)); }
   public boolean hasProject(String name) { return _projects.containsKey(name); }
   public Project getProject(String name) { return _projects.get(name); }
