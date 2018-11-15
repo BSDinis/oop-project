@@ -1,7 +1,7 @@
 package sth.exceptions;
 
 /** Exception thrown when the requested dicipline does not exist. */
-public class NoSuchDisciplineException extends Exception {
+public class DisciplineNotFoundException extends Exception {
 
   /** Serial number for serialization. */
   private static final long serialVersionUID = 201811140050L;
@@ -12,7 +12,7 @@ public class NoSuchDisciplineException extends Exception {
   /**
    * @param name
    */
-  public NoSuchDisciplineException(String name) {
+  public DisciplineNotFoundException(String name) {
     _name = name;
   }
 

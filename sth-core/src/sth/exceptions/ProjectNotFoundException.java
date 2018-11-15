@@ -1,7 +1,7 @@
 package sth.exceptions;
 
 /** Exception thrown when the requested project does not exist. */
-public class NoSuchProjectException extends Exception {
+public class ProjectNotFoundException extends Exception {
 
   /** Serial number for serialization. */
   private static final long serialVersionUID = 201811140050L;
@@ -12,7 +12,7 @@ public class NoSuchProjectException extends Exception {
   /**
    * @param name
    */
-  public NoSuchProjectException(String name) {
+  public ProjectNotFoundException(String name) {
     _name = name;
   }
 
