@@ -11,24 +11,23 @@ public class Project {
   private Survey _survey = null;
   private boolean _open = true;
 
-  public Project(String name, String description) {
+  Project(String name, String description) {
     _name = name; 
     _description = description;
   }
 
-  public Project(String name) { this(name, "empty description"); }
+  Project(String name) { this(name, "empty description"); }
 
-  public void close() { _open = false; }
+  public void close() { 
+    _open = false; 
+    if (hasSurvey()) _survey.open();
+  }
   
-  public void createSurvey() 
-    throw ProjectNotOpenException { 
-      if (_open) 
-        _survey = new Survey(); 
-      else 
-        throw new ProjectNotOpenException(_name);
+  public void createSurvey() { 
+      _survey = new Survey(_open); 
     }
   public boolean hasSurvey() { return _survey != null; }
-
+  public Survey getSurvey() { return _survey; }
 
   public void acceptSubmission(Student student, String submission)
     throws ProjectNotOpenException {

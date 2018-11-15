@@ -19,7 +19,7 @@ public class Discipline
   private List<Professor> _professors;
   private Map<String, Project> _projects = new TreeMap<String, Project>();
 
-  public Discipline(int cap, List<Student> students, List<Professor> profs) {
+  Discipline(int cap, List<Student> students, List<Professor> profs) {
     if (students.size() > cap) throw IllegalArgumentException();
     _capacity = cap;
     _students = students;
