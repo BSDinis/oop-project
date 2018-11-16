@@ -4,16 +4,21 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.lang.UnsupportedOperationException;
 
+import java.util.Comparator;
+
 import java.util.Map;
 import java.util.TreeMap;
 
 import java.util.Collection;
+import java.util.TreeSet;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.ArrayList;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 
 import sth.exceptions.BadEntryException;
 import sth.exceptions.DisciplineNotFoundException;
@@ -33,6 +38,17 @@ class School implements Serializable {
   private Map<Integer, Staffer> _staffers = new TreeMap<Integer, Staffer>();
   private List<Course> _courses = new LinkedList<Course>();
 
+  private Comparator<Person> PersonIdComparator =  new Comparator<Person>() {
+      public int compare(Person p1, Person p2) { return p1.id() - p2.id(); }
+    };
+
+  private void reset() {
+    _currentId = 100000;
+    _students = new TreeMap<Integer, Student>();
+    _professors = new TreeMap<Integer, Professor>();
+    _staffers = new TreeMap<Integer, Staffer>();
+    _courses = new LinkedList<Course>();
+  }
   public Student addStudent(Student s) {
     _students.put(s.id(), s);
     return s;
@@ -61,14 +77,21 @@ class School implements Serializable {
    */
   void importFile(String filename)
     throws IOException, BadEntryException {
-
+    reset();
     BufferedReader in = new BufferedReader(new FileReader(filename));
     PersonParser p = new PersonParser(this, in);
     while (p.parsePerson()); // parse all people
+    in.close();
   }
   
-  void saveToFile(String filename)
-    throws IOException, UnsupportedOperationException  {
+  void saveToFile(String filename) throws IOException {
+    BufferedWriter out = new BufferedWriter(new FileWriter(filename));
+    
+    DisciplinePrinter printer = new DisciplineToDatafilePrinter();
+    for (Person p : people()) {
+      out.write(p.toString(printer) + "\n");
+    }
+    out.close();
   }
 
   public boolean lookupId(int id) {
@@ -96,7 +119,8 @@ class School implements Serializable {
   }
 
   public Collection<Person> people() {
-    Collection<Person> allPeople = new ArrayList<Person>();
+    Collection<Person> allPeople = new TreeSet<Person>(PersonIdComparator);
+
     allPeople.addAll(_students.values());
     allPeople.addAll(_staffers.values());
     allPeople.addAll(_professors.values());
@@ -148,9 +172,12 @@ class School implements Serializable {
   public Collection<Person> getPersonByName(String name) {
     Collection<Person> result = new ArrayList<Person>();
 
-    for (Person p : people())
-      if (name.equals(p.name()))
+    for (Person p : people()) {
+      if (p.name().contains(name))
         result.add(p);
+    }
+
+
 
     return result;
   }

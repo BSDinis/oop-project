@@ -11,18 +11,15 @@ import sth.exceptions.NoSuchPersonIdException;
 import sth.exceptions.ProjectNotFoundException;
 import sth.exceptions.DisciplineNotFoundException;
 
-//FIXME import other classes if needed
-
 /**
  * The façade class.
  */
 public class SchoolManager {
-  //FIXME add object attributes if needed
   private School _school = new School();
   private int _loggedId = -1;
+  private boolean _needUpdate = false;
+  private String _filename = null;
 
-  //FIXME implement constructors if needed
-  
   private int getLoggedId() { return _loggedId; }
   private void setLoggedId(int id) { _loggedId = id; }
 
@@ -37,6 +34,7 @@ public class SchoolManager {
     throws ImportFileException {
     try {
       _school.importFile(datafile);
+      _needUpdate = false;
     } catch (IOException | BadEntryException e) {
       throw new ImportFileException(e);
     }
@@ -47,7 +45,12 @@ public class SchoolManager {
    */
   public void saveToFile(String datafile)
     throws IOException {
-    _school.saveToFile(datafile);
+    if (_filename == null ||  _needUpdate || !_filename.equals(datafile)) {
+      _filename = datafile;
+      _school.saveToFile(_filename);
+    }
+
+    _needUpdate = false;
   }
 
   /**
@@ -109,40 +112,44 @@ public class SchoolManager {
 
   public void changePhoneNumber(String newNumber) {
     Person p = getLoggedIn();
-    if (p != null) // in principle, the logged in person exists; this is being over cautious
+    if (p != null) {
+      // in principle, the logged in person exists; this is being over cautious
       p.changePhoneNumber(newNumber);
+      _needUpdate = true;
+    }
   }
 
-  public Collection<Person> searchPerson(String name)
-    throws UnsupportedOperationException {
+  public Collection<Person> searchPerson(String name) {
     return _school.getPersonByName(name);
   }
 
-  public Collection<Person> allPersons() 
-    throws UnsupportedOperationException {
+  public Collection<Person> allPersons() {
     return _school.people(); 
   }
 
-  // missing project description ?
-  public void createProject(String discipline, String projectName)
-    throws DisciplineNotFoundException {
-    Discipline d = _school.getDiscipline(discipline);
+  public void createProject(String discipline, String projectName) throws DisciplineNotFoundException {
+    Professor prof = getProfessorLoggedIn();
+    Discipline d = prof.getDiscipline(discipline);
     if (d == null) throw new DisciplineNotFoundException(discipline);
     d.addProject(projectName);
+    _needUpdate = true;
   }
 
   public Collection<Student> getDisciplineStudents(String discipline)
     throws DisciplineNotFoundException {
-    Discipline d = _school.getDiscipline(discipline);
+    Professor prof = getProfessorLoggedIn();
+    Discipline d = prof.getDiscipline(discipline);
     if (d == null) throw new DisciplineNotFoundException(discipline);
     return d.getStudents();
   }
 
-  // string or projectSubmission ??? FIXME
   public Map<Student, String> getProjectSubmissions(String discipline, String projectName)
     throws ProjectNotFoundException, DisciplineNotFoundException {
 
-    Project p = _school.getProject(discipline, projectName);
+    Professor prof = getProfessorLoggedIn();
+    Discipline d = prof.getDiscipline(discipline);
+    if (d == null) throw new DisciplineNotFoundException(discipline);
+    Project p = d.getProject(projectName);
     if (p == null) throw new ProjectNotFoundException(projectName);
 
     return p.getSubmissions();
@@ -151,9 +158,13 @@ public class SchoolManager {
   public void closeProject(String discipline, String projectName)
     throws ProjectNotFoundException, DisciplineNotFoundException {
 
+    Professor prof = getProfessorLoggedIn();
+    Discipline d = prof.getDiscipline(discipline);
+    if (d == null) throw new DisciplineNotFoundException(discipline);
     Project p = _school.getProject(discipline, projectName);
     if (p == null) throw new ProjectNotFoundException(projectName);
     p.close();
+    _needUpdate = true;
   }
 
   public void answerSurvey(String discipline, String projectName, int hours, String comment)
@@ -164,11 +175,13 @@ public class SchoolManager {
     if (p.hasSurvey()) {
       Survey s = p.getSurvey();
       s.addResponse(getStudentLoggedIn(), hours, comment);
+      _needUpdate = true;
     }
   }
 
   public void deliverProject(String discipline, String project, String comment)
     throws UnsupportedOperationException {
+    _needUpdate = true;
     throw new UnsupportedOperationException();
   }
 
@@ -192,9 +205,8 @@ public class SchoolManager {
     throw new UnsupportedOperationException();
   }
 
-  public String getFilename() 
-    throws UnsupportedOperationException {
-    throw new UnsupportedOperationException();
+  public String getFilename() {
+    return _filename;
   }
 
   public Person getLoggedIn()
@@ -204,28 +216,33 @@ public class SchoolManager {
 
   public void createSurvey(String discipline, String project)
     throws UnsupportedOperationException {
+    _needUpdate = true;
     throw new UnsupportedOperationException();
   }
 
   public void finishSurvey(String discipline, String project)
     throws UnsupportedOperationException {
-      throw new UnsupportedOperationException();
-    }
+    _needUpdate = true;
+    throw new UnsupportedOperationException();
+  }
 
   public void openSurvey(String discipline, String project)
     throws UnsupportedOperationException {
-      throw new UnsupportedOperationException();
-    }
+    _needUpdate = true;
+    throw new UnsupportedOperationException();
+  }
 
   public void closeSurvey(String discipline, String project)
     throws UnsupportedOperationException {
-      throw new UnsupportedOperationException();
-    }
+    _needUpdate = true;
+    throw new UnsupportedOperationException();
+  }
 
   public void cancelSurvey(String discipline, String project)
     throws UnsupportedOperationException {
-      throw new UnsupportedOperationException();
-    }
+    _needUpdate = true;
+    throw new UnsupportedOperationException();
+  }
 
   // more to do
 }

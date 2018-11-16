@@ -28,12 +28,14 @@ public class Discipline
   private List<Professor> _professors = new LinkedList<Professor>();
   private Map<String, Project> _projects = new TreeMap<String, Project>();
 
-  Discipline(String name, int cap) {
+  Discipline(String name, int cap, Course c) {
     _name = name;
     _capacity = cap;
+    _course = c;
   }
   
   public String name() { return _name; }
+  public Course course() { return _course; }
 
   public void enrollStudent(Student s) 
     throws StudentAlreadyEnrolledException,
@@ -61,6 +63,5 @@ public class Discipline
     p.addDiscipline(this);
   }
 
-  public String toString() { return "<<Discipline :: to implement>>"; }
-
+  public String toString() { DisciplinePrinter printer = new DisciplineDefaultPrinter(); return printer.format(this); }
 }

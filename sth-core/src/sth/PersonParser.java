@@ -33,9 +33,11 @@ class PersonParser {
   public boolean parsePerson() 
     throws IOException, BadEntryException{
 
+    if (_firstLine == null) return false;
+
     _firstLine = acceptPersonParams(_firstLine);
     generatePerson();
-    return _firstLine != null;
+    return true;
   }
 
   private void clear() { _lines = new LinkedList<List<String>>(); }
@@ -75,7 +77,7 @@ class PersonParser {
     if (lines.size() != 0) 
       throw new BadEntryException(reconstruct(Arrays.asList(descriptor, String.valueOf(id), phoneNumber, name)));
     
-    _school.addStaffer(new Staffer(name, phoneNumber, id));
+    _school.addStaffer(new Staffer(name, phoneNumber, id, _school));
   }
 
 
@@ -83,7 +85,7 @@ class PersonParser {
       int id, String phoneNumber, String name) 
     throws BadEntryException {
 
-    Professor p = _school.addProfessor(new Professor(name, phoneNumber, id));
+    Professor p = _school.addProfessor(new Professor(name, phoneNumber, id, _school));
 
     for (List<String> fields : lines) {
       String courseName = fields.get(0).substring(2);
@@ -103,7 +105,7 @@ class PersonParser {
       }
       else {
         // magic number: the Ultimate Question of Life, The Universe and Everything is: what is the maximum number (in hex, obviously) of students in a hypothetical class of the OOP project; those philosophers would be happy
-        d = c.addDiscipline(new Discipline(disciplineName, 0x42));
+        d = c.addDiscipline(new Discipline(disciplineName, 0x42, c));
       }
 
       try {
@@ -122,8 +124,7 @@ class PersonParser {
     if (lines.size() > 6) 
       throw new BadEntryException(reconstruct(lines.get(8)));
 
-    Student s = _school.addStudent(new Student(name, phoneNumber, id));
-    String studentsCourse = null;
+    Student s = _school.addStudent(new Student(name, phoneNumber, id, _school));
 
     for (List<String> fields : lines) {
       String courseName = fields.get(0).substring(2);
@@ -137,8 +138,9 @@ class PersonParser {
         c = _school.addCourse(new Course(courseName, 7)); // magic number: max number of representatives
       }
 
-      if (studentsCourse == null) {
-        studentsCourse = courseName;
+      if (s.getCourse() == null) {
+        s.enrollInCourse(c);
+
         if (isRepresentativeDescriptor(descriptor)) {
           try {
             c.electRepresentative(s);
@@ -148,7 +150,7 @@ class PersonParser {
           }
         }
       }
-      else if (!studentsCourse.equals(courseName)) {
+      else if (!courseName.equals(s.getCourse().name())) {
         throw new BadEntryException(reconstruct(fields));
       }
       
@@ -158,7 +160,7 @@ class PersonParser {
       }
       else {
         // magic number: the Ultimate Question of Life, The Universe and Everything is: what is the maximum number (in hex, obviously) of students in a hypothetical class of the OOP project; those philosophers would be happy
-        d = c.addDiscipline(new Discipline(disciplineName, 0x42));
+        d = c.addDiscipline(new Discipline(disciplineName, 0x42, c));
       }
 
       try {

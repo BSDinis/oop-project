@@ -46,10 +46,10 @@ public class DoShowSurveyResults extends Command<SchoolManager> {
       _display.popup("Operação não suportada");
     }
     catch (DisciplineNotFoundException e) {
-      new NoSuchDisciplineException(e.getName());
+      throw new NoSuchDisciplineException(e.getName());
     }
     catch (ProjectNotFoundException e) {
-      new NoSuchProjectException(e.getName(), _disciplineName.value());
+      throw new NoSuchProjectException(_disciplineName.value(), e.getName());
     }
     */
   }
