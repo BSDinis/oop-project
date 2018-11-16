@@ -31,9 +31,6 @@ import sth.exceptions.DuplicateCourseException;
  */
 class School implements Serializable {
 
-  /** Serial number for serialization. */
-  private static Final long serialVersionUID = 201810051538L;
-
   /**
    * Id to assign comming numbers
    */
@@ -62,9 +59,10 @@ class School implements Serializable {
   /**
    * Comparator for people
    */
-  private Comparator<Person> PersonIdComparator =  new Comparator<Person>() {
-      public int compare(Person p1, Person p2) { return p1.id() - p2.id(); }
-    };
+  class PersonComparator implements Comparator<Person>, Serializable {
+    public int compare(Person p1, Person p2) { return p1.id() - p2.id(); }
+  }
+  private Comparator<Person> PersonIdComparator =  new PersonComparator();
 
   /**
    * Reset the school to its original settings
@@ -150,23 +148,6 @@ class School implements Serializable {
     in.close();
   }
   
-  /**
-   * Saves to outputFile
-   *
-   * @param filename
-   * @throws BadEntryException
-   * @throws IOException
-   */
-  void saveToFile(String filename) throws IOException {
-    BufferedWriter out = new BufferedWriter(new FileWriter(filename));
-    
-    DisciplinePrinter printer = new DisciplineToDatafilePrinter();
-    for (Person p : people()) {
-      out.write(p.toString(printer) + "\n");
-    }
-    out.close();
-  }
-
   /**
    * Check if an id is taken
    *

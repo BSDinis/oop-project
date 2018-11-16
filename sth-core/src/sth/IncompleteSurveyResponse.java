@@ -1,7 +1,8 @@
 package sth;
 
 import java.io.Serializable;
-class IncompleteSurveyResponse implements Serializable {
+class IncompleteSurveyResponse 
+  implements Serializable {
   private int _hours;
   private String _comment;
   

@@ -30,7 +30,7 @@ public class DoSave extends Command<SchoolManager> {
     }
 
     try {
-      _receiver.saveToFile(filename);
+      _receiver.save(filename);
     }
     catch (IOException e) {
       _display.popup(e.getMessage());

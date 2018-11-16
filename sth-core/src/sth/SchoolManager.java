@@ -1,7 +1,14 @@
 package sth;
 
 import java.io.IOException;
+import java.io.FileNotFoundException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+
 import java.lang.UnsupportedOperationException;
+
 import java.util.Collection;
 import java.util.Map;
 
@@ -40,17 +47,40 @@ public class SchoolManager {
     }
   }
 
-  /**
-   * @param datafile
-   */
-  public void saveToFile(String datafile)
+  public void save(String datafile) 
     throws IOException {
-    if (_filename == null ||  _needUpdate || !_filename.equals(datafile)) {
+    if (_filename == null || !_filename.equals(datafile) || _needUpdate) {
+      ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(datafile));
+      oos.writeObject(_school);
+      oos.close();
       _filename = datafile;
-      _school.saveToFile(_filename);
+      _needUpdate = false;
+    }
+  }
+
+  public void load(String datafile) 
+    throws FileNotFoundException, ImportFileException, NoSuchPersonIdException {
+
+    School newSchool;
+    try {
+      ObjectInputStream ois = new ObjectInputStream(new FileInputStream(datafile));
+      newSchool = (School) ois.readObject();
+      ois.close();
+    }
+    catch (FileNotFoundException e) {
+      throw new FileNotFoundException(e.getMessage()); // do not convert FileNotFound to ImportFile
+    }
+    catch (IOException | ClassNotFoundException e) {
+      throw new ImportFileException(e); 
     }
 
-    _needUpdate = false;
+    if (!newSchool.lookupId(getLoggedId())) 
+      throw new NoSuchPersonIdException(getLoggedId());
+    else {
+      _school = newSchool;
+      _filename = datafile;
+      _needUpdate = false;
+    }
   }
 
   /**
@@ -209,8 +239,7 @@ public class SchoolManager {
     return _filename;
   }
 
-  public Person getLoggedIn()
-    throws UnsupportedOperationException {
+  public Person getLoggedIn() {
     return _school.getPersonById(getLoggedId()); 
   }
 

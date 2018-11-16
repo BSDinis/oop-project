@@ -2,6 +2,7 @@ package sth;
 
 import java.io.IOException;
 import java.io.BufferedReader;
+import java.io.Serializable;
 
 import java.util.List;
 import java.util.LinkedList;
@@ -18,7 +19,7 @@ import sth.exceptions.EnrollmentLimitReachedException;
 import sth.exceptions.DuplicatePersonException;
 import sth.exceptions.DuplicateCourseException;
 
-class PersonParser {
+class PersonParser implements Serializable {
   private LinkedList<List<String>> _lines = new LinkedList<List<String>>();
   BufferedReader _in;
   String _firstLine;
