@@ -2,7 +2,6 @@ package sth;
 
 import java.io.Serializable;
 
-import java.lang.IllegalArgumentException;
 import sth.exceptions.StudentAlreadyEnrolledException;
 import sth.exceptions.ProfessorAlreadyTeachingException;
 import sth.exceptions.DisciplineLimitReachedException;
@@ -15,9 +14,6 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.TreeMap;
 
-/**
- * Discipline implementation.
- */
 public class Discipline 
   implements Serializable {
 

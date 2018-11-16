@@ -10,12 +10,13 @@ import java.util.Arrays;
 
 import sth.exceptions.BadEntryException;
 import sth.exceptions.TooManyRepresentativesException;
-import sth.exceptions.DisciplineNotFoundException;
 import sth.exceptions.ProfessorAlreadyTeachingException;
 import sth.exceptions.StudentAlreadyEnrolledException;
 import sth.exceptions.AlienStudentException;
 import sth.exceptions.DisciplineLimitReachedException;
 import sth.exceptions.EnrollmentLimitReachedException;
+import sth.exceptions.DuplicatePersonException;
+import sth.exceptions.DuplicateCourseException;
 
 class PersonParser {
   private LinkedList<List<String>> _lines = new LinkedList<List<String>>();
@@ -75,38 +76,52 @@ class PersonParser {
     throws BadEntryException {
 
     if (lines.size() != 0) 
-      throw new BadEntryException(reconstruct(Arrays.asList(descriptor, String.valueOf(id), phoneNumber, name)));
+      throw new BadEntryException(reconstruct(descriptor, id, phoneNumber, name));
     
-    _school.addStaffer(new Staffer(name, phoneNumber, id, _school));
+    try {
+      _school.addStaffer(new Staffer(name, phoneNumber, id, _school));
+    } catch (DuplicatePersonException e) {
+      throw new BadEntryException(reconstruct(descriptor, id, phoneNumber, name));
+    }
   }
 
+
+  private Course generateCourseIfNeeded(String courseName) {
+    try {
+      return _school.addCourse(new Course(courseName, 7)); // magic number: max number of representatives
+    }
+    catch (DuplicateCourseException e) {
+      return _school.getCourseByName(courseName);
+    }
+  }
+
+
+  private Discipline generateDisciplineIfNeeded(Course c, String disciplineName) {
+    if (c.hasDiscipline(disciplineName)) {
+      return c.getDiscipline(disciplineName);
+    }
+    // magic number: the Ultimate Question of Life, The Universe and Everything is: what is the maximum number (in hex, obviously) of students in a hypothetical class of the OOP project; those philosophers would be happy
+    return c.addDiscipline(new Discipline(disciplineName, 0x42, c));
+  }
 
   private void generateProfessor(String descriptor, List<List<String>> lines,
       int id, String phoneNumber, String name) 
     throws BadEntryException {
 
-    Professor p = _school.addProfessor(new Professor(name, phoneNumber, id, _school));
+
+    Professor p;
+    try {
+      p = _school.addProfessor(new Professor(name, phoneNumber, id, _school));
+    } catch (DuplicatePersonException e) {
+      throw new BadEntryException(reconstruct(descriptor, id, phoneNumber, name));
+    }
 
     for (List<String> fields : lines) {
       String courseName = fields.get(0).substring(2);
       String disciplineName = fields.get(1);
 
-      Course c;
-      if (_school.hasCourse(courseName)) {
-        c = _school.getCourseByName(courseName);
-      }
-      else {
-        c = _school.addCourse(new Course(courseName, 7)); // magic number: max number of representatives
-      }
-
-      Discipline d;
-      if (c.hasDiscipline(disciplineName)) {
-        d = c.getDiscipline(disciplineName);
-      }
-      else {
-        // magic number: the Ultimate Question of Life, The Universe and Everything is: what is the maximum number (in hex, obviously) of students in a hypothetical class of the OOP project; those philosophers would be happy
-        d = c.addDiscipline(new Discipline(disciplineName, 0x42, c));
-      }
+      Course c = generateCourseIfNeeded(courseName);
+      Discipline d = generateDisciplineIfNeeded(c, disciplineName);
 
       try {
         d.addProfessor(p);
@@ -124,19 +139,18 @@ class PersonParser {
     if (lines.size() > 6) 
       throw new BadEntryException(reconstruct(lines.get(8)));
 
-    Student s = _school.addStudent(new Student(name, phoneNumber, id, _school));
+    Student s;
+    try {
+      s = _school.addStudent(new Student(name, phoneNumber, id, _school));
+    } catch (DuplicatePersonException e) {
+      throw new BadEntryException(reconstruct(descriptor, id, phoneNumber, name));
+    }
 
     for (List<String> fields : lines) {
       String courseName = fields.get(0).substring(2);
       String disciplineName = fields.get(1);
 
-      Course c;
-      if (_school.hasCourse(courseName)) {
-        c = _school.getCourseByName(courseName);
-      }
-      else {
-        c = _school.addCourse(new Course(courseName, 7)); // magic number: max number of representatives
-      }
+      Course c = generateCourseIfNeeded(courseName);
 
       if (s.getCourse() == null) {
         s.enrollInCourse(c);
@@ -153,16 +167,9 @@ class PersonParser {
       else if (!courseName.equals(s.getCourse().name())) {
         throw new BadEntryException(reconstruct(fields));
       }
-      
-      Discipline d;
-      if (c.hasDiscipline(disciplineName)) {
-        d = c.getDiscipline(disciplineName);
-      }
-      else {
-        // magic number: the Ultimate Question of Life, The Universe and Everything is: what is the maximum number (in hex, obviously) of students in a hypothetical class of the OOP project; those philosophers would be happy
-        d = c.addDiscipline(new Discipline(disciplineName, 0x42, c));
-      }
 
+      Discipline d = generateDisciplineIfNeeded(c, disciplineName);
+      
       try {
         d.enrollStudent(s);
       }
@@ -185,6 +192,11 @@ class PersonParser {
     }
 
     return result;
+  }
+
+  // special case
+  private String reconstruct(String descriptor, int id, String phoneNumber, String name) {
+    return reconstruct(Arrays.asList(descriptor, String.valueOf(id), phoneNumber, name));
   }
 
   /**

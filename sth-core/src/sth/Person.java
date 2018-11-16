@@ -2,9 +2,6 @@ package sth;
 
 import java.io.Serializable;
 
-/**
- * Person implementation.
- */
 public class Person implements Serializable {
   private static final long serialVersionUID = 201811151238L;
 

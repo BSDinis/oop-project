@@ -41,6 +41,4 @@ public class Project implements Serializable {
   public Map<Student, String> getSubmissions() {
     return _submissions;
   }
-
-  public String toString() { return "<<Project :: to implement>>"; }
 }
