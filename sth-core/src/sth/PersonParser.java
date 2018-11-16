@@ -13,7 +13,9 @@ import sth.exceptions.TooManyRepresentativesException;
 import sth.exceptions.DisciplineNotFoundException;
 import sth.exceptions.ProfessorAlreadyTeachingException;
 import sth.exceptions.StudentAlreadyEnrolledException;
+import sth.exceptions.AlienStudentException;
 import sth.exceptions.DisciplineLimitReachedException;
+import sth.exceptions.EnrollmentLimitReachedException;
 
 class PersonParser {
   private LinkedList<List<String>> _lines = new LinkedList<List<String>>();
@@ -117,7 +119,7 @@ class PersonParser {
       int id, String phoneNumber, String name) 
     throws BadEntryException {
 
-    if (lines.size() > 7) 
+    if (lines.size() > 6) 
       throw new BadEntryException(reconstruct(lines.get(8)));
 
     Student s = _school.addStudent(new Student(name, phoneNumber, id));
@@ -162,7 +164,10 @@ class PersonParser {
       try {
         d.enrollStudent(s);
       }
-      catch (StudentAlreadyEnrolledException | DisciplineLimitReachedException e) {
+      catch (StudentAlreadyEnrolledException 
+          | AlienStudentException 
+          | EnrollmentLimitReachedException 
+          | DisciplineLimitReachedException e) {
         throw new BadEntryException(reconstruct(fields));
       }
     }

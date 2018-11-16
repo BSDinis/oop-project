@@ -6,6 +6,8 @@ import java.lang.IllegalArgumentException;
 import sth.exceptions.StudentAlreadyEnrolledException;
 import sth.exceptions.ProfessorAlreadyTeachingException;
 import sth.exceptions.DisciplineLimitReachedException;
+import sth.exceptions.AlienStudentException;
+import sth.exceptions.EnrollmentLimitReachedException;
 
 import java.util.Collection;
 import java.util.List;
@@ -20,6 +22,7 @@ public class Discipline
   implements Serializable {
 
   private String _name;
+  private Course _course;
   private int _capacity;
   private List<Student> _students = new LinkedList<Student>();
   private List<Professor> _professors = new LinkedList<Professor>();
@@ -33,9 +36,14 @@ public class Discipline
   public String name() { return _name; }
 
   public void enrollStudent(Student s) 
-    throws StudentAlreadyEnrolledException, DisciplineLimitReachedException {
+    throws StudentAlreadyEnrolledException,
+                    DisciplineLimitReachedException,
+                    EnrollmentLimitReachedException,
+                    AlienStudentException {
+    if (!s.getCourse().equals(_course)) throw new AlienStudentException();
     if (_students.contains(s)) throw new StudentAlreadyEnrolledException();
     if (_students.size() == _capacity) throw new DisciplineLimitReachedException();
+    s.enrollInDiscipline(this);
     _students.add(s);
   }
   public Collection<Student> getStudents() { return _students; }
@@ -50,6 +58,7 @@ public class Discipline
       throw new ProfessorAlreadyTeachingException();
 
     _professors.add(p);
+    p.addDiscipline(this);
   }
 
   public String toString() { return "<<Discipline :: to implement>>"; }
