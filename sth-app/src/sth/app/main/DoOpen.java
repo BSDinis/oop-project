@@ -41,9 +41,6 @@ public class DoOpen extends Command<SchoolManager> {
     catch (ImportFileException e) {
       _display.popup(e.getMessage());
     }
-    catch (UnsupportedOperationException e) {
-      _display.popup("Operação não suportada");
-    } // FIXME: remove
   }
 
 }
