@@ -9,6 +9,9 @@ import sth.SchoolManager;
 import sth.app.exceptions.NoSuchDisciplineException;
 import sth.exceptions.DisciplineNotFoundException;
 
+import sth.app.exceptions.DuplicateProjectException;
+import sth.exceptions.ProjectAlreadyExistsException;
+
 /**
  * 4.3.1. Create project.
  */
@@ -38,6 +41,9 @@ public class DoCreateProject extends Command<SchoolManager> {
     }
     catch (DisciplineNotFoundException e) {
       throw new NoSuchDisciplineException(e.getName());
+    }
+    catch (ProjectAlreadyExistsException e) {
+      throw new DuplicateProjectException(e.getDisciplineName(), e.getName());
     }
   }
 

@@ -43,7 +43,7 @@ class PersonWithDisciplines
     Collections.sort(_disciplines, new Comparator<Discipline>() {
         public int compare(Discipline d1, Discipline d2) { 
           Collator c = Collator.getInstance(Locale.getDefault());
-          return c.compare(d1.name(), d2.name());
+          return c.compare(d1.course().name() + d1.name(), d2.course().name() + d2.name());
         }
     });
 

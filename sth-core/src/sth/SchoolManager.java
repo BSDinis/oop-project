@@ -16,6 +16,7 @@ import sth.exceptions.BadEntryException;
 import sth.exceptions.ImportFileException;
 import sth.exceptions.NoSuchPersonIdException;
 import sth.exceptions.ProjectNotFoundException;
+import sth.exceptions.ProjectAlreadyExistsException;
 import sth.exceptions.DisciplineNotFoundException;
 
 /**
@@ -157,7 +158,8 @@ public class SchoolManager {
     return _school.people(); 
   }
 
-  public void createProject(String discipline, String projectName) throws DisciplineNotFoundException {
+  public void createProject(String discipline, String projectName) 
+      throws DisciplineNotFoundException, ProjectAlreadyExistsException {
     Professor prof = getProfessorLoggedIn();
     Discipline d = prof.getDiscipline(discipline);
     if (d == null) throw new DisciplineNotFoundException(discipline);

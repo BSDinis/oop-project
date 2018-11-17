@@ -3,6 +3,7 @@ package sth;
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.UnsupportedOperationException;
+import java.text.ParseException;
 
 import java.util.Comparator;
 
@@ -14,6 +15,10 @@ import java.util.TreeSet;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.ArrayList;
+
+import java.util.Locale;
+import java.text.Collator;
+import java.text.RuleBasedCollator;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -209,7 +214,6 @@ class School implements Serializable {
    */
   public Collection<Person> people() {
     Collection<Person> allPeople = new TreeSet<Person>(PersonIdComparator);
-
     allPeople.addAll(_students.values());
     allPeople.addAll(_staffers.values());
     allPeople.addAll(_professors.values());
@@ -294,14 +298,23 @@ class School implements Serializable {
    * @return Collection of People
    */
   public Collection<Person> getPersonByName(String name) {
-    Collection<Person> result = new ArrayList<Person>();
+    Collection<Person> result = new TreeSet<Person>(new Comparator<Person>() {
+      public int compare(Person p1, Person p2) {
+          Collator rc = Collator.getInstance(Locale.getDefault());
+          String rules = ((RuleBasedCollator) rc).getRules();
+          try {
+            RuleBasedCollator c = new RuleBasedCollator(rules.replace("<'\u005f'", "<' '<'\u005f'"));
+            return c.compare(p1.name(), p2.name());
+          } catch(ParseException e) {
+            throw new RuntimeException(e);
+          }
+        }
+    });
 
     for (Person p : people()) {
       if (p.name().contains(name))
         result.add(p);
     }
-
-
 
     return result;
   }
