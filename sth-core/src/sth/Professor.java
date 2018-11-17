@@ -6,12 +6,9 @@ import java.io.Serializable;
  * Professor implementation.
  */
 public class Professor 
-  extends Person 
+  extends PersonWithDisciplines 
   implements Serializable {
 
-  Professor(String n, String pN, int id) { super(n, pN, id); }
-
-  /** Serial number for serialization. */
-  private static final long serialVersionUID = 201811151230L;
+  Professor(String n, String pN, int id, School s) { super(n, pN, id, s); }
 
 }

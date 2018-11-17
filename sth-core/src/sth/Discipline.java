@@ -2,10 +2,11 @@ package sth;
 
 import java.io.Serializable;
 
-import java.lang.IllegalArgumentException;
 import sth.exceptions.StudentAlreadyEnrolledException;
 import sth.exceptions.ProfessorAlreadyTeachingException;
 import sth.exceptions.DisciplineLimitReachedException;
+import sth.exceptions.AlienStudentException;
+import sth.exceptions.EnrollmentLimitReachedException;
 
 import java.util.Collection;
 import java.util.List;
@@ -13,29 +14,34 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.TreeMap;
 
-/**
- * Discipline implementation.
- */
 public class Discipline 
   implements Serializable {
 
   private String _name;
+  private Course _course;
   private int _capacity;
   private List<Student> _students = new LinkedList<Student>();
   private List<Professor> _professors = new LinkedList<Professor>();
   private Map<String, Project> _projects = new TreeMap<String, Project>();
 
-  Discipline(String name, int cap) {
+  Discipline(String name, int cap, Course c) {
     _name = name;
     _capacity = cap;
+    _course = c;
   }
   
   public String name() { return _name; }
+  public Course course() { return _course; }
 
   public void enrollStudent(Student s) 
-    throws StudentAlreadyEnrolledException, DisciplineLimitReachedException {
+    throws StudentAlreadyEnrolledException,
+                    DisciplineLimitReachedException,
+                    EnrollmentLimitReachedException,
+                    AlienStudentException {
+    if (!s.getCourse().equals(_course)) throw new AlienStudentException();
     if (_students.contains(s)) throw new StudentAlreadyEnrolledException();
     if (_students.size() == _capacity) throw new DisciplineLimitReachedException();
+    s.enrollInDiscipline(this);
     _students.add(s);
   }
   public Collection<Student> getStudents() { return _students; }
@@ -50,8 +56,8 @@ public class Discipline
       throw new ProfessorAlreadyTeachingException();
 
     _professors.add(p);
+    p.addDiscipline(this);
   }
 
-  public String toString() { return "<<Discipline :: to implement>>"; }
-
+  public String toString() { DisciplinePrinter printer = new DisciplineDefaultPrinter(); return printer.format(this); }
 }

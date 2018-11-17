@@ -21,7 +21,7 @@ public class DoShowPerson extends Command<SchoolManager> {
   public final void execute() {
     Person p = _receiver.getLoggedIn();
     if (p != null)
-      _display.addLine(""+p);
+      _display.addLine(p.toString());
     else
       _display.addLine("No person logged in");
 

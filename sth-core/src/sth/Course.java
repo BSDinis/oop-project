@@ -2,7 +2,6 @@ package sth;
 
 import java.io.Serializable;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -10,14 +9,8 @@ import java.util.TreeMap;
 
 import sth.exceptions.TooManyRepresentativesException;
 
-/**
- * Course implementation.
- */
 public class Course 
   implements Serializable {
-
-  /** Serial number for serialization. */
-  private static final long serialVersionUID = 201811151044L;
 
   private String _name;
 
@@ -59,7 +52,4 @@ public class Course
   void demoteRepresentative(Student oldRep) {
     _representatives.remove(oldRep);
   }
-
-  public String toString() { return "<<Course :: to implement>>"; }
-
 }

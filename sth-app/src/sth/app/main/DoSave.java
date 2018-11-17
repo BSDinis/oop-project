@@ -30,20 +30,11 @@ public class DoSave extends Command<SchoolManager> {
     }
 
     try {
-      _receiver.saveToFile(filename);
+      _receiver.save(filename);
     }
-    /*
-    catch (FileNotFoundException e) {
-      _display.popup(Message.fileNotFound(filename.value()));
-    }
-    FIXME ????
-    */
     catch (IOException e) {
       _display.popup(e.getMessage());
     }
-    catch (UnsupportedOperationException e) {
-      _display.popup("Operação não suportada");
-    } // FIXME: remove
   }
 
 }

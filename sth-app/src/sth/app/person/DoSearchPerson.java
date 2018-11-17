@@ -30,7 +30,7 @@ public class DoSearchPerson extends Command<SchoolManager> {
     searchResult = _receiver.searchPerson(_name.value());
 
     for (Person p : searchResult) {
-      _display.addLine(""+p); // FIXME 
+      _display.addLine(p.toString()); 
     }
     _display.display();
   }
