@@ -300,14 +300,8 @@ class School implements Serializable {
   public Collection<Person> getPersonByName(String name) {
     Collection<Person> result = new TreeSet<Person>(new Comparator<Person>() {
       public int compare(Person p1, Person p2) {
-          Collator rc = Collator.getInstance(Locale.getDefault());
-          String rules = ((RuleBasedCollator) rc).getRules();
-          try {
-            RuleBasedCollator c = new RuleBasedCollator(rules.replace("<'\u005f'", "<' '<'\u005f'"));
-            return c.compare(p1.name(), p2.name());
-          } catch(ParseException e) {
-            throw new RuntimeException(e);
-          }
+          Collator c = Collator.getInstance(Locale.getDefault());
+          return c.compare(p1.name(), p2.name());
         }
     });
 
