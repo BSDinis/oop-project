@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.Serializable;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.ArrayList;
@@ -72,7 +73,7 @@ class PersonParser implements Serializable {
     }
   }
 
-  private void generateStaffer(String descriptor, List<List<String>> lines,
+  private void generateStaffer(String descriptor, Collection<List<String>> lines,
       int id, String phoneNumber, String name) 
     throws BadEntryException {
 

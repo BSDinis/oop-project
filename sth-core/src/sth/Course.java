@@ -2,6 +2,7 @@ package sth;
 
 import java.io.Serializable;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -15,7 +16,7 @@ public class Course
   private String _name;
 
   private int _maxRepresentatives;
-  private List<Student> _representatives = new ArrayList<Student>();
+  private Collection<Student> _representatives = new ArrayList<Student>();
   private Map<String, Discipline> _disciplines = new TreeMap<String, Discipline>();
 
   Course(String name, int maxRepresentatives) {

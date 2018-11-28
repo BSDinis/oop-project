@@ -30,6 +30,7 @@ reset="\e[0m"
 
 # compiling: if you want to show the compilation shenanigans,
 # remove everything from &> onwards onwards
+echo -n "compiling... "
 make -C $src_dir &> /dev/null
 if [[ $? -ne 0 ]]
 then
@@ -38,6 +39,7 @@ then
   echo -e "$0: ${red}aborting"
   exit 1
 fi
+echo -e "${green}success${reset}"
 
 if ! [[ -d results ]]
 then
