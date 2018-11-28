@@ -46,12 +46,12 @@ fi
 
 total=0
 succs=0
-for file in $( ls tests-ei-eval-201811172227/*.in )
+for file in $( ls auto-tests/*.in )
 do
   input=$file
   raw=$(basename $input | cut -f 1 -d'.')
-  import=tests-ei-eval-201811172227/$raw.import
-  expected=tests-ei-eval-201811172227/expected/$raw.out
+  import=auto-tests/$raw.import
+  expected=auto-tests/expected/$raw.out
   out=results/$raw.outhyp
   if ! [[ -r $input ]]
   then
