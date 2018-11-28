@@ -34,6 +34,7 @@ echo -n "compiling... "
 make -C $src_dir &> /dev/null
 if [[ $? -ne 0 ]]
 then
+  make -C $src_dir
   echo 
   echo -e "$0: ${red}build failed"
   echo -e "$0: ${red}aborting"
