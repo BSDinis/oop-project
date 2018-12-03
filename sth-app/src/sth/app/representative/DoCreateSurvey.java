@@ -5,7 +5,13 @@ import pt.tecnico.po.ui.DialogException;
 import pt.tecnico.po.ui.Input;
 import sth.SchoolManager;
 
-//FIXME import other classes if needed
+import sth.exceptions.DisciplineNotFoundException;
+import sth.app.exceptions.NoSuchDisciplineException;
+import sth.exceptions.ProjectNotFoundException;
+import sth.app.exceptions.NoSuchProjectException;
+import sth.exceptions.SurveyAlreadyCreatedException;
+import sth.app.exceptions.DuplicateSurveyException;
+
 
 /**
  * 4.5.1. Create survey.
@@ -31,8 +37,14 @@ public class DoCreateSurvey extends Command<SchoolManager> {
     try {
       _receiver.createSurvey(_disciplineName.value(), _projectName.value()); 
     }
-    catch (UnsupportedOperationException e) {
-      _display.popup("Operação não suportada");
+    catch (DisciplineNotFoundException e) {
+      throw new NoSuchDisciplineException(e.getName());
+    }
+    catch (ProjectNotFoundException e) {
+      throw new NoSuchProjectException(_disciplineName.value(), e.getName());
+    }
+    catch (SurveyAlreadyCreatedException e) {
+      throw new DuplicateSurveyException(_disciplineName.value(), e.getName());
     }
   }
 

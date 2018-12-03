@@ -10,7 +10,9 @@ import sth.Survey;
 
 import sth.app.exceptions.NoSuchProjectException;
 import sth.app.exceptions.NoSuchDisciplineException;
+import sth.app.exceptions.NoSurveyException;
 import sth.exceptions.ProjectNotFoundException;
+import sth.exceptions.SurveyNotFoundException;
 import sth.exceptions.DisciplineNotFoundException;
 /**
  * 4.4.3. Show survey results.
@@ -32,15 +34,11 @@ public class DoShowSurveyResults extends Command<SchoolManager> {
   /** @see pt.tecnico.po.ui.Command#execute() */
   @Override
   public final void execute() throws DialogException {
-    /*
     _form.parse();
     try {
       Survey s = _receiver.getSurvey( _disciplineName.value(), _projectName.value()); 
-      _display.addLine(""+s); // FIXME
+      _display.addLine(""+s); 
       _display.display();
-    }
-    catch (UnsupportedOperationException e) {
-      _display.popup("Operação não suportada");
     }
     catch (DisciplineNotFoundException e) {
       throw new NoSuchDisciplineException(e.getName());
@@ -48,7 +46,9 @@ public class DoShowSurveyResults extends Command<SchoolManager> {
     catch (ProjectNotFoundException e) {
       throw new NoSuchProjectException(_disciplineName.value(), e.getName());
     }
-    */
+    catch (SurveyNotFoundException e) {
+      throw new NoSurveyException(_disciplineName.value(), e.getName());
+    }
   }
 
 }
