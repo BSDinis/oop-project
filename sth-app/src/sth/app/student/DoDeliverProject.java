@@ -9,6 +9,7 @@ import sth.SchoolManager;
 import sth.app.exceptions.NoSuchProjectException;
 import sth.app.exceptions.NoSuchDisciplineException;
 import sth.exceptions.ProjectNotFoundException;
+import sth.exceptions.ProjectNotOpenException;
 import sth.exceptions.DisciplineNotFoundException;
 
 /**
@@ -44,14 +45,16 @@ public class DoDeliverProject extends Command<SchoolManager> {
     catch (UnsupportedOperationException e) {
       _display.popup("Operação não suportada");
     }
-    /*
     catch (DisciplineNotFoundException e) {
       throw new NoSuchDisciplineException(e.getName());
+    }
+    catch (ProjectNotOpenException e) {
+      throw new NoSuchProjectException(_disciplineName.value(), e.getName());
     }
     catch (ProjectNotFoundException e) {
       throw new NoSuchProjectException(_disciplineName.value(), e.getName());
     }
-    */// FIXME
+
   }
 
 }

@@ -6,6 +6,16 @@ import pt.tecnico.po.ui.DialogException;
 import pt.tecnico.po.ui.Input;
 import sth.SchoolManager;
 
+import sth.exceptions.DisciplineNotFoundException;
+import sth.app.exceptions.NoSuchDisciplineException;
+import sth.exceptions.ProjectNotFoundException;
+import sth.app.exceptions.NoSuchProjectException;
+import sth.exceptions.IllegalSurveyFinishException;
+import sth.app.exceptions.FinishingSurveyException;
+import sth.exceptions.SurveyNotFoundException;
+import sth.app.exceptions.NoSurveyException;
+
+
 /**
  * 4.5.5. Finish survey.
  */
@@ -30,8 +40,17 @@ public class DoFinishSurvey extends Command<SchoolManager> {
     try {
       _receiver.finishSurvey(_disciplineName.value(), _projectName.value()); 
     }
-    catch (UnsupportedOperationException e) {
-      _display.popup("Operação não suportada");
+    catch (DisciplineNotFoundException e) {
+      throw new NoSuchDisciplineException(e.getName());
+    }
+    catch (ProjectNotFoundException e) {
+      throw new NoSuchProjectException(_disciplineName.value(), e.getName());
+    }
+    catch (SurveyNotFoundException e) {
+      throw new NoSurveyException(_disciplineName.value(), e.getName());
+    }
+    catch (IllegalSurveyFinishException e) {
+      throw new FinishingSurveyException(_disciplineName.value(), e.getName());
     }
   }
 

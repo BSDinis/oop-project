@@ -15,9 +15,20 @@ import java.util.Map;
 import sth.exceptions.BadEntryException;
 import sth.exceptions.ImportFileException;
 import sth.exceptions.NoSuchPersonIdException;
+import sth.exceptions.ProjectNotOpenException;
 import sth.exceptions.ProjectNotFoundException;
 import sth.exceptions.ProjectAlreadyExistsException;
 import sth.exceptions.DisciplineNotFoundException;
+
+import sth.exceptions.IllegalSurveyCloseException;
+import sth.exceptions.IllegalSurveyFinishException;
+import sth.exceptions.IllegalSurveyOpenException;
+import sth.exceptions.SurveyAlreadyCreatedException;
+import sth.exceptions.SurveyException;
+import sth.exceptions.SurveyFinishedException;
+import sth.exceptions.SurveyNotEmptyException;
+import sth.exceptions.SurveyNotFoundException;
+
 
 /**
  * The façade class.
@@ -199,35 +210,74 @@ public class SchoolManager {
     _needUpdate = true;
   }
 
-  public void answerSurvey(String discipline, String projectName, int hours, String comment)
-    throws ProjectNotFoundException, DisciplineNotFoundException {
+  public void deliverProject(String discipline, String projectName, String submission) 
+    throws ProjectNotFoundException, DisciplineNotFoundException, ProjectNotOpenException {
     Project p = _school.getProject(discipline, projectName);
     if (p == null) throw new ProjectNotFoundException(projectName);
-
-    if (p.hasSurvey()) {
-      Survey s = p.getSurvey();
-      s.addResponse(getStudentLoggedIn(), hours, comment);
-      _needUpdate = true;
-    }
+    
+    p.acceptSubmission(getStudentLoggedIn(), submission);
+    _needUpdate = true;
   }
 
-  public void deliverProject(String discipline, String project, String comment)
-    throws UnsupportedOperationException {
+  public Project getProject(String discipline, String projectName) 
+    throws DisciplineNotFoundException{
+    return _school.getProject(discipline, projectName);
+  }
+
+  public void createSurvey(String discipline, String projectName) 
+    throws ProjectNotFoundException, DisciplineNotFoundException, SurveyAlreadyCreatedException {
+    Project p = getProject(discipline, projectName);
+    p.createSurvey();
     _needUpdate = true;
     throw new UnsupportedOperationException();
   }
 
-  public Survey getSurvey(String discipline, String project) 
-    throws UnsupportedOperationException {
-    throw new UnsupportedOperationException();
+  public void finishSurvey(String discipline, String projectName)
+    throws ProjectNotFoundException, DisciplineNotFoundException, SurveyNotFoundException, IllegalSurveyFinishException {
+    Survey s = getSurvey(discipline, projectName);
+    s.finish();
+    _needUpdate = true;
   }
 
-  public Project getProject(String discipline, String project) 
-    throws UnsupportedOperationException {
-    throw new UnsupportedOperationException();
+  public void openSurvey(String discipline, String projectName)
+    throws ProjectNotFoundException, DisciplineNotFoundException, SurveyNotFoundException, IllegalSurveyOpenException {
+    Survey s = getSurvey(discipline, projectName);
+    s.open();
+    _needUpdate = true;
   }
 
-  public Collection<Survey> getProjectSurveys(String discipline, String project) 
+  public void closeSurvey(String discipline, String projectName)
+    throws ProjectNotFoundException, DisciplineNotFoundException, SurveyNotFoundException , IllegalSurveyCloseException {
+    Survey s = getSurvey(discipline, projectName);
+    s.close();
+    _needUpdate = true;
+  }
+
+  public void cancelSurvey(String discipline, String projectName)
+    throws ProjectNotFoundException, DisciplineNotFoundException, SurveyNotFoundException, SurveyNotEmptyException {
+    Survey s = getSurvey(discipline, projectName);
+    s.cancel();
+    _needUpdate = true;
+  }
+
+  public void answerSurvey(String discipline, String projectName, int hours, String comment)
+    throws ProjectNotFoundException, DisciplineNotFoundException, SurveyNotFoundException {
+    Survey s = getSurvey(discipline, projectName);
+    s.addResponse(getStudentLoggedIn(), hours, comment);
+    _needUpdate = true;
+  }
+
+  public Survey getSurvey(String discipline, String projectName) 
+    throws ProjectNotFoundException, DisciplineNotFoundException, SurveyNotFoundException {
+    Project p = _school.getProject(discipline, projectName);
+    if (p == null) throw new ProjectNotFoundException(projectName);
+    Survey s = p.getSurvey();
+    if (s == null) throw new SurveyNotFoundException(projectName);
+    return s;
+  }
+
+
+  public Collection<Survey> getProjectSurveys(String discipline, String projectName) 
     throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
@@ -243,36 +293,6 @@ public class SchoolManager {
 
   public Person getLoggedIn() {
     return _school.getPersonById(getLoggedId()); 
-  }
-
-  public void createSurvey(String discipline, String project)
-    throws UnsupportedOperationException {
-    _needUpdate = true;
-    throw new UnsupportedOperationException();
-  }
-
-  public void finishSurvey(String discipline, String project)
-    throws UnsupportedOperationException {
-    _needUpdate = true;
-    throw new UnsupportedOperationException();
-  }
-
-  public void openSurvey(String discipline, String project)
-    throws UnsupportedOperationException {
-    _needUpdate = true;
-    throw new UnsupportedOperationException();
-  }
-
-  public void closeSurvey(String discipline, String project)
-    throws UnsupportedOperationException {
-    _needUpdate = true;
-    throw new UnsupportedOperationException();
-  }
-
-  public void cancelSurvey(String discipline, String project)
-    throws UnsupportedOperationException {
-    _needUpdate = true;
-    throw new UnsupportedOperationException();
   }
 
   // more to do

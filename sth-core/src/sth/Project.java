@@ -3,6 +3,8 @@ package sth;
 import java.util.Map;
 import java.util.TreeMap;
 import sth.exceptions.ProjectNotOpenException;
+import sth.exceptions.IllegalSurveyOpenException;
+import sth.exceptions.SurveyAlreadyCreatedException;
 import java.io.Serializable;
 
 public class Project implements Serializable {
@@ -21,14 +23,18 @@ public class Project implements Serializable {
 
   public void close() { 
     _open = false; 
-    if (hasSurvey()) _survey.open();
   }
   
-  public void createSurvey() { 
-      _survey = new Survey(_open); 
-    }
+  public void createSurvey() throws SurveyAlreadyCreatedException { 
+    if (hasSurvey()) 
+      throw new SurveyAlreadyCreatedException(_name);
+
+    _survey = new Survey(this); 
+  }
+
   public boolean hasSurvey() { return _survey != null; }
   public Survey getSurvey() { return _survey; }
+  void remSurvey() { _survey = null; }
 
   public void acceptSubmission(Student student, String submission)
     throws ProjectNotOpenException {
@@ -38,7 +44,10 @@ public class Project implements Serializable {
       throw new ProjectNotOpenException(_name);
   }
 
-  public Map<Student, String> getSubmissions() {
-    return _submissions;
-  }
+  public String name() { return _name; }
+  public boolean isOpen() { return _open; }
+
+  public Map<Student, String> getSubmissions() { return _submissions; }
+  public boolean hasSubmissionFrom(Student s) { return (_submissions.containsKey(s)); }
+
 }

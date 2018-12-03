@@ -10,8 +10,10 @@ import sth.SchoolManager;
 
 import sth.app.exceptions.NoSuchProjectException;
 import sth.app.exceptions.NoSuchDisciplineException;
+import sth.app.exceptions.NoSurveyException;
 import sth.exceptions.ProjectNotFoundException;
 import sth.exceptions.DisciplineNotFoundException;
+import sth.exceptions.SurveyNotFoundException;
 
 /**
  * 4.4.2. Answer survey.
@@ -54,6 +56,9 @@ public class DoAnswerSurvey extends Command<SchoolManager> {
     }
     catch (ProjectNotFoundException e) {
       throw new NoSuchProjectException(_disciplineName.value(), e.getName());
+    }
+    catch (SurveyNotFoundException e) {
+      throw new NoSurveyException(_disciplineName.value(), e.getName());
     }
 
   }

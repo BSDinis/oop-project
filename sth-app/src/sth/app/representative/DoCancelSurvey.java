@@ -1,12 +1,20 @@
 package sth.app.representative;
 
-import java.lang.UnsupportedOperationException;
-
 import pt.tecnico.po.ui.Command;
 import pt.tecnico.po.ui.DialogException;
 import pt.tecnico.po.ui.Input;
 import sth.SchoolManager;
 import sth.Survey;
+
+import sth.exceptions.DisciplineNotFoundException;
+import sth.app.exceptions.NoSuchDisciplineException;
+import sth.exceptions.ProjectNotFoundException;
+import sth.app.exceptions.NoSuchProjectException;
+import sth.exceptions.SurveyNotFoundException;
+import sth.app.exceptions.NoSurveyException;
+import sth.exceptions.SurveyNotEmptyException;
+import sth.app.exceptions.NonEmptySurveyException;
+
 
 
 /**
@@ -33,8 +41,17 @@ public class DoCancelSurvey extends Command<SchoolManager> {
     try {
       _receiver.cancelSurvey(_disciplineName.value(), _projectName.value()); 
     }
-    catch (UnsupportedOperationException e) {
-      _display.popup("Operação não suportada");
+    catch (DisciplineNotFoundException e) {
+      throw new NoSuchDisciplineException(e.getName());
+    }
+    catch (ProjectNotFoundException e) {
+      throw new NoSuchProjectException(_disciplineName.value(), e.getName());
+    }
+    catch (SurveyNotFoundException e) {
+      throw new NoSurveyException(_disciplineName.value(), e.getName());
+    }
+    catch (SurveyNotEmptyException e) {
+      throw new NonEmptySurveyException(_disciplineName.value(), e.getName());
     }
   }
 
