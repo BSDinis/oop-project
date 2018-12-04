@@ -17,6 +17,10 @@ import java.util.Locale;
 import java.text.Collator;
 import java.util.Comparator;
 
+import sth.exceptions.DisciplineNotFoundException;
+import sth.exceptions.ProjectNotFoundException;
+import sth.exceptions.SurveyNotFoundException;
+
 class PersonWithDisciplines 
   extends Person 
   implements Serializable {
@@ -28,13 +32,26 @@ class PersonWithDisciplines
   void addDiscipline(Discipline d) { _disciplines.add(d); }
   void removeDiscipline(Discipline d) { _disciplines.remove(d); }
 
-  Discipline getDiscipline(String name) {
+  Discipline getDiscipline(String name) 
+    throws DisciplineNotFoundException {
     for (Discipline d: _disciplines) {
       if (name.equals(d.name()))
         return d;
     }
 
-    return null;
+    throw new DisciplineNotFoundException(name);
+  }
+
+  Project getProject(String discipline, String project) 
+    throws DisciplineNotFoundException, ProjectNotFoundException {
+    Discipline d = getDiscipline(discipline);
+    return d.getProject(project);
+  }
+
+  Survey getSurvey(String discipline, String project) 
+    throws DisciplineNotFoundException, ProjectNotFoundException, SurveyNotFoundException {
+    Project p = getProject(discipline, project);
+    return p.getSurvey();
   }
 
   public String toString(DisciplinePrinter printer) {
