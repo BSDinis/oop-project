@@ -2,7 +2,6 @@ package sth;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.lang.UnsupportedOperationException;
 import java.text.ParseException;
 
 import java.util.Comparator;
@@ -29,6 +28,7 @@ import sth.exceptions.BadEntryException;
 import sth.exceptions.DisciplineNotFoundException;
 import sth.exceptions.DuplicatePersonException;
 import sth.exceptions.DuplicateCourseException;
+import sth.exceptions.DisciplineNotFoundException;
 
 
 /**
@@ -61,13 +61,6 @@ class School implements Serializable {
    */
   private List<Course> _courses = new LinkedList<Course>();
 
-  /**
-   * Comparator for people
-   */
-  class PersonComparator implements Comparator<Person>, Serializable {
-    public int compare(Person p1, Person p2) { return p1.id() - p2.id(); }
-  }
-  private Comparator<Person> PersonIdComparator =  new PersonComparator();
 
   /**
    * Reset the school to its original settings
@@ -213,7 +206,7 @@ class School implements Serializable {
    * @return Collection of people
    */
   public Collection<Person> people() {
-    Collection<Person> allPeople = new TreeSet<Person>(PersonIdComparator);
+    Collection<Person> allPeople = new TreeSet<Person>();
     allPeople.addAll(_students.values());
     allPeople.addAll(_staffers.values());
     allPeople.addAll(_professors.values());
@@ -244,6 +237,16 @@ class School implements Serializable {
    */
   public Staffer getStafferById(int id) {
     return _staffers.get(id);
+  }
+
+  /**
+   * Get a representative by their id
+   *
+   * @return Student
+   */
+  public Student getRepresentativeById(int id) {
+    if (!isRepresentative(id)) return null;
+    return _students.get(id);
   }
 
   /**
@@ -313,37 +316,4 @@ class School implements Serializable {
     return result;
   }
 
-  /**
-   * Get a discipline by name
-   * Note that this returns the first one (in the event of multiple courses w/ the same Discipline name
-   *
-   * @return Discipline
-   */
-  public Discipline getDiscipline(String name) {
-    for (Course c : _courses)
-      if (c.hasDiscipline(name))
-        return c.getDiscipline(name); 
-    
-    return null;
-  }
-
-  /**
-   * Get a project by name
-   *
-   * @return Project
-   */
-  public Project getProject(String disciplineName, String projectName) throws DisciplineNotFoundException {
-    boolean foundDiscipline = false;
-    for (Course c : _courses) {
-      if (c.hasDiscipline(disciplineName)) {
-        foundDiscipline = true;
-        Discipline d = c.getDiscipline(disciplineName);
-        if (d.hasProject(projectName)) 
-          return d.getProject(projectName);
-      }
-    }
-
-    if (!foundDiscipline) throw new DisciplineNotFoundException(disciplineName);
-    return null;
-  }
 }
