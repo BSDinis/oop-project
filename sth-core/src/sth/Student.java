@@ -20,7 +20,9 @@ public class Student
   void enrollInDiscipline(Discipline d) 
     throws EnrollmentLimitReachedException { 
 
-    if (_disciplines.size() == 6) throw new EnrollmentLimitReachedException();
+    if (getDisciplines().size() == 6) 
+      throw new EnrollmentLimitReachedException();
+
     addDiscipline(d);
   }
   

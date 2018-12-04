@@ -9,6 +9,7 @@ package sth;
 
 import java.io.Serializable;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
@@ -25,13 +26,14 @@ class PersonWithDisciplines
   extends Person 
   implements Serializable {
 
-  List<Discipline> _disciplines = new ArrayList<Discipline>();
+  private List<Discipline> _disciplines = new ArrayList<Discipline>();
 
   PersonWithDisciplines(String n, String pN, int id, School s) { super(n, pN, id, s); }
 
   void addDiscipline(Discipline d) { _disciplines.add(d); }
   void removeDiscipline(Discipline d) { _disciplines.remove(d); }
 
+  protected Collection<Discipline> getDisciplines() { return _disciplines; }
   Discipline getDiscipline(String name) 
     throws DisciplineNotFoundException {
     for (Discipline d: _disciplines) {
@@ -53,6 +55,7 @@ class PersonWithDisciplines
     Project p = getProject(discipline, project);
     return p.getSurvey();
   }
+
 
   public String toString(DisciplinePrinter printer) {
     String repr = super.toString(printer);

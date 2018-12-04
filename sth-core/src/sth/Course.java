@@ -43,7 +43,7 @@ public class Course
     return null;
   }
 
-  void electRepresentative(Student newRep) 
+  public void electRepresentative(Student newRep) 
     throws TooManyRepresentativesException {
     if (_representatives.size() != _maxRepresentatives)
       _representatives.add(newRep);
@@ -51,7 +51,7 @@ public class Course
       throw new TooManyRepresentativesException();
   }
   
-  void demoteRepresentative(Student oldRep) {
+  public void demoteRepresentative(Student oldRep) {
     _representatives.remove(oldRep);
   }
 

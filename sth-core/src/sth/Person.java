@@ -4,8 +4,6 @@ import java.io.Serializable;
 
 public class Person 
   implements Serializable, Comparable<Person> {
-  private static final long serialVersionUID = 201811151238L;
-
   private School _school;
   private String _name;
   private String _phoneNumber;
