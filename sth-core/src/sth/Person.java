@@ -3,7 +3,7 @@ package sth;
 import java.io.Serializable;
 
 public class Person 
-  implements Serializable {
+  implements Serializable, Comparable<Person> {
   private static final long serialVersionUID = 201811151238L;
 
   private School _school;
@@ -32,4 +32,6 @@ public class Person
 
     return descriptor + "|" + String.valueOf(id()) + "|" + phoneNumber() + "|" + name();
   }
+
+  public int compareTo(Person other) { return id() - other.id(); }
 }
