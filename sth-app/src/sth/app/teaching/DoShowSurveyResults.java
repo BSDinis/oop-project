@@ -1,8 +1,5 @@
 package sth.app.teaching;
 
-import java.util.Collection;
-
-import java.lang.UnsupportedOperationException;
 import pt.tecnico.po.ui.Command;
 import pt.tecnico.po.ui.DialogException;
 import pt.tecnico.po.ui.Input;
@@ -11,7 +8,11 @@ import sth.Survey;
 import sth.exceptions.ProjectNotFoundException;
 import sth.exceptions.DisciplineNotFoundException;
 import sth.app.exceptions.NoSuchProjectException;
+import sth.app.exceptions.NoSurveyException;
+import sth.exceptions.SurveyNotFoundException;
 import sth.app.exceptions.NoSuchDisciplineException;
+import sth.SurveyProfessorPrinter;
+
 
 /**
  * 4.3.5. Show survey results.
@@ -33,17 +34,11 @@ public class DoShowSurveyResults extends Command<SchoolManager> {
   /** @see pt.tecnico.po.ui.Command#execute() */
   @Override
   public final void execute() throws DialogException {
-    /*
     _form.parse();
     try {
-      Collection<Survey> surveys = _receiver.getProjectSurveys(_disciplineName.value(), _projectName.value()); 
-      for (Survey s : surveys) 
-        _display.addLine(""+s); // FIXME
-
+      Survey s = _receiver.professorGetSurvey(_disciplineName.value(), _projectName.value()); 
+      _display.addLine(s.print(new SurveyProfessorPrinter())); 
       _display.display();
-    }
-    catch (UnsupportedOperationException e) {
-      _display.popup("Operação não suportada");
     }
     catch (DisciplineNotFoundException e) {
       throw new NoSuchDisciplineException(e.getName());
@@ -51,7 +46,9 @@ public class DoShowSurveyResults extends Command<SchoolManager> {
     catch (ProjectNotFoundException e) {
       throw new NoSuchProjectException(_disciplineName.value(), e.getName());
     }
-    */
+    catch (SurveyNotFoundException e) {
+      throw new NoSurveyException(_disciplineName.value(), e.getName());
+    }
   }
 
 }

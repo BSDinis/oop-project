@@ -14,6 +14,8 @@ import sth.exceptions.SurveyNotFoundException;
 import sth.app.exceptions.NoSurveyException;
 import sth.exceptions.SurveyNotEmptyException;
 import sth.app.exceptions.NonEmptySurveyException;
+import sth.exceptions.FinishedSurveyException;
+import sth.app.exceptions.SurveyFinishedException;
 
 
 
@@ -52,6 +54,9 @@ public class DoCancelSurvey extends Command<SchoolManager> {
     }
     catch (SurveyNotEmptyException e) {
       throw new NonEmptySurveyException(_disciplineName.value(), e.getName());
+    }
+    catch (FinishedSurveyException e) {
+      throw new SurveyFinishedException(_disciplineName.value(), e.getName());
     }
   }
 

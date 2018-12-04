@@ -1,7 +1,5 @@
 package sth.app.student;
 
-import java.lang.UnsupportedOperationException;
-
 import pt.tecnico.po.ui.Command;
 import pt.tecnico.po.ui.DialogException;
 import pt.tecnico.po.ui.Input;
@@ -14,6 +12,7 @@ import sth.app.exceptions.NoSurveyException;
 import sth.exceptions.ProjectNotFoundException;
 import sth.exceptions.SurveyNotFoundException;
 import sth.exceptions.DisciplineNotFoundException;
+import sth.SurveyStudentPrinter;
 /**
  * 4.4.3. Show survey results.
  */
@@ -36,8 +35,8 @@ public class DoShowSurveyResults extends Command<SchoolManager> {
   public final void execute() throws DialogException {
     _form.parse();
     try {
-      Survey s = _receiver.getSurvey( _disciplineName.value(), _projectName.value()); 
-      _display.addLine(""+s); 
+      Survey s = _receiver.studentGetSurvey( _disciplineName.value(), _projectName.value()); 
+      _display.addLine(s.print(new SurveyStudentPrinter())); 
       _display.display();
     }
     catch (DisciplineNotFoundException e) {
