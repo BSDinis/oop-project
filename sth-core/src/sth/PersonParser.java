@@ -23,9 +23,9 @@ import sth.exceptions.DuplicateCourseException;
 
 class PersonParser implements Serializable {
   private LinkedList<List<String>> _lines = new LinkedList<List<String>>();
-  BufferedReader _in;
-  String _firstLine;
-  School _school;
+  private BufferedReader _in;
+  private String _firstLine;
+  private School _school;
 
   PersonParser(School s, BufferedReader in) 
     throws IOException {

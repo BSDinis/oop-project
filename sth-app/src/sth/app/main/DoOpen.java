@@ -20,35 +20,47 @@ public class DoOpen extends Command<SchoolManager> {
   
   
   private Input<String> _filenameInput;
-  private String _filename = null;
+  private boolean _hasFilename;
   /**
    * @param receiver
    */
   public DoOpen(SchoolManager receiver) {
     super(Label.OPEN, receiver);
-    _filename = receiver.getFilename();
-    if (_filename == null)
+    if (!(_hasFilename = receiver.hasFilename()))
       _filenameInput = _form.addStringInput(Message.openFile());
   }
 
   /** @see pt.tecnico.po.ui.Command#execute() */
   @Override
   public final void execute() throws NoSuchPersonException {
-    if (_filename == null) {
-      _form.parse();
-      _filename = _filenameInput.value();
+    if (!_hasFilename) {
+      try {
+          _form.parse();
+          _receiver.load(_filenameInput.value());
+      }
+      catch (FileNotFoundException e) {
+        _display.popup(Message.fileNotFound(_filenameInput.value()));
+      }
+      catch (ImportFileException e) {
+        _display.popup(e.getMessage());
+      }
+      catch (NoSuchPersonIdException e) {
+        throw new NoSuchPersonException(e.getId());
+      }
     }
-    try {
-      _receiver.load(_filename);
-    }
-    catch (FileNotFoundException e) {
-      _display.popup(Message.fileNotFound(_filename));
-    }
-    catch (ImportFileException e) {
-      _display.popup(e.getMessage());
-    }
-    catch (NoSuchPersonIdException e) {
-      throw new NoSuchPersonException(e.getId());
+    else {
+      try {
+        _receiver.load();
+      }
+      catch (FileNotFoundException e) {
+        _display.popup(Message.fileNotFound(_receiver.getFilename()));
+      }
+      catch (ImportFileException e) {
+        _display.popup(e.getMessage());
+      }
+      catch (NoSuchPersonIdException e) {
+        throw new NoSuchPersonException(e.getId());
+      }
     }
   }
 

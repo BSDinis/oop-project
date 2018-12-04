@@ -70,6 +70,11 @@ public class SchoolManager {
     }
   }
 
+  public void load() 
+    throws FileNotFoundException, ImportFileException, NoSuchPersonIdException {
+    load(getFilename());  
+  }
+
   public void load(String datafile) 
     throws FileNotFoundException, ImportFileException, NoSuchPersonIdException {
 
@@ -115,6 +120,11 @@ public class SchoolManager {
   public String getFilename() {
     return _filename;
   }
+
+  public boolean hasFilename() {
+    return _filename != null;
+  }
+
 
   public Person getLoggedIn() {
     return _school.getPersonById(getLoggedId()); 
