@@ -11,6 +11,9 @@ import sth.exceptions.ProjectAlreadyExistsException;
 import sth.exceptions.DisciplineLimitReachedException;
 import sth.exceptions.AlienStudentException;
 import sth.exceptions.EnrollmentLimitReachedException;
+import sth.exceptions.DisciplineNotFoundException;
+import sth.exceptions.ProjectNotFoundException;
+import sth.exceptions.SurveyNotFoundException;
 
 import java.util.Collections;
 import java.util.Collection;
@@ -62,15 +65,38 @@ public class Discipline
     return _students;
   }
 
-
   public void addProject(String name) 
     throws ProjectAlreadyExistsException {
     if (hasProject(name)) 
       throw new ProjectAlreadyExistsException(name(), name);
-    _projects.put(name, new Project(name));
+    _projects.put(name, new Project(name, name()));
   }
   public boolean hasProject(String name) { return _projects.containsKey(name); }
-  public Project getProject(String name) { return _projects.get(name); }
+  public Project getProject(String name)
+    throws ProjectNotFoundException
+  { 
+    if (!hasProject(name)) 
+      throw new ProjectNotFoundException(name);
+
+    return _projects.get(name); 
+  }
+  public Collection<Project> getProjects() { return _projects.values(); }
+  public Collection<Survey> getSurveys() { 
+    Collection<Survey> surveys = new LinkedList<>();
+    Collection<Project> projects = getProjects();
+    for (Project p : projects) {
+      if (p.hasSurvey()) {
+        try {
+          surveys.add(p.getSurvey());
+        }
+        catch (SurveyNotFoundException e) {
+          // ignored because verification was made
+        }
+      }
+    }
+
+    return surveys;
+  }
 
   public void addProfessor(Professor p) 
     throws ProfessorAlreadyTeachingException {
