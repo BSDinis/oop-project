@@ -1,6 +1,5 @@
 package sth.app.teaching;
 
-import java.lang.UnsupportedOperationException;
 import java.util.Map;
 
 import pt.tecnico.po.ui.Command;

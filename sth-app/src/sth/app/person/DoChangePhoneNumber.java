@@ -24,13 +24,8 @@ public class DoChangePhoneNumber extends Command<SchoolManager> {
   public final void execute() {
     _form.parse();
 
-    try {
-      _receiver.changePhoneNumber(_phoneNumber.value());
-      _display.addLine(_receiver.getLoggedIn().toString());
-      _display.display();
-    }
-    catch (UnsupportedOperationException e) {
-      _display.popup("Operação não suportada.");
-    }
+    _receiver.changePhoneNumber(_phoneNumber.value());
+    _display.addLine(_receiver.getLoggedIn().toString());
+    _display.display();
   }
 }
