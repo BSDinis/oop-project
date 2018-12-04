@@ -1,7 +1,5 @@
 package sth.app.student;
 
-import java.lang.UnsupportedOperationException;
-
 import pt.tecnico.po.ui.Command;
 import pt.tecnico.po.ui.DialogException;
 import pt.tecnico.po.ui.Input;
@@ -41,9 +39,6 @@ public class DoDeliverProject extends Command<SchoolManager> {
           _projectName.value(),
           _delivery.value()
           ); 
-    }
-    catch (UnsupportedOperationException e) {
-      _display.popup("Operação não suportada");
     }
     catch (DisciplineNotFoundException e) {
       throw new NoSuchDisciplineException(e.getName());
