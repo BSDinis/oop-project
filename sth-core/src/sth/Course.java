@@ -28,6 +28,7 @@ public class Course
   public Discipline addDiscipline(Discipline d) { _disciplines.put(d.name(), d); return d; } 
   public boolean hasDiscipline(String name) { return _disciplines.containsKey(name); }
   public Discipline getDiscipline(String name) { return _disciplines.get(name); } 
+  public Collection<Discipline> getDisciplines() { return _disciplines.values(); }
 
   public boolean hasRepresentative(int id) { 
     for (Student s : _representatives)
@@ -53,4 +54,5 @@ public class Course
   void demoteRepresentative(Student oldRep) {
     _representatives.remove(oldRep);
   }
+
 }
