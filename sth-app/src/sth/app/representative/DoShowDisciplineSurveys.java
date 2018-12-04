@@ -1,6 +1,5 @@
 package sth.app.representative;
 
-import java.lang.UnsupportedOperationException;
 import java.util.Collection;
 
 import pt.tecnico.po.ui.Command;
@@ -8,6 +7,11 @@ import pt.tecnico.po.ui.DialogException;
 import pt.tecnico.po.ui.Input;
 import sth.SchoolManager;
 import sth.Survey;
+
+import sth.exceptions.DisciplineNotFoundException;
+import sth.app.exceptions.NoSuchDisciplineException;
+
+import sth.SurveyRepresentativePrinter;
 
 /**
  * 4.5.6. Show discipline surveys.
@@ -31,13 +35,14 @@ public class DoShowDisciplineSurveys extends Command<SchoolManager> {
     Collection<Survey> surveys; 
     try {
       surveys = _receiver.getDisciplineSurveys(_disciplineName.value()); 
+      SurveyRepresentativePrinter printer = new SurveyRepresentativePrinter();
       for (Survey s : surveys) 
-        _display.addLine(""+s); // FIXME
+        _display.addLine(s.print(printer)); 
 
       _display.display();
     }
-    catch (UnsupportedOperationException e) {
-      _display.popup("Operação não suportada");
+    catch (DisciplineNotFoundException e) {
+      throw new NoSuchDisciplineException(e.getName());
     }
   }
 
