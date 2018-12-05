@@ -2,8 +2,6 @@ package sth;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.List;
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -17,7 +15,7 @@ public class Course
 
   private String _name;
   private int _maxRepresentatives;
-  private Collection<Student> _representatives = new ArrayList<>();
+  private Map<Integer, Student> _representatives = new TreeMap<>();
   private Map<String, Discipline> _disciplines = new TreeMap<>();
 
   Course(String name, int maxRepresentatives) {
@@ -35,30 +33,20 @@ public class Course
 
   Collection<Discipline> disciplines() { return _disciplines.values(); }
 
-  boolean hasRepresentative(int id) { 
-    for (Student s : _representatives)
-      if (s.id() == id) return true;
+  boolean hasRepresentative(int id) { return _representatives.containsKey(id); }
 
-    return false;
-  }
-
-  Student getRepresentative(int id) {
-    for (Student s : _representatives)
-      if (s.id() == id) return s;
-
-    return null;
-  }
+  Student getRepresentative(int id) { return _representatives.get(id); }
 
   void electRepresentative(Student newRep) 
     throws TooManyRepresentativesException {
     if (_representatives.size() != _maxRepresentatives)
-      _representatives.add(newRep);
+      _representatives.put(newRep.id(), newRep);
     else
       throw new TooManyRepresentativesException();
   }
   
   void demoteRepresentative(Student oldRep) {
-    _representatives.remove(oldRep);
+    _representatives.remove(oldRep.id());
   }
 
 }

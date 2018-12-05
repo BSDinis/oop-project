@@ -26,6 +26,7 @@ class PersonWithDisciplines
   extends Person 
   implements Serializable {
 
+  // FIXME: couldn't change to map
   private List<Discipline> _disciplines = new ArrayList<>();
 
   PersonWithDisciplines(String n, String pN, int id, School s) { super(n, pN, id, s); }

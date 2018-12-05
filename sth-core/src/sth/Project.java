@@ -14,7 +14,7 @@ public class Project implements Serializable {
   private String _name;
   private Discipline _discipline;
   private String _description;
-  private Map<Student, String> _submissions = new TreeMap<>();
+  private Map<Integer, String> _submissions = new TreeMap<>();
   private Survey _survey = null;
   private boolean _open = true;
 
@@ -60,7 +60,7 @@ public class Project implements Serializable {
   void acceptSubmission(Student student, String submission)
     throws ProjectNotOpenException {
     if (_open) 
-      _submissions.put(student, submission);
+      _submissions.put(student.id(), submission);
     else 
       throw new ProjectNotOpenException(_name);
   }
@@ -73,8 +73,8 @@ public class Project implements Serializable {
 
   public Collection<String> getSubmissions() { 
     Collection<String> sub = new LinkedList<>();
-    for (Map.Entry<Student, String> entry : _submissions.entrySet())
-      sub.add(entry.getKey().id() + "|" + entry.getValue());
+    for (Map.Entry<Integer, String> entry : _submissions.entrySet())
+      sub.add(entry.getKey() + "|" + entry.getValue());
     return sub; 
   }
 

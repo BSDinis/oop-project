@@ -59,7 +59,7 @@ class School implements Serializable {
   /**
    * List of courses
    */
-  private List<Course> _courses = new LinkedList<>();
+  private Map<String, Course> _courses = new TreeMap<>();
 
 
   /**
@@ -67,10 +67,10 @@ class School implements Serializable {
    */
   private void reset() {
     _currentId = 100000;
-    _students = new TreeMap<Integer, Student>();
-    _professors = new TreeMap<Integer, Professor>();
-    _staffers = new TreeMap<Integer, Staffer>();
-    _courses = new LinkedList<Course>();
+    _students = new TreeMap<>();
+    _professors = new TreeMap<>();
+    _staffers = new TreeMap<>();
+    _courses = new TreeMap<>();
   }
 
   /**
@@ -125,7 +125,7 @@ class School implements Serializable {
   Course addCourse(Course c) 
     throws DuplicateCourseException {
     if (hasCourse(c.name())) throw new DuplicateCourseException();
-    _courses.add(c);
+    _courses.put(c.name(), c);
     return c;
   }
 
@@ -194,7 +194,9 @@ class School implements Serializable {
    */
   boolean isRepresentative(int id) {
     if (!isStudent(id)) return false;
-    for (Course c : _courses)
+
+    Collection<Course> courseCollection = _courses.values();
+    for (Course c : courseCollection)
       if (c.hasRepresentative(id)) return true;
 
     return false;
@@ -272,28 +274,14 @@ class School implements Serializable {
    *
    * @return boolean
    */
-  boolean hasCourse(String name) {
-    for (Course c : _courses) {
-      if (c.name().equals(name))
-        return true;
-    }
-
-    return false;
-  }
+  boolean hasCourse(String name) { return _courses.containsKey(name); }
 
   /**
    * Get a course by its name
    *
    * @return Course
    */
-  Course getCourseByName(String name) {
-    for (Course c : _courses) {
-      if (c.name().equals(name))
-        return c;
-    }
-
-    return null;
-  }
+  Course getCourseByName(String name) { return _courses.get(name); }
 
   /**
    * Get people by a common name
