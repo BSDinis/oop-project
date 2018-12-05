@@ -46,8 +46,8 @@ public class Discipline
                     DisciplineLimitReachedException,
                     EnrollmentLimitReachedException,
                     AlienStudentException {
-    if (!s.getCourse().equals(_course)) throw new AlienStudentException();
-    if (_students.containsKey(s.id())) throw new StudentAlreadyEnrolledException();
+    if (!s.getCourse().equals(_course)) throw new AlienStudentException(s);
+    if (_students.containsKey(s.id())) throw new StudentAlreadyEnrolledException(s);
     if (_students.size() == _capacity) throw new DisciplineLimitReachedException(name());
     s.enrollInDiscipline(this);
     _students.put(s.id(), s);

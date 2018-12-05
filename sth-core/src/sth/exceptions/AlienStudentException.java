@@ -1,4 +1,6 @@
 package sth.exceptions;
 
-// FIXME
-public class AlienStudentException extends Exception { }
+import sth.Student;
+public class AlienStudentException extends StudentException { 
+  public AlienStudentException(Student s) { super(s);}
+}

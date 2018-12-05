@@ -14,9 +14,6 @@ public class Person
 
   void changePhoneNumber(String pN) { _phoneNumber = pN; }
 
-  int id() { return _id; }
-  String name() { return _name; }
-  String phoneNumber() { return _phoneNumber; }
 
   String print(DisciplinePrinter printer) { 
     String descriptor = "";
@@ -28,6 +25,9 @@ public class Person
     return descriptor + "|" + String.valueOf(id()) + "|" + phoneNumber() + "|" + name();
   }
 
+  public int id() { return _id; }
+  public String name() { return _name; }
+  public String phoneNumber() { return _phoneNumber; }
   public int compareTo(Person other) { return id() - other.id(); }
   public String toString() { 
     return print(new DisciplineDefaultPrinter());
