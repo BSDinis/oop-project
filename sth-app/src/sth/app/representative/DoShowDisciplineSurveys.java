@@ -8,10 +8,12 @@ import pt.tecnico.po.ui.Input;
 import sth.SchoolManager;
 import sth.Survey;
 
+import sth.app.printers.SurveyBasicPrinter;
+
 import sth.exceptions.DisciplineNotFoundException;
 import sth.app.exceptions.NoSuchDisciplineException;
 
-import sth.SurveyRepresentativePrinter;
+import sth.SurveyPrinter;
 
 /**
  * 4.5.6. Show discipline surveys.
@@ -31,11 +33,22 @@ public class DoShowDisciplineSurveys extends Command<SchoolManager> {
   /** @see pt.tecnico.po.ui.Command#execute() */
   @Override
   public final void execute() throws DialogException {
+    class SurveyRepresentativePrinter 
+      extends SurveyBasicPrinter
+      implements SurveyPrinter {
+
+      public String print(Survey.Finished s) {
+        String res = defaultFormat(s.disciplineName(), s.projectName());
+        res += " - " + s.responsesNumber() + " respostas - " + s.medHours() + " horas";
+        return res;
+      }
+    }
+
     _form.parse();
     Collection<Survey> surveys; 
     try {
-      surveys = _receiver.getDisciplineSurveys(_disciplineName.value()); 
-      SurveyRepresentativePrinter printer = new SurveyRepresentativePrinter();
+      surveys = _receiver.disciplineSurveys(_disciplineName.value()); 
+      SurveyPrinter printer = new SurveyRepresentativePrinter();
       for (Survey s : surveys) 
         _display.addLine(s.print(printer)); 
 

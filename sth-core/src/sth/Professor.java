@@ -10,5 +10,4 @@ public class Professor
   implements Serializable {
 
   Professor(String n, String pN, int id, School s) { super(n, pN, id, s); }
-
 }

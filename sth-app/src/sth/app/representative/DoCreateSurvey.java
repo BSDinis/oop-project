@@ -41,10 +41,10 @@ public class DoCreateSurvey extends Command<SchoolManager> {
       throw new NoSuchDisciplineException(e.getName());
     }
     catch (ProjectNotFoundException e) {
-      throw new NoSuchProjectException(_disciplineName.value(), e.getName());
+      throw new NoSuchProjectException(e.getDisciplineName(), e.getName());
     }
     catch (SurveyAlreadyCreatedException e) {
-      throw new DuplicateSurveyException(_disciplineName.value(), e.getName());
+      throw new DuplicateSurveyException(e.getDisciplineName(), e.getProjectName());
     }
   }
 

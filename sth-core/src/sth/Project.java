@@ -1,5 +1,7 @@
 package sth;
 
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.TreeMap;
 import sth.exceptions.ProjectNotOpenException;
@@ -10,60 +12,73 @@ import java.io.Serializable;
 
 public class Project implements Serializable {
   private String _name;
-  private String _disciplineName;
+  private Discipline _discipline;
   private String _description;
-  private Map<Student, String> _submissions = new TreeMap<Student, String>();
+  private Map<Integer, String> _submissions = new TreeMap<>();
   private Survey _survey = null;
   private boolean _open = true;
 
-  Project(String name, String disciplineName, String description) {
+  Project(String name, String description, Discipline discipline) {
     _name = name; 
-    _disciplineName = disciplineName; 
     _description = description;
+    _discipline = discipline;
   }
 
-  Project(String name, String disciplineName) { this(name, disciplineName, "empty description"); }
+  Project(String name, Discipline discipline) {
+    this(name, "empty description", discipline); 
+  }
 
-  public void close() {
+  void close() {
     _open = false; 
     if (hasSurvey()) {
       try {
         _survey.open();
       } catch (IllegalSurveyOpenException e) {
-        // ignore - this will never happen FIXME: confirm
+        e.printStackTrace();
       }
     }
   }
   
-  public void createSurvey() throws SurveyAlreadyCreatedException { 
+  void createSurvey() throws SurveyAlreadyCreatedException { 
     if (hasSurvey()) 
-      throw new SurveyAlreadyCreatedException(_name);
+      throw new SurveyAlreadyCreatedException(disciplineName(), _name);
 
     _survey = new Survey(this); 
   }
 
-  public boolean hasSurvey() { return _survey != null; }
-  public Survey getSurvey()
+  boolean hasSurvey() { return _survey != null; }
+
+  Survey survey()
     throws SurveyNotFoundException
   { 
-    if (!hasSurvey()) throw new SurveyNotFoundException(_name);
+    if (!hasSurvey()) throw new SurveyNotFoundException(disciplineName(), _name);
     return _survey; 
   }
+
   void remSurvey() { _survey = null; }
 
-  public void acceptSubmission(Student student, String submission)
+  void acceptSubmission(Student student, String submission)
     throws ProjectNotOpenException {
     if (_open) 
-      _submissions.put(student, submission);
+      _submissions.put(student.id(), submission);
     else 
-      throw new ProjectNotOpenException(_name);
+      throw new ProjectNotOpenException(disciplineName(), _name);
   }
 
-  public String name() { return _name; }
-  public String disciplineName() { return _disciplineName; }
+  String name() { return _name; }
+
+  String disciplineName() { return _discipline.name(); }
+
   public boolean isOpen() { return _open; }
 
-  public Map<Student, String> getSubmissions() { return _submissions; }
-  public boolean hasSubmissionFrom(Student s) { return (_submissions.containsKey(s)); }
+  public Collection<String> getSubmissions() { 
+    Collection<String> sub = new LinkedList<>();
+    for (Map.Entry<Integer, String> entry : _submissions.entrySet())
+      sub.add(entry.getKey() + "|" + entry.getValue());
+    return sub; 
+  }
+
+  public boolean hasSubmissionFrom(Student s) { return (_submissions.containsKey(s.id())); }
+
   public int submissionNumber() { return _submissions.size(); }
 }

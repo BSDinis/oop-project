@@ -4,6 +4,7 @@ import java.io.Serializable;
 import sth.exceptions.EnrollmentLimitReachedException;
 import sth.exceptions.DisciplineNotFoundException;
 import sth.exceptions.ProjectNotFoundException;
+import sth.exceptions.ProjectNotOpenException;
 import sth.exceptions.SurveyNotFoundException;
 import java.util.Collection;
 
@@ -15,20 +16,39 @@ public class Student
 
   Student(String n, String pN, int id, School s) { super(n, pN, id, s); }
 
+  // Refactor
   Course getCourse() { return _course; }
   void enrollInCourse(Course c) { _course = c; }
   void enrollInDiscipline(Discipline d) 
     throws EnrollmentLimitReachedException { 
 
-    if (getDisciplines().size() == 6) 
-      throw new EnrollmentLimitReachedException();
+    if (disciplines().size() == 6) 
+      throw new EnrollmentLimitReachedException(id(), d.name());
 
     addDiscipline(d);
   }
-  
-  Collection<Discipline> getCourseDisciplines() {
-    return _course.getDisciplines(); // invariant: course is not null
+
+  Project project(String disciplineName, String projectName) 
+    throws DisciplineNotFoundException, ProjectNotFoundException {
+    Project p = super.project(disciplineName, projectName);
+    if (!p.hasSubmissionFrom(this)) 
+      throw new ProjectNotFoundException(disciplineName, projectName);
+
+    return p;
   }
+
+  void submitProject(String disciplineName, String projectName, String submission) 
+    throws ProjectNotFoundException, DisciplineNotFoundException, ProjectNotOpenException {
+    Project p = super.project(disciplineName, projectName);
+    p.acceptSubmission(this, submission);
+  }
+  
+  // Refactor
+  Collection<Discipline> getCourseDisciplines() {
+    return _course.disciplines(); // invariant: course is not null
+  }
+
+  // Refactor
   Discipline getCourseDiscipline(String discipline) 
       throws DisciplineNotFoundException {
     Collection<Discipline> disciplines = getCourseDisciplines();
@@ -38,15 +58,18 @@ public class Student
 
     throw new DisciplineNotFoundException(discipline);
   }
+
+  // Refactor
   Project getCourseProject(String discipline, String project) 
       throws DisciplineNotFoundException, ProjectNotFoundException {
     Discipline d = getCourseDiscipline(discipline);
-    return d.getProject(project);
+    return d.project(project);
   }
+
+  // Refactor
   Survey getCourseSurvey(String discipline, String project) 
       throws DisciplineNotFoundException, ProjectNotFoundException, SurveyNotFoundException {
     Project p = getCourseProject(discipline, project);
-    return p.getSurvey();
+    return p.survey();
   }
-
 }

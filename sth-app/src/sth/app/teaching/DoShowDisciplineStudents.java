@@ -29,7 +29,7 @@ public class DoShowDisciplineStudents extends Command<SchoolManager> {
   public final void execute() throws DialogException {
     _form.parse();
     try {
-      Collection<Student> students = _receiver.getDisciplineStudents(_disciplineName.value()); 
+      Collection<Student> students = _receiver.disciplineStudents(_disciplineName.value()); 
       for (Student s : students) 
         _display.addLine(""+s);
 

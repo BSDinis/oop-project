@@ -44,22 +44,22 @@ class School implements Serializable {
   /**
    * Association between id's and students
    */
-  private Map<Integer, Student> _students = new TreeMap<Integer, Student>();
+  private Map<Integer, Student> _students = new TreeMap<>();
 
   /**
    * Association between id's and professors
    */
-  private Map<Integer, Professor> _professors = new TreeMap<Integer, Professor>();
+  private Map<Integer, Professor> _professors = new TreeMap<>();
 
   /**
    * Association between id's and staffers
    */
-  private Map<Integer, Staffer> _staffers = new TreeMap<Integer, Staffer>();
+  private Map<Integer, Staffer> _staffers = new TreeMap<>();
 
   /**
    * List of courses
    */
-  private List<Course> _courses = new LinkedList<Course>();
+  private Map<String, Course> _courses = new TreeMap<>();
 
 
   /**
@@ -67,10 +67,10 @@ class School implements Serializable {
    */
   private void reset() {
     _currentId = 100000;
-    _students = new TreeMap<Integer, Student>();
-    _professors = new TreeMap<Integer, Professor>();
-    _staffers = new TreeMap<Integer, Staffer>();
-    _courses = new LinkedList<Course>();
+    _students = new TreeMap<>();
+    _professors = new TreeMap<>();
+    _staffers = new TreeMap<>();
+    _courses = new TreeMap<>();
   }
 
   /**
@@ -80,9 +80,9 @@ class School implements Serializable {
    * @return Student: allow for `Student s = school.addStudent(new Student(...)) constructs`
    * @throws DuplicatePersonException
    */
-  public Student addStudent(Student s) 
+  Student addStudent(Student s) 
     throws DuplicatePersonException {
-    if (lookupId(s.id())) throw new DuplicatePersonException();
+    if (lookupId(s.id())) throw new DuplicatePersonException(s.id());
     _students.put(s.id(), s);
     return s;
   }
@@ -94,9 +94,9 @@ class School implements Serializable {
    * @return Professor: allow for `Professor s = school.addProfessor(new Professor(...)) constructs`
    * @throws DuplicatePersonException
    */
-  public Professor addProfessor(Professor p) 
+  Professor addProfessor(Professor p) 
     throws DuplicatePersonException {
-    if (lookupId(p.id())) throw new DuplicatePersonException();
+    if (lookupId(p.id())) throw new DuplicatePersonException(p.id());
     _professors.put(p.id(), p);
     return p;
   }
@@ -108,9 +108,9 @@ class School implements Serializable {
    * @return Staffer: allow for `Staffer s = school.addStaffer(new Staffer(...)) constructs`
    * @throws DuplicatePersonException
    */
-  public Staffer addStaffer(Staffer s) 
+  Staffer addStaffer(Staffer s) 
     throws DuplicatePersonException {
-    if (lookupId(s.id())) throw new DuplicatePersonException();
+    if (lookupId(s.id())) throw new DuplicatePersonException(s.id());
     _staffers.put(s.id(), s);
     return s;
   }
@@ -122,10 +122,10 @@ class School implements Serializable {
    * @return Course: allow for `Course s = school.addCourse(new Course(...)) constructs`
    * @throws DuplicateCourseException
    */
-  public Course addCourse(Course c) 
+  Course addCourse(Course c) 
     throws DuplicateCourseException {
-    if (hasCourse(c.name())) throw new DuplicateCourseException();
-    _courses.add(c);
+    if (hasCourse(c.name())) throw new DuplicateCourseException(c.name());
+    _courses.put(c.name(), c);
     return c;
   }
 
@@ -152,7 +152,7 @@ class School implements Serializable {
    * @param id 
    * @return whether an id is taken or not
    */
-  public boolean lookupId(int id) {
+  boolean lookupId(int id) {
     return _students.containsKey(id) || _professors.containsKey(id) || _staffers.containsKey(id);
   }
   
@@ -162,7 +162,7 @@ class School implements Serializable {
    * @param id 
    * @return whether an id is a staffer's id
    */
-  public boolean isAdministrative(int id) {
+  boolean isAdministrative(int id) {
     return _staffers.containsKey(id);
   }
 
@@ -172,7 +172,7 @@ class School implements Serializable {
    * @param id 
    * @return whether an id is a professor's id
    */
-  public boolean isProfessor(int id) {
+  boolean isProfessor(int id) {
     return _professors.containsKey(id);
   }
 
@@ -182,7 +182,7 @@ class School implements Serializable {
    * @param id 
    * @return whether an id is a student's id
    */
-  public boolean isStudent(int id) {
+  boolean isStudent(int id) {
     return _students.containsKey(id);
   }
 
@@ -192,9 +192,11 @@ class School implements Serializable {
    * @param id 
    * @return whether an id is a representative's id
    */
-  public boolean isRepresentative(int id) {
+  boolean isRepresentative(int id) {
     if (!isStudent(id)) return false;
-    for (Course c : _courses)
+
+    Collection<Course> courseCollection = _courses.values();
+    for (Course c : courseCollection)
       if (c.hasRepresentative(id)) return true;
 
     return false;
@@ -205,7 +207,7 @@ class School implements Serializable {
    *
    * @return Collection of people
    */
-  public Collection<Person> people() {
+  Collection<Person> people() {
     Collection<Person> allPeople = new TreeSet<Person>();
     allPeople.addAll(_students.values());
     allPeople.addAll(_staffers.values());
@@ -218,7 +220,7 @@ class School implements Serializable {
    *
    * @return Person
    */
-  public Person getPersonById(int id) {
+  Person getPersonById(int id) {
     Person p;
     p = getStafferById(id);
     if (p != null) return p;
@@ -235,7 +237,7 @@ class School implements Serializable {
    *
    * @return Staffer
    */
-  public Staffer getStafferById(int id) {
+  Staffer getStafferById(int id) {
     return _staffers.get(id);
   }
 
@@ -244,7 +246,7 @@ class School implements Serializable {
    *
    * @return Student
    */
-  public Student getRepresentativeById(int id) {
+  Student getRepresentativeById(int id) {
     if (!isRepresentative(id)) return null;
     return _students.get(id);
   }
@@ -254,7 +256,7 @@ class School implements Serializable {
    *
    * @return Student
    */
-  public Student getStudentById(int id) {
+  Student getStudentById(int id) {
     return _students.get(id);
   }
 
@@ -263,7 +265,7 @@ class School implements Serializable {
    *
    * @return Professor
    */
-  public Professor getProfessorById(int id) {
+  Professor getProfessorById(int id) {
     return _professors.get(id);
   }
 
@@ -272,35 +274,21 @@ class School implements Serializable {
    *
    * @return boolean
    */
-  boolean hasCourse(String name) {
-    for (Course c : _courses) {
-      if (c.name().equals(name))
-        return true;
-    }
-
-    return false;
-  }
+  boolean hasCourse(String name) { return _courses.containsKey(name); }
 
   /**
    * Get a course by its name
    *
    * @return Course
    */
-  Course getCourseByName(String name) {
-    for (Course c : _courses) {
-      if (c.name().equals(name))
-        return c;
-    }
-
-    return null;
-  }
+  Course getCourseByName(String name) { return _courses.get(name); }
 
   /**
    * Get people by a common name
    *
    * @return Collection of People
    */
-  public Collection<Person> getPersonByName(String name) {
+  Collection<Person> getPersonByName(String name) {
     Collection<Person> result = new TreeSet<Person>(new Comparator<Person>() {
       public int compare(Person p1, Person p2) {
           Collator c = Collator.getInstance(Locale.getDefault());

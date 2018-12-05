@@ -1,58 +1,52 @@
 package sth;
 
 import java.io.Serializable;
-
 import java.util.Collection;
-import java.util.List;
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
 
 import sth.exceptions.TooManyRepresentativesException;
 
+
+/* methods are package on purpose */
+
 public class Course 
   implements Serializable {
 
   private String _name;
-
   private int _maxRepresentatives;
-  private Collection<Student> _representatives = new ArrayList<Student>();
-  private Map<String, Discipline> _disciplines = new TreeMap<String, Discipline>();
+  private Map<Integer, Student> _representatives = new TreeMap<>();
+  private Map<String, Discipline> _disciplines = new TreeMap<>();
 
   Course(String name, int maxRepresentatives) {
     _maxRepresentatives = maxRepresentatives;
     _name = name;
   }
 
-  public String name() { return _name; }
-  public Discipline addDiscipline(Discipline d) { _disciplines.put(d.name(), d); return d; } 
-  public boolean hasDiscipline(String name) { return _disciplines.containsKey(name); }
-  public Discipline getDiscipline(String name) { return _disciplines.get(name); } 
-  public Collection<Discipline> getDisciplines() { return _disciplines.values(); }
+  String name() { return _name; }
 
-  public boolean hasRepresentative(int id) { 
-    for (Student s : _representatives)
-      if (s.id() == id) return true;
+  Discipline addDiscipline(Discipline d) { _disciplines.put(d.name(), d); return d; } 
 
-    return false;
-  }
-  public Student getRepresentative(int id) {
-    for (Student s : _representatives)
-      if (s.id() == id) return s;
+  boolean hasDiscipline(String name) { return _disciplines.containsKey(name); }
 
-    return null;
-  }
+  Discipline getDiscipline(String name) { return _disciplines.get(name); } 
 
-  public void electRepresentative(Student newRep) 
+  Collection<Discipline> disciplines() { return _disciplines.values(); }
+
+  boolean hasRepresentative(int id) { return _representatives.containsKey(id); }
+
+  Student getRepresentative(int id) { return _representatives.get(id); }
+
+  void electRepresentative(Student newRep) 
     throws TooManyRepresentativesException {
     if (_representatives.size() != _maxRepresentatives)
-      _representatives.add(newRep);
+      _representatives.put(newRep.id(), newRep);
     else
-      throw new TooManyRepresentativesException();
+      throw new TooManyRepresentativesException(name());
   }
   
-  public void demoteRepresentative(Student oldRep) {
-    _representatives.remove(oldRep);
+  void demoteRepresentative(Student oldRep) {
+    _representatives.remove(oldRep.id());
   }
 
 }

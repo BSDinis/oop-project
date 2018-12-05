@@ -6,13 +6,18 @@ import pt.tecnico.po.ui.Input;
 import sth.SchoolManager;
 import sth.Survey;
 
+import sth.SurveyPrinter;
+import sth.app.printers.SurveyBasicPrinter;
+
 import sth.app.exceptions.NoSuchProjectException;
 import sth.app.exceptions.NoSuchDisciplineException;
 import sth.app.exceptions.NoSurveyException;
 import sth.exceptions.ProjectNotFoundException;
 import sth.exceptions.SurveyNotFoundException;
 import sth.exceptions.DisciplineNotFoundException;
-import sth.SurveyStudentPrinter;
+
+
+
 /**
  * 4.4.3. Show survey results.
  */
@@ -33,20 +38,32 @@ public class DoShowSurveyResults extends Command<SchoolManager> {
   /** @see pt.tecnico.po.ui.Command#execute() */
   @Override
   public final void execute() throws DialogException {
+    class SurveyStudentPrinter 
+      extends SurveyBasicPrinter
+      implements SurveyPrinter {
+      public String print(Survey.Finished s) {
+        String res = defaultFormat(s.disciplineName(), s.projectName()) + '\n';
+        res += " * Número de respostas: " + s.responsesNumber() + "\n";
+        res += " * Tempos de resolução (horas) (médio): " + s.medHours();
+        return res;
+      }
+    }
+
     _form.parse();
     try {
       Survey s = _receiver.studentGetSurvey( _disciplineName.value(), _projectName.value()); 
-      _display.addLine(s.print(new SurveyStudentPrinter())); 
+      SurveyPrinter printer = new SurveyStudentPrinter();
+      _display.addLine(s.print(printer)); 
       _display.display();
     }
     catch (DisciplineNotFoundException e) {
       throw new NoSuchDisciplineException(e.getName());
     }
     catch (ProjectNotFoundException e) {
-      throw new NoSuchProjectException(_disciplineName.value(), e.getName());
+      throw new NoSuchProjectException(e.getDisciplineName(), e.getName());
     }
     catch (SurveyNotFoundException e) {
-      throw new NoSurveyException(_disciplineName.value(), e.getName());
+      throw new NoSurveyException(e.getDisciplineName(), e.getProjectName());
     }
   }
 
