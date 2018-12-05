@@ -12,7 +12,10 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.ArrayList;
+import java.util.LinkedList;
+
+import java.util.Map;
+import java.util.TreeMap;
 
 import java.util.Locale;
 import java.text.Collator;
@@ -26,24 +29,41 @@ class PersonWithDisciplines
   extends Person 
   implements Serializable {
 
-  // FIXME: couldn't change to map
-  private List<Discipline> _disciplines = new ArrayList<>();
+  private Map<String, LinkedList<Discipline>> _disciplines = new TreeMap<>();
 
   PersonWithDisciplines(String n, String pN, int id, School s) { super(n, pN, id, s); }
 
-  void addDiscipline(Discipline d) { _disciplines.add(d); }
-  void removeDiscipline(Discipline d) { _disciplines.remove(d); }
+  void addDiscipline(Discipline d) { 
+    LinkedList<Discipline> list = _disciplines.get(d.name());
+    if (list == null) {
+      list = new LinkedList<>();
+      list.add(d);
+      _disciplines.put(d.name(), list);
+    }
+    else {
+      list.add(d);
+    }
+  }
+  void removeDiscipline(Discipline d) { 
+    _disciplines.remove(d.name()); 
+  }
 
-  Collection<Discipline> disciplines() { return _disciplines; }
+  List<Discipline> disciplines() { 
+    Collection<LinkedList<Discipline>> lists = _disciplines.values();
+    List<Discipline> linearized = new LinkedList<>();
+    for (LinkedList<Discipline> l : lists)
+      linearized.addAll(l);
+
+    return linearized; 
+  }
 
   Discipline discipline(String name) 
     throws DisciplineNotFoundException {
-    for (Discipline d: _disciplines) {
-      if (name.equals(d.name()))
-        return d;
-    }
+    LinkedList<Discipline> list = _disciplines.get(name);
+    if (list == null) 
+      throw new DisciplineNotFoundException(name);
 
-    throw new DisciplineNotFoundException(name);
+    return list.peekFirst();
   }
 
   Project project(String discipline, String project) 
@@ -61,14 +81,15 @@ class PersonWithDisciplines
   String print(DisciplinePrinter printer) {
     String repr = super.print(printer);
     
-    Collections.sort(_disciplines, new Comparator<Discipline>() {
+    List<Discipline> disciplineList = disciplines();
+    Collections.sort(disciplineList, new Comparator<Discipline>() {
         public int compare(Discipline d1, Discipline d2) { 
           Collator c = Collator.getInstance(Locale.getDefault());
           return c.compare(d1.course().name() + d1.name(), d2.course().name() + d2.name());
         }
     });
 
-    for (Discipline d : _disciplines) 
+    for (Discipline d : disciplineList) 
       repr += "\n" + printer.print(d);
 
     return repr;
