@@ -4,6 +4,7 @@ import java.io.Serializable;
 import sth.exceptions.EnrollmentLimitReachedException;
 import sth.exceptions.DisciplineNotFoundException;
 import sth.exceptions.ProjectNotFoundException;
+import sth.exceptions.ProjectNotOpenException;
 import sth.exceptions.SurveyNotFoundException;
 import java.util.Collection;
 
@@ -25,6 +26,21 @@ public class Student
       throw new EnrollmentLimitReachedException(id(), d.name());
 
     addDiscipline(d);
+  }
+
+  Project project(String disciplineName, String projectName) 
+    throws DisciplineNotFoundException, ProjectNotFoundException {
+    Project p = super.project(disciplineName, projectName);
+    if (!p.hasSubmissionFrom(this)) 
+      throw new ProjectNotFoundException(disciplineName, projectName);
+
+    return p;
+  }
+
+  void submitProject(String disciplineName, String projectName, String submission) 
+    throws ProjectNotFoundException, DisciplineNotFoundException, ProjectNotOpenException {
+    Project p = super.project(disciplineName, projectName);
+    p.acceptSubmission(this, submission);
   }
   
   // Refactor

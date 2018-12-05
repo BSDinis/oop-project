@@ -221,8 +221,7 @@ public class SchoolManager {
   public void deliverProject(String disciplineName, String projectName, String submission) 
     throws ProjectNotFoundException, DisciplineNotFoundException, ProjectNotOpenException {
     Student student = getStudentLoggedIn();
-    Project p = student.project(disciplineName, projectName);
-    p.acceptSubmission(student, submission);
+    student.submitProject(disciplineName, projectName, submission); 
     _needUpdate = true;
   }
 
