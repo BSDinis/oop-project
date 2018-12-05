@@ -24,6 +24,8 @@ import java.util.TreeSet;
 import java.util.Map;
 import java.util.TreeMap;
 
+/* methods are package on purpose */
+
 public class Discipline 
   implements Serializable {
 
@@ -40,10 +42,10 @@ public class Discipline
     _course = c;
   }
   
-  public String name() { return _name; }
-  public Course course() { return _course; }
+  String name() { return _name; }
+  Course course() { return _course; }
 
-  public void enrollStudent(Student s) 
+  void enrollStudent(Student s) 
     throws StudentAlreadyEnrolledException,
                     DisciplineLimitReachedException,
                     EnrollmentLimitReachedException,
@@ -54,7 +56,8 @@ public class Discipline
     s.enrollInDiscipline(this);
     _students.add(s);
   }
-  public Collection<Student> getStudents() {
+
+  Collection<Student> students() {
     Collections.sort(_students, new Comparator<Student>() {
       public int compare(Student a, Student b) {
         Collator c = Collator.getInstance(Locale.getDefault());
@@ -65,14 +68,16 @@ public class Discipline
     return _students;
   }
 
-  public void addProject(String name) 
+  void addProject(String name) 
     throws ProjectAlreadyExistsException {
     if (hasProject(name)) 
       throw new ProjectAlreadyExistsException(name(), name);
-    _projects.put(name, new Project(name, name()));
+    _projects.put(name, new Project(name, this));
   }
-  public boolean hasProject(String name) { return _projects.containsKey(name); }
-  public Project getProject(String name)
+
+  boolean hasProject(String name) { return _projects.containsKey(name); }
+
+  Project project(String name)
     throws ProjectNotFoundException
   { 
     if (!hasProject(name)) 
@@ -80,14 +85,16 @@ public class Discipline
 
     return _projects.get(name); 
   }
-  public Collection<Project> getProjects() { return _projects.values(); }
-  public Collection<Survey> getSurveys() { 
+
+  Collection<Project> projects() { return _projects.values(); }
+
+  Collection<Survey> surveys() { 
     Collection<Survey> surveys = new LinkedList<>();
-    Collection<Project> projects = getProjects();
+    Collection<Project> projects = projects();
     for (Project p : projects) {
       if (p.hasSurvey()) {
         try {
-          surveys.add(p.getSurvey());
+          surveys.add(p.survey());
         }
         catch (SurveyNotFoundException e) {
           // ignored because verification was made
@@ -98,7 +105,7 @@ public class Discipline
     return surveys;
   }
 
-  public void addProfessor(Professor p) 
+  void addProfessor(Professor p) 
     throws ProfessorAlreadyTeachingException {
     if (_professors.contains(p))
       throw new ProfessorAlreadyTeachingException();

@@ -1,5 +1,6 @@
 package sth;
 
+// FIXME I don't belong
 public class SurveyProfessorPrinter 
   extends SurveyBasicPrinter
   implements SurveyPrinter {

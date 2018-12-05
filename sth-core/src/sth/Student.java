@@ -15,20 +15,24 @@ public class Student
 
   Student(String n, String pN, int id, School s) { super(n, pN, id, s); }
 
+  // Refactor
   Course getCourse() { return _course; }
   void enrollInCourse(Course c) { _course = c; }
   void enrollInDiscipline(Discipline d) 
     throws EnrollmentLimitReachedException { 
 
-    if (getDisciplines().size() == 6) 
+    if (disciplines().size() == 6) 
       throw new EnrollmentLimitReachedException();
 
     addDiscipline(d);
   }
   
+  // Refactor
   Collection<Discipline> getCourseDisciplines() {
-    return _course.getDisciplines(); // invariant: course is not null
+    return _course.disciplines(); // invariant: course is not null
   }
+
+  // Refactor
   Discipline getCourseDiscipline(String discipline) 
       throws DisciplineNotFoundException {
     Collection<Discipline> disciplines = getCourseDisciplines();
@@ -38,15 +42,18 @@ public class Student
 
     throw new DisciplineNotFoundException(discipline);
   }
+
+  // Refactor
   Project getCourseProject(String discipline, String project) 
       throws DisciplineNotFoundException, ProjectNotFoundException {
     Discipline d = getCourseDiscipline(discipline);
-    return d.getProject(project);
+    return d.project(project);
   }
+
+  // Refactor
   Survey getCourseSurvey(String discipline, String project) 
       throws DisciplineNotFoundException, ProjectNotFoundException, SurveyNotFoundException {
     Project p = getCourseProject(discipline, project);
-    return p.getSurvey();
+    return p.survey();
   }
-
 }

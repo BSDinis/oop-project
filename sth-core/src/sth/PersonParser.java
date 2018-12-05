@@ -20,7 +20,6 @@ import sth.exceptions.EnrollmentLimitReachedException;
 import sth.exceptions.DuplicatePersonException;
 import sth.exceptions.DuplicateCourseException;
 
-
 class PersonParser implements Serializable {
   private LinkedList<List<String>> _lines = new LinkedList<List<String>>();
   private BufferedReader _in;
@@ -34,7 +33,7 @@ class PersonParser implements Serializable {
     _firstLine = _in.readLine(); 
   }
 
-  public boolean parsePerson() 
+  boolean parsePerson() 
     throws IOException, BadEntryException{
 
     if (_firstLine == null) return false;

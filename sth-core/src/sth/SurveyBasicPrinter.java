@@ -1,5 +1,6 @@
 package sth;
 
+// FIXME: i don't belong
 abstract class SurveyBasicPrinter
   implements SurveyPrinter {
   public String print(Survey.Open s) {
@@ -14,6 +15,7 @@ abstract class SurveyBasicPrinter
   }
   abstract public String print(Survey.Finished s);
 
+  // laziness at its best
   protected String defaultFormat(String discipline, String project, String label) {
     return discipline + " - " + project + " " + label;
   }

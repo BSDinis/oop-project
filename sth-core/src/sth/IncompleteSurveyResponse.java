@@ -1,6 +1,9 @@
 package sth;
 
 import java.io.Serializable;
+
+// FIXME : kill this pls
+
 class IncompleteSurveyResponse 
   implements Serializable {
   private int _hours;
@@ -11,6 +14,6 @@ class IncompleteSurveyResponse
     _comment = comment;
   }
 
-  public int getHours() { return _hours; }
-  public String getComment() { return _comment; }
+  int getHours() { return _hours; }
+  String getComment() { return _comment; }
 }

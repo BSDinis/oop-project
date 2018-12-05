@@ -33,8 +33,9 @@ class PersonWithDisciplines
   void addDiscipline(Discipline d) { _disciplines.add(d); }
   void removeDiscipline(Discipline d) { _disciplines.remove(d); }
 
-  protected Collection<Discipline> getDisciplines() { return _disciplines; }
-  Discipline getDiscipline(String name) 
+  Collection<Discipline> disciplines() { return _disciplines; }
+
+  Discipline discipline(String name) 
     throws DisciplineNotFoundException {
     for (Discipline d: _disciplines) {
       if (name.equals(d.name()))
@@ -44,20 +45,19 @@ class PersonWithDisciplines
     throw new DisciplineNotFoundException(name);
   }
 
-  Project getProject(String discipline, String project) 
+  Project project(String discipline, String project) 
     throws DisciplineNotFoundException, ProjectNotFoundException {
-    Discipline d = getDiscipline(discipline);
-    return d.getProject(project);
+    Discipline d = discipline(discipline);
+    return d.project(project);
   }
 
-  Survey getSurvey(String discipline, String project) 
+  Survey survey(String discipline, String project) 
     throws DisciplineNotFoundException, ProjectNotFoundException, SurveyNotFoundException {
-    Project p = getProject(discipline, project);
-    return p.getSurvey();
+    Project p = project(discipline, project);
+    return p.survey();
   }
 
-
-  public String print(DisciplinePrinter printer) {
+  String print(DisciplinePrinter printer) {
     String repr = super.print(printer);
     
     Collections.sort(_disciplines, new Comparator<Discipline>() {

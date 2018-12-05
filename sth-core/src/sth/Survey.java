@@ -14,6 +14,7 @@ import sth.exceptions.FinishedSurveyException;
 import sth.exceptions.SurveyNotEmptyException;
 import sth.exceptions.SurveyNotFoundException;
 
+// FIXME: can u, for fucks sake, draw the state-machine?
 public class Survey 
   implements Serializable {
 
@@ -100,24 +101,24 @@ public class Survey
       _state = new Open();
   }
 
-  public void close() throws IllegalSurveyCloseException {
+  void close() throws IllegalSurveyCloseException {
     _state.close();
   }
 
-  public void finish() throws IllegalSurveyFinishException {
+  void finish() throws IllegalSurveyFinishException {
     _state.finish();
   }
 
-  public void open() throws IllegalSurveyOpenException {
+  void open() throws IllegalSurveyOpenException {
     _state.open();
   }
 
-  public void cancel() throws SurveyNotEmptyException, FinishedSurveyException {
+  void cancel() throws SurveyNotEmptyException, FinishedSurveyException {
     _state.cancel();
   }
 
 
-  public void addResponse(Student s, int hours, String comment) 
+  void addResponse(Student s, int hours, String comment) 
     throws SurveyNotFoundException {
     _state.addResponse(s, hours, comment);
   }

@@ -1,6 +1,5 @@
 package sth;
 
-import java.io.Serializable;
 class DisciplineToDatafilePrinter 
   implements DisciplinePrinter {
 
