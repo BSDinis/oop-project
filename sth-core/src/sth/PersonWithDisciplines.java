@@ -57,8 +57,8 @@ class PersonWithDisciplines
   }
 
 
-  public String toString(DisciplinePrinter printer) {
-    String repr = super.toString(printer);
+  public String print(DisciplinePrinter printer) {
+    String repr = super.print(printer);
     
     Collections.sort(_disciplines, new Comparator<Discipline>() {
         public int compare(Discipline d1, Discipline d2) { 
@@ -68,7 +68,7 @@ class PersonWithDisciplines
     });
 
     for (Discipline d : _disciplines) 
-      repr += "\n" + printer.format(d);
+      repr += "\n" + printer.print(d);
 
     return repr;
   }

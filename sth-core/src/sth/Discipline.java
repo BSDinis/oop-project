@@ -107,5 +107,8 @@ public class Discipline
     p.addDiscipline(this);
   }
 
-  public String toString() { DisciplinePrinter printer = new DisciplineDefaultPrinter(); return printer.format(this); }
+  public String toString() { 
+    DisciplinePrinter printer = new DisciplineDefaultPrinter(); 
+    return printer.print(this); 
+  }
 }

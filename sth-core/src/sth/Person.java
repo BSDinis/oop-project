@@ -18,10 +18,10 @@ public class Person
   public String phoneNumber() { return _phoneNumber; }
 
   public String toString() { 
-    return toString(new DisciplineDefaultPrinter());
+    return print(new DisciplineDefaultPrinter());
   }
 
-  public String toString(DisciplinePrinter printer) { 
+  public String print(DisciplinePrinter printer) { 
     String descriptor = "";
     if (_school.isRepresentative(id())) descriptor = "DELEGADO";
     else if (_school.isStudent(id())) descriptor = "ALUNO";
