@@ -43,13 +43,13 @@ public class DoCloseSurvey extends Command<SchoolManager> {
       throw new NoSuchDisciplineException(e.getName());
     }
     catch (ProjectNotFoundException e) {
-      throw new NoSuchProjectException(_disciplineName.value(), e.getName());
+      throw new NoSuchProjectException(e.getDisciplineName(), e.getName());
     }
     catch (SurveyNotFoundException e) {
-      throw new NoSurveyException(_disciplineName.value(), e.getName());
+      throw new NoSurveyException(e.getDisciplineName(), e.getProjectName());
     }
     catch (IllegalSurveyCloseException e) {
-      throw new ClosingSurveyException(_disciplineName.value(), e.getName());
+      throw new ClosingSurveyException(e.getDisciplineName(), e.getProjectName());
     }
   }
 

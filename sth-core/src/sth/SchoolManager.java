@@ -22,7 +22,6 @@ import sth.exceptions.IllegalSurveyCloseException;
 import sth.exceptions.IllegalSurveyFinishException;
 import sth.exceptions.IllegalSurveyOpenException;
 import sth.exceptions.SurveyAlreadyCreatedException;
-import sth.exceptions.SurveyException;
 import sth.exceptions.FinishedSurveyException;
 import sth.exceptions.SurveyNotEmptyException;
 import sth.exceptions.SurveyNotFoundException;
@@ -231,7 +230,7 @@ public class SchoolManager {
     throws ProjectNotFoundException, DisciplineNotFoundException, SurveyAlreadyCreatedException {
     Student rep = getRepresentativeLoggedIn();
     Project p = rep.getCourseProject(disciplineName, projectName);
-    if (!p.isOpen()) throw new ProjectNotFoundException(projectName);
+    if (!p.isOpen()) throw new ProjectNotFoundException(disciplineName, projectName);
     p.createSurvey();
     _needUpdate = true;
   }

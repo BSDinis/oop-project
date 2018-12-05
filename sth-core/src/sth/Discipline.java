@@ -48,7 +48,7 @@ public class Discipline
                     AlienStudentException {
     if (!s.getCourse().equals(_course)) throw new AlienStudentException();
     if (_students.containsKey(s.id())) throw new StudentAlreadyEnrolledException();
-    if (_students.size() == _capacity) throw new DisciplineLimitReachedException();
+    if (_students.size() == _capacity) throw new DisciplineLimitReachedException(name());
     s.enrollInDiscipline(this);
     _students.put(s.id(), s);
   }
@@ -68,7 +68,7 @@ public class Discipline
     throws ProjectNotFoundException
   { 
     if (!hasProject(name)) 
-      throw new ProjectNotFoundException(name);
+      throw new ProjectNotFoundException(name(), name);
 
     return _projects.get(name); 
   }

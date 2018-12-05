@@ -47,16 +47,16 @@ public class DoCancelSurvey extends Command<SchoolManager> {
       throw new NoSuchDisciplineException(e.getName());
     }
     catch (ProjectNotFoundException e) {
-      throw new NoSuchProjectException(_disciplineName.value(), e.getName());
+      throw new NoSuchProjectException(e.getDisciplineName(), e.getName());
     }
     catch (SurveyNotFoundException e) {
-      throw new NoSurveyException(_disciplineName.value(), e.getName());
+      throw new NoSurveyException(e.getDisciplineName(), e.getProjectName());
     }
     catch (SurveyNotEmptyException e) {
-      throw new NonEmptySurveyException(_disciplineName.value(), e.getName());
+      throw new NonEmptySurveyException(e.getDisciplineName(), e.getProjectName());
     }
     catch (FinishedSurveyException e) {
-      throw new SurveyFinishedException(_disciplineName.value(), e.getName());
+      throw new SurveyFinishedException(e.getDisciplineName(), e.getProjectName());
     }
   }
 

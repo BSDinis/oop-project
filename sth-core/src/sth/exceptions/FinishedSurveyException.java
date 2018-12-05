@@ -1,7 +1,7 @@
 package sth.exceptions;
 
 public class FinishedSurveyException extends SurveyException {
-  public FinishedSurveyException(String name) {
-    super(name);
+  public FinishedSurveyException(String disciplineName, String projectName) {
+    super(disciplineName, projectName);
   }
 }

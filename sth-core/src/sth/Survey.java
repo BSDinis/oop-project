@@ -49,17 +49,17 @@ public class Survey
 
   abstract class State implements Serializable {
     void setState(State new_state) { _state = new_state; }
-    void open() throws IllegalSurveyOpenException { throw new IllegalSurveyOpenException(_parentProject.name()); }
-    void close() throws IllegalSurveyCloseException { throw new IllegalSurveyCloseException(_parentProject.name()); }
-    void finish() throws IllegalSurveyFinishException { throw new IllegalSurveyFinishException(_parentProject.name()); }
-    void cancel() throws FinishedSurveyException, SurveyNotEmptyException { throw new SurveyNotEmptyException(_parentProject.name()); }
+    void open() throws IllegalSurveyOpenException { throw new IllegalSurveyOpenException(disciplineName(), projectName()); }
+    void close() throws IllegalSurveyCloseException { throw new IllegalSurveyCloseException(disciplineName(), projectName()); }
+    void finish() throws IllegalSurveyFinishException { throw new IllegalSurveyFinishException(disciplineName(), projectName()); }
+    void cancel() throws FinishedSurveyException, SurveyNotEmptyException { throw new SurveyNotEmptyException(disciplineName(), projectName()); }
     void addResponse(Student s, int hours, String comment) throws SurveyNotFoundException 
     { 
-      throw new SurveyNotFoundException(_parentProject.name()); 
+      throw new SurveyNotFoundException(disciplineName(), projectName()); 
     }
     abstract String print(SurveyPrinter p);
-    public String disciplineName() { return _parentProject.disciplineName(); }
-    public String projectName() { return _parentProject.name(); }
+    public String disciplineName() { return Survey.this.disciplineName(); }
+    public String projectName() { return Survey.this.projectName(); }
   }
 
   public class Created extends State implements Serializable {
@@ -73,7 +73,7 @@ public class Survey
     void close() { setState(new Closed()); }
     void cancel() throws SurveyNotEmptyException {
       if (!_answeredIds.isEmpty()) 
-        throw new SurveyNotEmptyException(_parentProject.name());
+        throw new SurveyNotEmptyException(disciplineName(), projectName());
 
       _parentProject.remSurvey();
     }
@@ -100,9 +100,9 @@ public class Survey
 
   public class Finished extends State implements Serializable {
     void finish() {}
-    void cancel() throws FinishedSurveyException { throw new FinishedSurveyException(_parentProject.name());}
-    //void open() throws FinishedSurveyException { throw new FinishedSurveyException(_parentProject.name());}
-    //void close() throws FinishedSurveyException { throw new FinishedSurveyException(_parentProject.name());} not sure
+    void cancel() throws FinishedSurveyException { throw new FinishedSurveyException(disciplineName(), projectName());}
+    //void open() throws FinishedSurveyException { throw new FinishedSurveyException(disciplineName(), projectName());}
+    //void close() throws FinishedSurveyException { throw new FinishedSurveyException(disciplineName(), projectName());} not sure
     String print(SurveyPrinter p) { return p.print(this); }
     public int minHours() { return _minHours; }
     public int maxHours() { return _maxHours; }
@@ -148,5 +148,8 @@ public class Survey
   public String print(SurveyPrinter p) {
     return _state.print(p);
   }
+
+  String disciplineName() { return _parentProject.disciplineName(); }
+  String projectName() { return _parentProject.name(); }
 
 }

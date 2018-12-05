@@ -49,7 +49,7 @@ public class DoShowProjectSubmissions extends Command<SchoolManager> {
       throw new NoSuchDisciplineException(e.getName());
     }
     catch (ProjectNotFoundException e) {
-      throw new NoSuchProjectException(_disciplineName.value(), e.getName());
+      throw new NoSuchProjectException(e.getDisciplineName(), e.getName());
     }
   }
 

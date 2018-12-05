@@ -41,7 +41,7 @@ public class Project implements Serializable {
   
   void createSurvey() throws SurveyAlreadyCreatedException { 
     if (hasSurvey()) 
-      throw new SurveyAlreadyCreatedException(_name);
+      throw new SurveyAlreadyCreatedException(disciplineName(), _name);
 
     _survey = new Survey(this); 
   }
@@ -51,7 +51,7 @@ public class Project implements Serializable {
   Survey survey()
     throws SurveyNotFoundException
   { 
-    if (!hasSurvey()) throw new SurveyNotFoundException(_name);
+    if (!hasSurvey()) throw new SurveyNotFoundException(disciplineName(), _name);
     return _survey; 
   }
 
@@ -62,7 +62,7 @@ public class Project implements Serializable {
     if (_open) 
       _submissions.put(student.id(), submission);
     else 
-      throw new ProjectNotOpenException(_name);
+      throw new ProjectNotOpenException(disciplineName(), _name);
   }
 
   String name() { return _name; }
@@ -78,7 +78,7 @@ public class Project implements Serializable {
     return sub; 
   }
 
-  public boolean hasSubmissionFrom(Student s) { return (_submissions.containsKey(s)); }
+  public boolean hasSubmissionFrom(Student s) { return (_submissions.containsKey(s.id())); }
 
   public int submissionNumber() { return _submissions.size(); }
 }
