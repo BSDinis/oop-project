@@ -34,7 +34,7 @@ echo -n "compiling... "
 make -C $src_dir &> .compilation_msg
 if [[ $? -ne 0 ]]
 then
-  echo 
+  echo -e "${red}failed${reset}"
   cat .compilation_msg
   rm -f .compilation_msg
   echo -e "$0: ${red}build failed"
