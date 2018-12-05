@@ -42,7 +42,7 @@ public class Course
     if (_representatives.size() != _maxRepresentatives)
       _representatives.put(newRep.id(), newRep);
     else
-      throw new TooManyRepresentativesException();
+      throw new TooManyRepresentativesException(name());
   }
   
   void demoteRepresentative(Student oldRep) {
