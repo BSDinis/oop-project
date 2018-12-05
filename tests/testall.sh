@@ -87,13 +87,16 @@ do
   fi
 done
 
+disp_score=$(echo "scale=2; 100 * $succs / $total" | bc -l)
 score=$(echo "100 * $succs / $total" | bc)
-if [[ $score -eq 100 ]]
+if [ $score -eq 100 ]
 then
   echo -e "Score$green 100 [$succs/$total]"
 else
-  echo -e "Score$red $score [$succs/$total]"
+  echo -e "Score$red $disp_score [$succs/$total]"
 fi
 
-echo -e $reset
+echo -e -n "${reset}cleaning... " 
+make clean -C .. &> /dev/null
+echo "done"
 echo -e "$0: finished"
