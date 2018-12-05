@@ -22,7 +22,7 @@ public class Student
     throws EnrollmentLimitReachedException { 
 
     if (disciplines().size() == 6) 
-      throw new EnrollmentLimitReachedException();
+      throw new EnrollmentLimitReachedException(id(), d.name());
 
     addDiscipline(d);
   }

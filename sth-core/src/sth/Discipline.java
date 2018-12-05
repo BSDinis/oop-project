@@ -95,7 +95,7 @@ public class Discipline
   void addProfessor(Professor p) 
     throws ProfessorAlreadyTeachingException {
     if (_professors.containsKey(p.id()))
-      throw new ProfessorAlreadyTeachingException();
+      throw new ProfessorAlreadyTeachingException(p.id(), name());
 
     _professors.put(p.id(), p);
     p.addDiscipline(this);

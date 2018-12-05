@@ -82,7 +82,7 @@ class School implements Serializable {
    */
   Student addStudent(Student s) 
     throws DuplicatePersonException {
-    if (lookupId(s.id())) throw new DuplicatePersonException();
+    if (lookupId(s.id())) throw new DuplicatePersonException(s.id());
     _students.put(s.id(), s);
     return s;
   }
@@ -96,7 +96,7 @@ class School implements Serializable {
    */
   Professor addProfessor(Professor p) 
     throws DuplicatePersonException {
-    if (lookupId(p.id())) throw new DuplicatePersonException();
+    if (lookupId(p.id())) throw new DuplicatePersonException(p.id());
     _professors.put(p.id(), p);
     return p;
   }
@@ -110,7 +110,7 @@ class School implements Serializable {
    */
   Staffer addStaffer(Staffer s) 
     throws DuplicatePersonException {
-    if (lookupId(s.id())) throw new DuplicatePersonException();
+    if (lookupId(s.id())) throw new DuplicatePersonException(s.id());
     _staffers.put(s.id(), s);
     return s;
   }
@@ -124,7 +124,7 @@ class School implements Serializable {
    */
   Course addCourse(Course c) 
     throws DuplicateCourseException {
-    if (hasCourse(c.name())) throw new DuplicateCourseException();
+    if (hasCourse(c.name())) throw new DuplicateCourseException(c.name());
     _courses.put(c.name(), c);
     return c;
   }
