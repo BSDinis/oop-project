@@ -41,13 +41,13 @@ public class Survey
     public String projectName() { return _parentProject.name(); }
   }
 
-  class Created extends State implements Serializable {
+  public class Created extends State implements Serializable {
     void open() { setState(new Open()); }
     String print(SurveyPrinter p) { return p.print(this); }
     void cancel() { _parentProject.remSurvey(); }
   }
 
-  class Open extends State implements Serializable {
+  public class Open extends State implements Serializable {
     void open() { }
     void close() { setState(new Closed()); }
     void cancel() throws SurveyNotEmptyException {
@@ -68,7 +68,7 @@ public class Survey
     String print(SurveyPrinter p) { return p.print(this); }
   }
 
-  class Closed extends State implements Serializable {
+  public class Closed extends State implements Serializable {
     void open() { setState(new Open()); }
     void cancel() { open(); }
     void close() {}
@@ -76,7 +76,7 @@ public class Survey
     String print(SurveyPrinter p) { return p.print(this); }
   }
 
-  class Finished extends State implements Serializable {
+  public class Finished extends State implements Serializable {
     void finish() {}
     void cancel() throws FinishedSurveyException { throw new FinishedSurveyException(_parentProject.name());}
     //void open() throws FinishedSurveyException { throw new FinishedSurveyException(_parentProject.name());}
