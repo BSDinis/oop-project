@@ -2,8 +2,10 @@ package sth;
 
 import java.io.Serializable;
 
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.Set;
+import java.util.TreeSet;
 import sth.Project;
 
 import sth.exceptions.IllegalSurveyCloseException;
@@ -18,7 +20,26 @@ import sth.exceptions.SurveyNotFoundException;
 public class Survey 
   implements Serializable {
 
-  private Map<Student, IncompleteSurveyResponse> _responses = new TreeMap<Student, IncompleteSurveyResponse>();
+  private class SurveyResponse 
+    implements Serializable {
+
+    private Student _student;
+    private int _hours;
+    private String _comment;
+    
+    SurveyResponse(Student student, int hours, String comment) {
+      _student = student;
+      _hours = hours;
+      _comment = comment;
+    }
+
+     Student student() { return _student; }
+     int hours() { return _hours; }
+     String comment() { return _comment; }
+  }
+
+  private Set<Integer> _answeredIds = new TreeSet<>();
+  private Collection<SurveyResponse> _responses = new LinkedList<>();
   private State _state;
   private Project _parentProject;
   private int _minHours = Integer.MAX_VALUE;
@@ -51,18 +72,19 @@ public class Survey
     void open() { }
     void close() { setState(new Closed()); }
     void cancel() throws SurveyNotEmptyException {
-      if (_responses.size() > 0) 
+      if (!_answeredIds.isEmpty()) 
         throw new SurveyNotEmptyException(_parentProject.name());
 
       _parentProject.remSurvey();
     }
     void addResponse(Student s, int hours, String comment)
     { 
-      if (_parentProject.hasSubmissionFrom(s) && !_responses.containsKey(s)) {
+      if (_parentProject.hasSubmissionFrom(s) && !_answeredIds.contains(s.id())) {
         _minHours = (hours < _minHours) ? hours : _minHours;
         _maxHours = (hours > _maxHours) ? hours : _minHours;
         _sumHours += hours;
-        _responses.put(s, new IncompleteSurveyResponse(hours, comment));
+        _answeredIds.add(s.id());
+        _responses.add(new SurveyResponse(s, hours, comment));
       }
     }
     String print(SurveyPrinter p) { return p.print(this); }
