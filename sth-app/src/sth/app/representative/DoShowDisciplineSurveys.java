@@ -34,7 +34,7 @@ public class DoShowDisciplineSurveys extends Command<SchoolManager> {
     _form.parse();
     Collection<Survey> surveys; 
     try {
-      surveys = _receiver.getDisciplineSurveys(_disciplineName.value()); 
+      surveys = _receiver.disciplineSurveys(_disciplineName.value()); 
       SurveyRepresentativePrinter printer = new SurveyRepresentativePrinter();
       for (Survey s : surveys) 
         _display.addLine(s.print(printer)); 
