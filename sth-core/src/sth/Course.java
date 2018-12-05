@@ -17,8 +17,8 @@ public class Course
 
   private String _name;
   private int _maxRepresentatives;
-  private Collection<Student> _representatives = new ArrayList<Student>();
-  private Map<String, Discipline> _disciplines = new TreeMap<String, Discipline>();
+  private Collection<Student> _representatives = new ArrayList<>();
+  private Map<String, Discipline> _disciplines = new TreeMap<>();
 
   Course(String name, int maxRepresentatives) {
     _maxRepresentatives = maxRepresentatives;

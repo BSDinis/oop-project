@@ -26,7 +26,7 @@ class PersonWithDisciplines
   extends Person 
   implements Serializable {
 
-  private List<Discipline> _disciplines = new ArrayList<Discipline>();
+  private List<Discipline> _disciplines = new ArrayList<>();
 
   PersonWithDisciplines(String n, String pN, int id, School s) { super(n, pN, id, s); }
 

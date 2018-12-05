@@ -44,22 +44,22 @@ class School implements Serializable {
   /**
    * Association between id's and students
    */
-  private Map<Integer, Student> _students = new TreeMap<Integer, Student>();
+  private Map<Integer, Student> _students = new TreeMap<>();
 
   /**
    * Association between id's and professors
    */
-  private Map<Integer, Professor> _professors = new TreeMap<Integer, Professor>();
+  private Map<Integer, Professor> _professors = new TreeMap<>();
 
   /**
    * Association between id's and staffers
    */
-  private Map<Integer, Staffer> _staffers = new TreeMap<Integer, Staffer>();
+  private Map<Integer, Staffer> _staffers = new TreeMap<>();
 
   /**
    * List of courses
    */
-  private List<Course> _courses = new LinkedList<Course>();
+  private List<Course> _courses = new LinkedList<>();
 
 
   /**

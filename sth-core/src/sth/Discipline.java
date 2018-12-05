@@ -32,9 +32,9 @@ public class Discipline
   private String _name;
   private Course _course;
   private int _capacity;
-  private List<Student> _students = new ArrayList<Student>();
-  private List<Professor> _professors = new LinkedList<Professor>();
-  private Map<String, Project> _projects = new TreeMap<String, Project>();
+  private List<Student> _students = new ArrayList<>();
+  private List<Professor> _professors = new LinkedList<>();
+  private Map<String, Project> _projects = new TreeMap<>();
 
   Discipline(String name, int cap, Course c) {
     _name = name;

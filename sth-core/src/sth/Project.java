@@ -14,7 +14,7 @@ public class Project implements Serializable {
   private String _name;
   private Discipline _discipline;
   private String _description;
-  private Map<Student, String> _submissions = new TreeMap<Student, String>();
+  private Map<Student, String> _submissions = new TreeMap<>();
   private Survey _survey = null;
   private boolean _open = true;
 
