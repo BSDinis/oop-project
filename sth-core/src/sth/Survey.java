@@ -39,6 +39,7 @@ public class Survey
   }
 
   private Set<Integer> _answeredIds = new TreeSet<>();
+  private Collection<SurveyObserver> _viewers = new LinkedList<>();
   private Collection<SurveyResponse> _responses = new LinkedList<>();
   private State _state;
   private Project _parentProject;
@@ -58,6 +59,7 @@ public class Survey
       throw new SurveyNotFoundException(disciplineName(), projectName()); 
     }
     abstract String print(SurveyPrinter p);
+    SurveyNotification genNotification() { return null; }
     public String disciplineName() { return Survey.this.disciplineName(); }
     public String projectName() { return Survey.this.projectName(); }
   }
@@ -88,6 +90,7 @@ public class Survey
       }
     }
     String print(SurveyPrinter p) { return p.print(this); }
+    SurveyNotification genNotification() { return new SurveyOpenNotification(Survey.this); }
   }
 
   public class Closed extends State implements Serializable {
@@ -111,6 +114,7 @@ public class Survey
         return 0; // this will never happen
       return _sumHours / responsesNumber(); 
     }
+    SurveyNotification genNotification() { return new SurveyFinishNotification(Survey.this); }
     public int submissionNumber() { return _parentProject.submissionNumber(); }
     public int responsesNumber() { return _responses.size(); }
   }
@@ -139,6 +143,18 @@ public class Survey
     _state.cancel();
   }
 
+  void addObserver(SurveyObserver viewer) {
+    _viewers.add(viewer);
+  }
+
+  void broadCastChange() {
+    for (SurveyObserver viewer : _viewers) 
+      viewer.update();
+  }
+
+  SurveyNotification genNotification() {
+    return _state.genNotification();
+  }
 
   void addResponse(Student s, int hours, String comment) 
     throws SurveyNotFoundException {
