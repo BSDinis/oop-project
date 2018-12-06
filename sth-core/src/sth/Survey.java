@@ -1,11 +1,15 @@
 package sth;
 
 import java.io.Serializable;
+import java.util.Comparator;
 
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.TreeMap;
 import sth.Project;
 
 import sth.exceptions.IllegalSurveyCloseException;
@@ -39,6 +43,7 @@ public class Survey
   }
 
   private Set<Integer> _answeredIds = new TreeSet<>();
+  private Collection<SurveyObserver> _viewers = new LinkedList<>();
   private Collection<SurveyResponse> _responses = new LinkedList<>();
   private State _state;
   private Project _parentProject;
@@ -48,7 +53,11 @@ public class Survey
 
 
   abstract class State implements Serializable {
-    void setState(State new_state) { _state = new_state; }
+    void setState(State new_state) { 
+      _state = new_state; 
+      Survey.this.broadcastChange();
+    }
+
     void open() throws IllegalSurveyOpenException { throw new IllegalSurveyOpenException(disciplineName(), projectName()); }
     void close() throws IllegalSurveyCloseException { throw new IllegalSurveyCloseException(disciplineName(), projectName()); }
     void finish() throws IllegalSurveyFinishException { throw new IllegalSurveyFinishException(disciplineName(), projectName()); }
@@ -58,6 +67,7 @@ public class Survey
       throw new SurveyNotFoundException(disciplineName(), projectName()); 
     }
     abstract String print(SurveyPrinter p);
+    SurveyNotification genNotification() { return null; }
     public String disciplineName() { return Survey.this.disciplineName(); }
     public String projectName() { return Survey.this.projectName(); }
   }
@@ -88,6 +98,7 @@ public class Survey
       }
     }
     String print(SurveyPrinter p) { return p.print(this); }
+    SurveyNotification genNotification() { return new SurveyOpenNotification(Survey.this); }
   }
 
   public class Closed extends State implements Serializable {
@@ -111,16 +122,27 @@ public class Survey
         return 0; // this will never happen
       return _sumHours / responsesNumber(); 
     }
+    SurveyNotification genNotification() { return new SurveyFinishNotification(Survey.this); }
     public int submissionNumber() { return _parentProject.submissionNumber(); }
     public int responsesNumber() { return _responses.size(); }
   }
 
   Survey(Project parentProject) {
     _parentProject = parentProject;
+
     if (_parentProject.isOpen())
       _state = new Created();
     else
       _state = new Open();
+
+    Set<Person> subscribers = new TreeSet<>();
+
+    subscribers.addAll(_parentProject.students());
+    subscribers.addAll(_parentProject.professors());
+    subscribers.addAll(_parentProject.courseRepresentatives());
+
+    for (Person p : subscribers)
+      p.addSurveyObserver(new SurveyObserver(this));
   }
 
   void close() throws IllegalSurveyCloseException {
@@ -139,6 +161,18 @@ public class Survey
     _state.cancel();
   }
 
+  void addObserver(SurveyObserver viewer) {
+    _viewers.add(viewer);
+  }
+
+  void broadcastChange() {
+    for (SurveyObserver viewer : _viewers) 
+      viewer.update();
+  }
+
+  SurveyNotification genNotification() {
+    return _state.genNotification();
+  }
 
   void addResponse(Student s, int hours, String comment) 
     throws SurveyNotFoundException {

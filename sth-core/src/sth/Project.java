@@ -81,4 +81,8 @@ public class Project implements Serializable {
   public boolean hasSubmissionFrom(Student s) { return (_submissions.containsKey(s.id())); }
 
   public int submissionNumber() { return _submissions.size(); }
+
+  Collection<Professor> professors() { return _discipline.professors(); }
+  Collection<Student> students() { return _discipline.students(); }
+  Collection<Student> courseRepresentatives() { return _discipline.courseRepresentatives(); }
 }

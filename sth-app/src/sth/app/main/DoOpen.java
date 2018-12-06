@@ -4,6 +4,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.ClassNotFoundException;
 
+import java.util.Collection;
+
 import pt.tecnico.po.ui.Command;
 import pt.tecnico.po.ui.Input;
 import pt.tecnico.po.ui.Form;
@@ -12,6 +14,10 @@ import sth.SchoolManager;
 import sth.exceptions.ImportFileException;
 import sth.exceptions.NoSuchPersonIdException;
 import sth.app.exceptions.NoSuchPersonException;
+
+import sth.SurveyNotification;
+import sth.SurveyNotificationPrinter;
+import sth.app.printers.SurveyNotificationBasicPrinter;
 
 /**
  * 4.1.1. Open existing document.
@@ -33,10 +39,11 @@ public class DoOpen extends Command<SchoolManager> {
   /** @see pt.tecnico.po.ui.Command#execute() */
   @Override
   public final void execute() throws NoSuchPersonException {
+    Collection<SurveyNotification> notifs = null;
     if (!_hasFilename) {
       try {
           _form.parse();
-          _receiver.load(_filenameInput.value());
+          notifs = _receiver.load(_filenameInput.value());
       }
       catch (FileNotFoundException e) {
         _display.popup(Message.fileNotFound(_filenameInput.value()));
@@ -50,7 +57,7 @@ public class DoOpen extends Command<SchoolManager> {
     }
     else {
       try {
-        _receiver.load();
+        notifs = _receiver.load();
       }
       catch (FileNotFoundException e) {
         _display.popup(Message.fileNotFound(_receiver.getFilename()));
@@ -62,6 +69,10 @@ public class DoOpen extends Command<SchoolManager> {
         throw new NoSuchPersonException(e.getId());
       }
     }
+
+    SurveyNotificationPrinter printer = new SurveyNotificationBasicPrinter();
+    _display.addLine(printer.print(notifs));
+    _display.display();
   }
 
 }
