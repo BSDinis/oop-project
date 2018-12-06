@@ -187,108 +187,82 @@ public class SchoolManager {
 
   public void createProject(String disciplineName, String projectName) 
       throws DisciplineNotFoundException, ProjectAlreadyExistsException {
-    Professor prof = getProfessorLoggedIn();
-    Discipline d = prof.discipline(disciplineName);
-    d.addProject(projectName);
+    _school.createProject(getLoggedId(), disciplineName, projectName);
     _needUpdate = true;
   }
 
   public Collection<Student> disciplineStudents(String disciplineName)
     throws DisciplineNotFoundException {
-    Professor prof = getProfessorLoggedIn();
-    Discipline d = prof.discipline(disciplineName);
-    return d.students();
+    return _school.disciplineStudents(getLoggedId(), disciplineName);
   }
 
   public Collection<String> projectSubmissions(String disciplineName, String projectName)
     throws ProjectNotFoundException, DisciplineNotFoundException {
-
-    Professor prof = getProfessorLoggedIn();
-    Project p = prof.project(disciplineName, projectName);
-    return p.getSubmissions();
+    return _school.projectSubmissions(getLoggedId(), disciplineName, projectName);
   }
 
   public void closeProject(String disciplineName, String projectName)
     throws ProjectNotFoundException, DisciplineNotFoundException {
 
-    Professor prof = getProfessorLoggedIn();
-    Project p = prof.project(disciplineName, projectName);
-    p.close();
+    _school.closeProject(getLoggedId(), disciplineName, projectName);
     _needUpdate = true;
   }
 
   public void deliverProject(String disciplineName, String projectName, String submission) 
     throws ProjectNotFoundException, DisciplineNotFoundException, ProjectNotOpenException {
-    Student student = getStudentLoggedIn();
-    student.submitProject(disciplineName, projectName, submission); 
+    _school.deliverProject(getLoggedId(), disciplineName, projectName, submission);
     _needUpdate = true;
   }
 
   public void createSurvey(String disciplineName, String projectName) 
     throws ProjectNotFoundException, DisciplineNotFoundException, SurveyAlreadyCreatedException {
-    Student rep = getRepresentativeLoggedIn();
-    Project p = rep.getCourseProject(disciplineName, projectName);
-    if (!p.isOpen()) throw new ProjectNotFoundException(disciplineName, projectName);
-    p.createSurvey();
+    _school.createSurvey(getLoggedId(), disciplineName, projectName);
     _needUpdate = true;
   }
 
   public void finishSurvey(String disciplineName, String projectName)
     throws ProjectNotFoundException, DisciplineNotFoundException, SurveyNotFoundException, IllegalSurveyFinishException {
-    Student rep = getRepresentativeLoggedIn();
-    Survey s = rep.getCourseSurvey(disciplineName, projectName);
-    s.finish();
+    _school.finishSurvey(getLoggedId(), disciplineName, projectName);
     _needUpdate = true;
   }
 
   public void openSurvey(String disciplineName, String projectName)
     throws ProjectNotFoundException, DisciplineNotFoundException, SurveyNotFoundException, IllegalSurveyOpenException {
-    Student rep = getRepresentativeLoggedIn();
-    Survey s = rep.getCourseSurvey(disciplineName, projectName);
-    s.open();
+    _school.openSurvey(getLoggedId(), disciplineName, projectName);
     _needUpdate = true;
   }
 
   public void closeSurvey(String disciplineName, String projectName)
     throws ProjectNotFoundException, DisciplineNotFoundException, SurveyNotFoundException , IllegalSurveyCloseException {
-    Student rep = getRepresentativeLoggedIn();
-    Survey s = rep.getCourseSurvey(disciplineName, projectName);
-    s.close();
+    _school.closeSurvey(getLoggedId(), disciplineName, projectName);
     _needUpdate = true;
   }
 
   public void cancelSurvey(String disciplineName, String projectName)
     throws ProjectNotFoundException, DisciplineNotFoundException, SurveyNotFoundException, SurveyNotEmptyException, FinishedSurveyException {
-    Student rep = getRepresentativeLoggedIn();
-    Survey s = rep.getCourseSurvey(disciplineName, projectName);
-    s.cancel();
-    _needUpdate = true;
-  }
-
-  public void answerSurvey(String disciplineName, String projectName, int hours, String comment)
-    throws ProjectNotFoundException, DisciplineNotFoundException, SurveyNotFoundException {
-    Student student = getStudentLoggedIn();
-    Survey s = student.survey(disciplineName, projectName);
-    s.addResponse(getStudentLoggedIn(), hours, comment);
+    _school.cancelSurvey(getLoggedId(), disciplineName, projectName);
     _needUpdate = true;
   }
 
   public Collection<Survey> disciplineSurveys(String disciplineName) 
     throws DisciplineNotFoundException {
-    Student rep = getRepresentativeLoggedIn();
-    Discipline d = rep.getCourseDiscipline(disciplineName);
-    return d.surveys();
-  } // FIXME
+    return _school.disciplineSurveys(getLoggedId(), disciplineName);
+  } 
 
+  public void answerSurvey(String disciplineName, String projectName, int hours, String comment)
+    throws ProjectNotFoundException, DisciplineNotFoundException, SurveyNotFoundException {
+    _school.answerSurvey(getLoggedId(), disciplineName, projectName, hours, comment);
+    _needUpdate = true;
+  }
+
+  // refactor: this should be one function
   public Survey studentGetSurvey(String disciplineName, String projectName)
     throws ProjectNotFoundException, DisciplineNotFoundException, SurveyNotFoundException {
-    Student student = getStudentLoggedIn();
-    return student.survey(disciplineName, projectName);
+    return _school.studentGetSurvey(getLoggedId(), disciplineName, projectName);
   }
+
   public Survey professorGetSurvey(String disciplineName, String projectName)
     throws ProjectNotFoundException, DisciplineNotFoundException, SurveyNotFoundException {
-    Professor prof = getProfessorLoggedIn();
-    return prof.survey(disciplineName, projectName);
+    return _school.professorGetSurvey(getLoggedId(), disciplineName, projectName);
   }
-  // more to do
 }
