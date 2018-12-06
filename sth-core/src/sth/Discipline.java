@@ -87,6 +87,7 @@ public class Discipline
         }
         catch (SurveyNotFoundException e) {
           // ignored because verification was made
+          e.printStackTrace();
         }
       }
     }
