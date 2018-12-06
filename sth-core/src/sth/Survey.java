@@ -121,10 +121,19 @@ public class Survey
 
   Survey(Project parentProject) {
     _parentProject = parentProject;
+
     if (_parentProject.isOpen())
       _state = new Created();
     else
       _state = new Open();
+
+    Set<Person> subscribers = new TreeSet<>();
+    subscribers.addAll(_parentProject.students());
+    subscribers.addAll(_parentProject.professors());
+    subscribers.addAll(_parentProject.courseRepresentatives());
+
+    for (Person p : subscribers)
+      p.addSurveyObserver(new SurveyObserver(this));
   }
 
   void close() throws IllegalSurveyCloseException {

@@ -69,12 +69,12 @@ public class SchoolManager {
     }
   }
 
-  public void load() 
+  public Collection<SurveyNotification> load() 
     throws FileNotFoundException, ImportFileException, NoSuchPersonIdException {
-    load(getFilename());  
+    return load(getFilename());  
   }
 
-  public void load(String datafile) 
+  public Collection<SurveyNotification> load(String datafile) 
     throws FileNotFoundException, ImportFileException, NoSuchPersonIdException {
 
     School newSchool;
@@ -92,24 +92,23 @@ public class SchoolManager {
 
     if (!newSchool.lookupId(getLoggedId())) 
       throw new NoSuchPersonIdException(getLoggedId());
-    else {
-      _school = newSchool;
-      _filename = datafile;
-      _needUpdate = false;
-    }
+
+    _school = newSchool;
+    _filename = datafile;
+    _needUpdate = false;
+    return getLoggedIn().flushNotifications();
   }
 
   /**
    * @param id
    * @throws NoSuchPersonIdException
    */
-  public void login(int id)
+  public Collection<SurveyNotification> login(int id)
     throws NoSuchPersonIdException {
+    if (!_school.lookupId(id)) throw new NoSuchPersonIdException(id);
 
-    if (_school.lookupId(id))
-      setLoggedId(id);
-    else 
-      throw new NoSuchPersonIdException(id);
+    setLoggedId(id);
+    return getLoggedIn().flushNotifications();
   }
 
   public void logout() {

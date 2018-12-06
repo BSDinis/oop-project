@@ -1,6 +1,8 @@
 package sth;
 
-public abstract class SurveyNotification {
+import java.io.Serializable;
+public abstract class SurveyNotification 
+  implements Serializable {
   private String _disciplineName;
   private String _projectName;
   SurveyNotification(Survey s) {
@@ -9,4 +11,5 @@ public abstract class SurveyNotification {
   }
   public String getDisciplineName() { return _disciplineName; }
   public String getProjectName() { return _projectName; }
+  abstract public String print(SurveyNotificationPrinter p);
 }

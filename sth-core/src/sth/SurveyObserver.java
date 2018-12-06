@@ -1,9 +1,12 @@
 package sth;
 
+import java.io.Serializable;
+
 import java.util.Collection;
 import java.util.Queue;
 import java.util.LinkedList;
-class SurveyObserver {
+
+class SurveyObserver implements Serializable {
   private Survey _survey;
   private Queue<SurveyNotification> _notifs = new LinkedList<>();
   private boolean _subscribed = true; // default

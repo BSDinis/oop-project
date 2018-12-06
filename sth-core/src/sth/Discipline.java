@@ -54,7 +54,9 @@ public class Discipline
   }
 
   Collection<Student> students() { return _students.values(); }
-
+  Collection<Professor> professors() { return _professors.values(); }
+  Collection<Student> courseRepresentatives() { return _course.representatives(); }
+                                                                
   void addProject(String name) 
     throws ProjectAlreadyExistsException {
     if (hasProject(name)) 
