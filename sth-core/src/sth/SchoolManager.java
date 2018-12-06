@@ -95,7 +95,7 @@ public class SchoolManager {
 
     _school = newSchool;
     _filename = datafile;
-    _needUpdate = false;
+    _needUpdate = true;
     return getLoggedIn().flushNotifications();
   }
 

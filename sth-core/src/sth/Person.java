@@ -47,4 +47,7 @@ public class Person
     return notifs;
   }
 
+  public boolean equals(Object o) { return o instanceof Person && equals((Person) o); }
+
+  public boolean equals(Person p) { return p.id() == id(); }
 }

@@ -10,7 +10,7 @@ public abstract class SurveyNotificationPrinter {
     String res = ""; 
     int i;
     for (SurveyNotification notif : notifs)                             
-      res += notif.print(this);
+      res += notif.print(this) + '\n';
 
     return res.substring(0, res.length() - 1); 
   }

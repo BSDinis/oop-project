@@ -12,7 +12,7 @@ public class SurveyNotificationBasicPrinter
   public String print(SurveyOpenNotification n) { return "Pode preencher " + templateString(n); }
   public String print(SurveyFinishNotification n) { return "Resultados do " + templateString(n); }
   private String templateString(SurveyNotification n) {
-    return "inquérito do projeto " + n.getProjectName() + " da disciplina " + n.getDisciplineName();
+    return "inquérito do projecto " + n.getProjectName() + " da disciplina " + n.getDisciplineName();
   }
 }
 

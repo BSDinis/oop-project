@@ -1,11 +1,15 @@
 package sth;
 
 import java.io.Serializable;
+import java.util.Comparator;
 
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.TreeMap;
 import sth.Project;
 
 import sth.exceptions.IllegalSurveyCloseException;
@@ -49,7 +53,11 @@ public class Survey
 
 
   abstract class State implements Serializable {
-    void setState(State new_state) { _state = new_state; }
+    void setState(State new_state) { 
+      _state = new_state; 
+      Survey.this.broadcastChange();
+    }
+
     void open() throws IllegalSurveyOpenException { throw new IllegalSurveyOpenException(disciplineName(), projectName()); }
     void close() throws IllegalSurveyCloseException { throw new IllegalSurveyCloseException(disciplineName(), projectName()); }
     void finish() throws IllegalSurveyFinishException { throw new IllegalSurveyFinishException(disciplineName(), projectName()); }
@@ -128,6 +136,7 @@ public class Survey
       _state = new Open();
 
     Set<Person> subscribers = new TreeSet<>();
+
     subscribers.addAll(_parentProject.students());
     subscribers.addAll(_parentProject.professors());
     subscribers.addAll(_parentProject.courseRepresentatives());
@@ -156,7 +165,7 @@ public class Survey
     _viewers.add(viewer);
   }
 
-  void broadCastChange() {
+  void broadcastChange() {
     for (SurveyObserver viewer : _viewers) 
       viewer.update();
   }
