@@ -26,13 +26,12 @@ public class DoOpen extends Command<SchoolManager> {
   
   
   private Input<String> _filenameInput;
-  private boolean _hasFilename;
   /**
    * @param receiver
    */
   public DoOpen(SchoolManager receiver) {
     super(Label.OPEN, receiver);
-    if (!(_hasFilename = receiver.hasFilename()))
+    if (!receiver.hasFilename())
       _filenameInput = _form.addStringInput(Message.openFile());
   }
 
@@ -40,7 +39,7 @@ public class DoOpen extends Command<SchoolManager> {
   @Override
   public final void execute() throws NoSuchPersonException {
     Collection<SurveyNotification> notifs = null;
-    if (!_hasFilename) {
+    if (!_receiver.hasFilename()) {
       try {
           _form.parse();
           notifs = _receiver.load(_filenameInput.value());
@@ -60,7 +59,7 @@ public class DoOpen extends Command<SchoolManager> {
         notifs = _receiver.load();
       }
       catch (FileNotFoundException e) {
-        _display.popup(Message.fileNotFound(_receiver.getFilename()));
+        _display.popup(Message.fileNotFound(e.getMessage()));
       }
       catch (ImportFileException e) {
         _display.popup(e.getMessage());
