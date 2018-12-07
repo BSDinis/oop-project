@@ -253,6 +253,20 @@ class School implements Serializable {
   }
 
   /**
+   * Change person's phone number
+   *
+   * @return boolean success of change
+   */
+  boolean changePhoneNumber(int id, String newNumber) {
+    Person p = getPersonById(id);
+    if (p != null) {
+      // in principle, the logged in person exists; this is being over cautious
+      p.changePhoneNumber(newNumber);
+      return true;
+    }
+    return false;
+  }
+  /**
    * Get a representative by their id
    *
    * @return Student

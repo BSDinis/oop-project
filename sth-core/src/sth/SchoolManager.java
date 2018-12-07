@@ -40,10 +40,6 @@ public class SchoolManager {
   private int getLoggedId() { return _loggedId; }
   private void setLoggedId(int id) { _loggedId = id; }
 
-  private Student getRepresentativeLoggedIn() { return _school.getRepresentativeById(getLoggedId()); }
-  private Student getStudentLoggedIn() { return _school.getStudentById(getLoggedId()); }
-  private Professor getProfessorLoggedIn() { return _school.getProfessorById(getLoggedId()); }
-
   /**
    * @param datafile
    * @throws ImportFileException
@@ -169,12 +165,7 @@ public class SchoolManager {
   }
 
   public void changePhoneNumber(String newNumber) {
-    Person p = getLoggedIn();
-    if (p != null) {
-      // in principle, the logged in person exists; this is being over cautious
-      p.changePhoneNumber(newNumber);
-      _needUpdate = true;
-    }
+    _needUpdate |= _school.changePhoneNumber(getLoggedId(), newNumber);
   }
 
   public Collection<Person> searchPerson(String name) {
