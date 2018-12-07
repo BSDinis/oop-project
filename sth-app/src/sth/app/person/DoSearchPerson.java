@@ -5,6 +5,7 @@ import pt.tecnico.po.ui.Command;
 import pt.tecnico.po.ui.Input; 
 
 import sth.SchoolManager;
+import sth.Person;
 /**
  * 4.2.4. Search person.
  */
@@ -24,11 +25,11 @@ public class DoSearchPerson extends Command<SchoolManager> {
   @Override
   public final void execute() {
     _form.parse();
-    Collection<String> searchResult;
-    searchResult = _receiver.getPersonDescription(_name.value());
+    Collection<Person> searchResult;
+    searchResult = _receiver.getPerson(_name.value());
 
-    for (String s : searchResult) {
-      _display.addLine(s); 
+    for (Person p : searchResult) {
+      _display.addLine(p.toString()); 
     }
     _display.display();
   }

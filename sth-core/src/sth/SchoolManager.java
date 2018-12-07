@@ -127,9 +127,12 @@ public class SchoolManager {
     return _filename != null;
   }
 
-
   public String getLoggedPersonDescription() {
     return _school.getPersonDescription(getLoggedId());
+  }
+
+  public Person getPersonLoggedIn() {
+    return _school.getPersonById(getLoggedId());
   }
 
   /**
