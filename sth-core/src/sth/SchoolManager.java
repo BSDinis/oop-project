@@ -27,6 +27,19 @@ import sth.exceptions.SurveyNotEmptyException;
 import sth.exceptions.SurveyNotFoundException;
 
 
+/*
+ * Note to future self:
+ * The school manager returns objects to the school.
+ * This is OK: the objects' public interface DOES NOT ALTER IT state
+ * This is important; any future changes should keep that in mind
+ *
+ * Also this puts the burden of formatting the output in the app (where it should be)
+ * Some objects have toString functions that may (coincidentally) coincide with the
+ *   app's formatting requirements.
+ *
+ * This is whishful thinking ;).
+ * If more flexibility were to be required, visitors could be created (see SurveyPrinter.java)
+ */
 
 /**
  * The façade class.
