@@ -359,21 +359,21 @@ class School implements Serializable {
   void createProject(int id, String disciplineName, String projectName) 
       throws DisciplineNotFoundException, ProjectAlreadyExistsException {
     Professor prof = getProfessorById(id);
-    Discipline d = prof.discipline(disciplineName);
+    Discipline d = prof.getDiscipline(disciplineName);
     d.addProject(projectName);
   }
 
   Collection<Student> disciplineStudents(int id, String disciplineName)
     throws DisciplineNotFoundException {
     Professor prof = getProfessorById(id);
-    Discipline d = prof.discipline(disciplineName);
-    return d.students();
+    Discipline d = prof.getDiscipline(disciplineName);
+    return d.getStudents();
   }
 
   Collection<String> projectSubmissions(int id, String disciplineName, String projectName)
     throws ProjectNotFoundException, DisciplineNotFoundException {
     Professor prof = getProfessorById(id);
-    Project p = prof.project(disciplineName, projectName);
+    Project p = prof.getProject(disciplineName, projectName);
     return p.getSubmissions();
   }
 
@@ -381,7 +381,7 @@ class School implements Serializable {
     throws ProjectNotFoundException, DisciplineNotFoundException {
 
     Professor prof = getProfessorById(id);
-    Project p = prof.project(disciplineName, projectName);
+    Project p = prof.getProject(disciplineName, projectName);
     p.close();
   }
 
@@ -394,7 +394,8 @@ class School implements Serializable {
   void createSurvey(int id, String disciplineName, String projectName) 
     throws ProjectNotFoundException, DisciplineNotFoundException, SurveyAlreadyCreatedException {
     Student rep = getRepresentativeById(id);
-    Project p = rep.getCourseProject(disciplineName, projectName);
+    Course course = rep.getCourse();
+    Project p = course.getProject(disciplineName, projectName);
     if (!p.isOpen()) throw new ProjectNotFoundException(disciplineName, projectName);
     p.createSurvey();
   }
@@ -402,44 +403,49 @@ class School implements Serializable {
   void finishSurvey(int id, String disciplineName, String projectName)
     throws ProjectNotFoundException, DisciplineNotFoundException, SurveyNotFoundException, IllegalSurveyFinishException {
     Student rep = getRepresentativeById(id);
-    Survey s = rep.getCourseSurvey(disciplineName, projectName);
+    Course course = rep.getCourse();
+    Survey s = course.getSurvey(disciplineName, projectName);
     s.finish();
   }
 
   void openSurvey(int id, String disciplineName, String projectName)
     throws ProjectNotFoundException, DisciplineNotFoundException, SurveyNotFoundException, IllegalSurveyOpenException {
     Student rep = getRepresentativeById(id);
-    Survey s = rep.getCourseSurvey(disciplineName, projectName);
+    Course course = rep.getCourse();
+    Survey s = course.getSurvey(disciplineName, projectName);
     s.open();
   }
 
   void closeSurvey(int id, String disciplineName, String projectName)
     throws ProjectNotFoundException, DisciplineNotFoundException, SurveyNotFoundException , IllegalSurveyCloseException {
     Student rep = getRepresentativeById(id);
-    Survey s = rep.getCourseSurvey(disciplineName, projectName);
+    Course course = rep.getCourse();
+    Survey s = course.getSurvey(disciplineName, projectName);
     s.close();
   }
 
   void cancelSurvey(int id, String disciplineName, String projectName)
     throws ProjectNotFoundException, DisciplineNotFoundException, SurveyNotFoundException, SurveyNotEmptyException, FinishedSurveyException {
     Student rep = getRepresentativeById(id);
-    Survey s = rep.getCourseSurvey(disciplineName, projectName);
+    Course course = rep.getCourse();
+    Survey s = course.getSurvey(disciplineName, projectName);
     s.cancel();
   }
 
   void answerSurvey(int id, String disciplineName, String projectName, int hours, String comment)
     throws ProjectNotFoundException, DisciplineNotFoundException, SurveyNotFoundException {
     Student student = getStudentById(id);
-    Survey s = student.survey(disciplineName, projectName);
+    Survey s = student.getSurvey(disciplineName, projectName);
     s.addResponse(getStudentById(id), hours, comment);
   }
 
   Collection<Survey> disciplineSurveys(int id, String disciplineName) 
     throws DisciplineNotFoundException {
     Student rep = getRepresentativeById(id);
-    Discipline d = rep.getCourseDiscipline(disciplineName);
-    return d.surveys();
-  } // FIXME
+    Course course = rep.getCourse();
+    Discipline d = course.getDiscipline(disciplineName);
+    return d.getSurveys();
+  } 
 
   Survey getSurvey(int id, String disciplineName, String projectName)
     throws ProjectNotFoundException, DisciplineNotFoundException, SurveyNotFoundException {
@@ -448,6 +454,6 @@ class School implements Serializable {
     else if (isProfessor(id)) person = getProfessorById(id);
     else throw new SurveyNotFoundException(disciplineName, projectName); // this should never happen
 
-    return person.survey(disciplineName, projectName);
+    return person.getSurvey(disciplineName, projectName);
   }
 }

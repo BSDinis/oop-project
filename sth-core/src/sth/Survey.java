@@ -116,13 +116,9 @@ public class Survey
     void finish() {}
     void cancel() throws FinishedSurveyException { throw new FinishedSurveyException(disciplineName(), projectName());}
     String print(SurveyPrinter p) { return p.print(this); }
-    public int minHours() { return _minHours; }
-    public int maxHours() { return _maxHours; }
-    public int medHours() { 
-      if (responsesNumber() == 0) 
-        return 0; // this will never happen
-      return _sumHours / responsesNumber(); 
-    }
+    public int minHours() { return (responsesNumber() > 0 ) ? _minHours : 0; }
+    public int maxHours() { return (responsesNumber() > 0 ) ? _maxHours : 0; }
+    public int medHours() { return (responsesNumber() > 0 ) ? _sumHours/responsesNumber() : 0; }
     SurveyNotification genNotification() { return new SurveyFinishNotification(Survey.this); }
     public int submissionNumber() { return _parentProject.submissionNumber(); }
     public int responsesNumber() { return _responses.size(); }
@@ -136,9 +132,9 @@ public class Survey
 
       Set<Person> subscribers = new TreeSet<>();
 
-      subscribers.addAll(_parentProject.students());
-      subscribers.addAll(_parentProject.professors());
-      subscribers.addAll(_parentProject.courseRepresentatives());
+      subscribers.addAll(_parentProject.getStudents());
+      subscribers.addAll(_parentProject.getProfessors());
+      subscribers.addAll(_parentProject.getCourseRepresentatives());
 
       for (Person p : subscribers)
         p.addSurveyObserver(new SurveyObserver(this));

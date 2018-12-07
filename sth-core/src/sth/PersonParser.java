@@ -19,6 +19,7 @@ import sth.exceptions.DisciplineLimitReachedException;
 import sth.exceptions.EnrollmentLimitReachedException;
 import sth.exceptions.DuplicatePersonException;
 import sth.exceptions.DuplicateCourseException;
+import sth.exceptions.DisciplineNotFoundException;
 
 class PersonParser implements Serializable {
   private LinkedList<List<String>> _lines = new LinkedList<List<String>>();
@@ -251,7 +252,13 @@ class PersonParser implements Serializable {
    */
   private Discipline generateDisciplineIfNeeded(Course c, String disciplineName) {
     if (c.hasDiscipline(disciplineName)) {
-      return c.getDiscipline(disciplineName);
+      try {
+        return c.getDiscipline(disciplineName);
+      }
+      catch (DisciplineNotFoundException e) {
+        // ignored because verification was made
+        e.printStackTrace();
+      }
     }
     /* magic number: the Ultimate Question of Life, The Universe and
      * Everything is: what is the maximum number (in hex, obviously)
