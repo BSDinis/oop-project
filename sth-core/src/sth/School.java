@@ -326,11 +326,11 @@ class School implements Serializable {
   Course getCourseByName(String name) { return _courses.get(name); }
 
   /**
-   * Get people descriptions by a common name
+   * Get group of people who have a certain name
    *
    * @return Collection of String
    */
-  Collection<String> getPersonDescriptionByName(String name) {
+  Collection<Person> getPersonByName(String name) {
     // using tree set for ordering
     Collection<Person> peopleSet = new TreeSet<>(new Comparator<Person>() {
       public int compare(Person p1, Person p2) {
@@ -344,11 +344,7 @@ class School implements Serializable {
         peopleSet.add(p);
     }
 
-    Collection<String> result = new LinkedList<>();
-    for (Person p : peopleSet)
-      result.add(p.toString());
-
-    return result;
+    return peopleSet;
   }
 
   /**

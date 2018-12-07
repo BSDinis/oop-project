@@ -167,8 +167,8 @@ public class SchoolManager {
     _needUpdate |= _school.changePhoneNumber(getLoggedId(), newNumber);
   }
 
-  public Collection<String> getPersonDescription(String name) {
-    return _school.getPersonDescriptionByName(name);
+  public Collection<Person> getPerson(String name) {
+    return _school.getPersonByName(name);
   }
 
   public Collection<Person> allPersons() {
