@@ -160,6 +160,9 @@ public class SchoolManager {
     return getLoggedId() != -1 && _school.isRepresentative(getLoggedId());
   }
 
+  /* =====================================
+   *           Generic methods
+   * =====================================*/
   public void changePhoneNumber(String newNumber) {
     _needUpdate |= _school.changePhoneNumber(getLoggedId(), newNumber);
   }
@@ -172,20 +175,19 @@ public class SchoolManager {
     return _school.people(); 
   }
 
-  public void createProject(String disciplineName, String projectName) 
-      throws DisciplineNotFoundException, ProjectAlreadyExistsException {
-    _school.createProject(getLoggedId(), disciplineName, projectName);
-    _needUpdate = true;
-  }
+  /* =====================================
+   *           Professor methods
+   * =====================================*/
 
   public Collection<Student> disciplineStudents(String disciplineName)
     throws DisciplineNotFoundException {
     return _school.disciplineStudents(getLoggedId(), disciplineName);
   }
 
-  public Collection<String> projectSubmissions(String disciplineName, String projectName)
-    throws ProjectNotFoundException, DisciplineNotFoundException {
-    return _school.projectSubmissions(getLoggedId(), disciplineName, projectName);
+  public void createProject(String disciplineName, String projectName) 
+      throws DisciplineNotFoundException, ProjectAlreadyExistsException {
+    _school.createProject(getLoggedId(), disciplineName, projectName);
+    _needUpdate = true;
   }
 
   public void closeProject(String disciplineName, String projectName)
@@ -195,11 +197,14 @@ public class SchoolManager {
     _needUpdate = true;
   }
 
-  public void deliverProject(String disciplineName, String projectName, String submission) 
-    throws ProjectNotFoundException, DisciplineNotFoundException, ProjectNotOpenException {
-    _school.deliverProject(getLoggedId(), disciplineName, projectName, submission);
-    _needUpdate = true;
+  public Collection<String> projectSubmissions(String disciplineName, String projectName)
+    throws ProjectNotFoundException, DisciplineNotFoundException {
+    return _school.projectSubmissions(getLoggedId(), disciplineName, projectName);
   }
+
+  /* =====================================
+   *        Representative methods
+   * =====================================*/
 
   public void createSurvey(String disciplineName, String projectName) 
     throws ProjectNotFoundException, DisciplineNotFoundException, SurveyAlreadyCreatedException {
@@ -236,12 +241,23 @@ public class SchoolManager {
     return _school.disciplineSurveys(getLoggedId(), disciplineName);
   } 
 
+  /* =====================================
+   *           Student methods
+   * =====================================*/
+
+  public void deliverProject(String disciplineName, String projectName, String submission) 
+    throws ProjectNotFoundException, DisciplineNotFoundException, ProjectNotOpenException {
+    _school.deliverProject(getLoggedId(), disciplineName, projectName, submission);
+    _needUpdate = true;
+  }
+
   public void answerSurvey(String disciplineName, String projectName, int hours, String comment)
     throws ProjectNotFoundException, DisciplineNotFoundException, SurveyNotFoundException {
     _school.answerSurvey(getLoggedId(), disciplineName, projectName, hours, comment);
     _needUpdate = true;
   }
 
+  // this is for all
   public Survey getSurvey(String disciplineName, String projectName)
     throws ProjectNotFoundException, DisciplineNotFoundException, SurveyNotFoundException {
     return _school.getSurvey(getLoggedId(), disciplineName, projectName);
