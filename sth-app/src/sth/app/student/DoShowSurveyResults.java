@@ -44,7 +44,7 @@ public class DoShowSurveyResults extends Command<SchoolManager> {
       public String print(Survey.Finished s) {
         String res = defaultFormat(s.disciplineName(), s.projectName()) + '\n';
         res += " * Número de respostas: " + s.responsesNumber() + "\n";
-        res += " * Tempo médio (horas): " + s.medHours();
+        res += " * Tempo médio (horas): " + s.avgHours();
         return res;
       }
     }

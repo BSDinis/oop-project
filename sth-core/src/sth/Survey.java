@@ -82,14 +82,14 @@ public class Survey
   }
 
   public class Open extends State implements Serializable {
-    void open() { }
     void close() { setState(new Closed()); }
     void cancel() throws SurveyNotEmptyException {
-      if (!_answeredIds.isEmpty()) 
+      if (!isEmpty()) 
         throw new SurveyNotEmptyException(disciplineName(), projectName());
 
       _parentProject.remSurvey();
     }
+
     void addResponse(Student s, int hours, String comment)
     { 
       if (_parentProject.hasSubmissionFrom(s) && !_answeredIds.contains(s.id())) {
@@ -100,6 +100,7 @@ public class Survey
         _responses.add(new SurveyResponse(s, hours, comment));
       }
     }
+
     String print(SurveyPrinter p) { return p.print(this); }
     SurveyNotification genNotification() { return new SurveyOpenNotification(Survey.this); }
   }
@@ -118,7 +119,7 @@ public class Survey
     String print(SurveyPrinter p) { return p.print(this); }
     public int minHours() { return (responsesNumber() > 0 ) ? _minHours : 0; }
     public int maxHours() { return (responsesNumber() > 0 ) ? _maxHours : 0; }
-    public int medHours() { return (responsesNumber() > 0 ) ? _sumHours/responsesNumber() : 0; }
+    public int avgHours() { return (responsesNumber() > 0 ) ? _sumHours/responsesNumber() : 0; }
     SurveyNotification genNotification() { return new SurveyFinishNotification(Survey.this); }
     public int submissionNumber() { return _parentProject.submissionNumber(); }
     public int responsesNumber() { return _responses.size(); }
@@ -174,6 +175,8 @@ public class Survey
     throws SurveyNotFoundException {
     _state.addResponse(s, hours, comment);
   }
+
+  boolean isEmpty() { return _answeredIds.isEmpty(); }
 
   public String print(SurveyPrinter p) {
     return _state.print(p);

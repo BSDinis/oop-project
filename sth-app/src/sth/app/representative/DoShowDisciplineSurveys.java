@@ -39,7 +39,7 @@ public class DoShowDisciplineSurveys extends Command<SchoolManager> {
 
       public String print(Survey.Finished s) {
         String res = defaultFormat(s.disciplineName(), s.projectName());
-        res += " - " + s.responsesNumber() + " respostas - " + s.medHours() + " horas";
+        res += " - " + s.responsesNumber() + " respostas - " + s.avgHours() + " horas";
         return res;
       }
     }

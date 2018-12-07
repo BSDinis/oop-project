@@ -45,7 +45,7 @@ public class DoShowSurveyResults extends Command<SchoolManager> {
         String res = defaultFormat(s.disciplineName(), s.projectName());
         res += "\n * Número de submissões: " + s.submissionNumber();
         res += "\n * Número de respostas: " + s.responsesNumber();
-        res += "\n * Tempos de resolução (horas) (mínimo, médio, máximo): " + s.minHours() + ", " + s.medHours() + ", " + s.maxHours();
+        res += "\n * Tempos de resolução (horas) (mínimo, médio, máximo): " + s.minHours() + ", " + s.avgHours() + ", " + s.maxHours();
         return res;
       }
     }
