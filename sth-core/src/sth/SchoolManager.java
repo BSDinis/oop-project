@@ -54,6 +54,11 @@ public class SchoolManager {
     }
   }
 
+  public void save() 
+    throws IOException {
+    save(getFilename());
+  }
+
   public void save(String datafile) 
     throws IOException {
     if (_filename == null || !_filename.equals(datafile) || _needUpdate) {
@@ -80,7 +85,7 @@ public class SchoolManager {
       ois.close();
     }
     catch (FileNotFoundException e) {
-      throw new FileNotFoundException(e.getMessage()); // do not convert FileNotFound to ImportFile
+      throw new FileNotFoundException(datafile); // send filename that caused
     }
     catch (IOException | ClassNotFoundException e) {
       throw new ImportFileException(e); 
@@ -111,7 +116,7 @@ public class SchoolManager {
     setLoggedId(-1);
   }
 
-  public String getFilename() {
+  String getFilename() {
     return _filename;
   }
 
@@ -120,48 +125,40 @@ public class SchoolManager {
   }
 
 
-  public Person getLoggedIn() {
+  Person getLoggedIn() {
     return _school.getPersonById(getLoggedId()); 
+  }
+
+  public String getLoggedPersonDescription() {
+    return _school.getPersonDescription(getLoggedId());
   }
 
   /**
    * @return true when the currently logged in person is an administrative
    */
   public boolean hasAdministrative() {
-    if (getLoggedId() != -1)
-      return _school.isAdministrative(getLoggedId());
-    else
-      return false;
+    return getLoggedId() != -1 && _school.isAdministrative(getLoggedId());
   }
 
   /**
    * @return true when the currently getLogged in person is a professor
    */
   public boolean hasProfessor() {
-    if (getLoggedId() != -1)
-      return _school.isProfessor(getLoggedId());
-    else
-      return false;
+    return getLoggedId() != -1 && _school.isProfessor(getLoggedId());
   }
 
   /**
    * @return true when the currently getLogged in person is a student
    */
   public boolean hasStudent() {
-    if (getLoggedId() != -1)
-      return _school.isStudent(getLoggedId());
-    else
-      return false;
+    return getLoggedId() != -1 && _school.isStudent(getLoggedId());
   }
 
   /**
    * @return true when the currently getLogged in person is a representative
    */
   public boolean hasRepresentative() {
-    if (getLoggedId() != -1)
-      return _school.isRepresentative(getLoggedId());
-    else
-      return false;
+    return getLoggedId() != -1 && _school.isRepresentative(getLoggedId());
   }
 
   public void changePhoneNumber(String newNumber) {

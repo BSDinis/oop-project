@@ -19,9 +19,9 @@ public class DoShowPerson extends Command<SchoolManager> {
   /** @see pt.tecnico.po.ui.Command#execute() */
   @Override
   public final void execute() {
-    Person p = _receiver.getLoggedIn();
-    if (p != null)
-      _display.addLine(p.toString());
+    String descript = _receiver.getLoggedPersonDescription();
+    if (descript != null)
+      _display.addLine(descript);
     else
       _display.addLine("No person logged in");
 

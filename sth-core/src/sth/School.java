@@ -243,6 +243,18 @@ class School implements Serializable {
     return p;
   }
 
+
+  /**
+   * Get description of a person 
+   *
+   * @return String
+   */
+  String getPersonDescription(int id) {
+    Person p = getPersonById(id);
+    if (p == null) return null;
+    return p.toString();
+  }
+
   /**
    * Get a staffer by their id
    *
