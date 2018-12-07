@@ -84,5 +84,5 @@ public class Project implements Serializable {
 
   Collection<Professor> professors() { return _discipline.professors(); }
   Collection<Student> students() { return _discipline.students(); }
-  Collection<Student> courseRepresentatives() { return _discipline.courseRepresentatives(); }
+  Collection<Student> getCourseRepresentatives() { return _discipline.getCourseRepresentatives(); }
 }

@@ -138,7 +138,7 @@ public class Survey
 
       subscribers.addAll(_parentProject.students());
       subscribers.addAll(_parentProject.professors());
-      subscribers.addAll(_parentProject.courseRepresentatives());
+      subscribers.addAll(_parentProject.getCourseRepresentatives());
 
       for (Person p : subscribers)
         p.addSurveyObserver(new SurveyObserver(this));

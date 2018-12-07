@@ -37,7 +37,7 @@ public class Course
 
   Student getRepresentative(int id) { return _representatives.get(id); }
 
-  Collection<Student> representatives() { return _representatives.values(); }
+  Collection<Student> getRepresentatives() { return _representatives.values(); }
 
   void electRepresentative(Student newRep) 
     throws TooManyRepresentativesException {
