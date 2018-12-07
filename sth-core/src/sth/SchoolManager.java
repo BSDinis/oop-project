@@ -255,14 +255,8 @@ public class SchoolManager {
     _needUpdate = true;
   }
 
-  // refactor: this should be one function
-  public Survey studentGetSurvey(String disciplineName, String projectName)
+  public Survey getSurvey(String disciplineName, String projectName)
     throws ProjectNotFoundException, DisciplineNotFoundException, SurveyNotFoundException {
-    return _school.studentGetSurvey(getLoggedId(), disciplineName, projectName);
-  }
-
-  public Survey professorGetSurvey(String disciplineName, String projectName)
-    throws ProjectNotFoundException, DisciplineNotFoundException, SurveyNotFoundException {
-    return _school.professorGetSurvey(getLoggedId(), disciplineName, projectName);
+    return _school.getSurvey(getLoggedId(), disciplineName, projectName);
   }
 }

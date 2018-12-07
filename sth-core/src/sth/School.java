@@ -400,14 +400,13 @@ class School implements Serializable {
     return d.surveys();
   } // FIXME
 
-  Survey studentGetSurvey(int id, String disciplineName, String projectName)
+  Survey getSurvey(int id, String disciplineName, String projectName)
     throws ProjectNotFoundException, DisciplineNotFoundException, SurveyNotFoundException {
-    Student student = getStudentById(id);
-    return student.survey(disciplineName, projectName);
-  }
-  Survey professorGetSurvey(int id, String disciplineName, String projectName)
-    throws ProjectNotFoundException, DisciplineNotFoundException, SurveyNotFoundException {
-    Professor prof = getProfessorById(id);
-    return prof.survey(disciplineName, projectName);
+    PersonWithDisciplines person = null;
+    if (isStudent(id)) person = getStudentById(id);
+    else if (isProfessor(id)) person = getProfessorById(id);
+    else throw new SurveyNotFoundException(disciplineName, projectName); // this should never happen
+
+    return person.survey(disciplineName, projectName);
   }
 }

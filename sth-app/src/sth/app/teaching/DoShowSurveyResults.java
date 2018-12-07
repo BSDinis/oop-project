@@ -49,7 +49,7 @@ public class DoShowSurveyResults extends Command<SchoolManager> {
     }
     _form.parse();
     try {
-      Survey s = _receiver.professorGetSurvey(_disciplineName.value(), _projectName.value()); 
+      Survey s = _receiver.getSurvey(_disciplineName.value(), _projectName.value()); 
       _display.addLine(s.print(new SurveyProfessorPrinter())); 
       _display.display();
     }

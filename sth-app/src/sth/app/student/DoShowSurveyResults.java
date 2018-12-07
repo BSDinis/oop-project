@@ -51,7 +51,7 @@ public class DoShowSurveyResults extends Command<SchoolManager> {
 
     _form.parse();
     try {
-      Survey s = _receiver.studentGetSurvey( _disciplineName.value(), _projectName.value()); 
+      Survey s = _receiver.getSurvey( _disciplineName.value(), _projectName.value()); 
       SurveyPrinter printer = new SurveyStudentPrinter();
       _display.addLine(s.print(printer)); 
       _display.display();
