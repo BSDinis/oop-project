@@ -20,7 +20,6 @@ import sth.exceptions.FinishedSurveyException;
 import sth.exceptions.SurveyNotEmptyException;
 import sth.exceptions.SurveyNotFoundException;
 
-// FIXME: can u, for fucks sake, draw the state-machine?
 public class Survey 
   implements Serializable {
 
@@ -73,7 +72,11 @@ public class Survey
   }
 
   public class Created extends State implements Serializable {
-    void open() { setState(new Open()); }
+    void open() 
+      throws IllegalSurveyOpenException { 
+      if (_parentProject.isOpen()) throw new IllegalSurveyOpenException(disciplineName(), projectName());
+      setState(new Open()); 
+    }
     String print(SurveyPrinter p) { return p.print(this); }
     void cancel() { _parentProject.remSurvey(); }
   }
@@ -112,8 +115,6 @@ public class Survey
   public class Finished extends State implements Serializable {
     void finish() {}
     void cancel() throws FinishedSurveyException { throw new FinishedSurveyException(disciplineName(), projectName());}
-    //void open() throws FinishedSurveyException { throw new FinishedSurveyException(disciplineName(), projectName());}
-    //void close() throws FinishedSurveyException { throw new FinishedSurveyException(disciplineName(), projectName());} not sure
     String print(SurveyPrinter p) { return p.print(this); }
     public int minHours() { return _minHours; }
     public int maxHours() { return _maxHours; }
@@ -130,19 +131,18 @@ public class Survey
   Survey(Project parentProject) {
     _parentProject = parentProject;
 
-    if (_parentProject.isOpen())
-      _state = new Created();
-    else
-      _state = new Open();
+    if (_parentProject.isOpen()) {
+        _state = new Created();
 
-    Set<Person> subscribers = new TreeSet<>();
+      Set<Person> subscribers = new TreeSet<>();
 
-    subscribers.addAll(_parentProject.students());
-    subscribers.addAll(_parentProject.professors());
-    subscribers.addAll(_parentProject.courseRepresentatives());
+      subscribers.addAll(_parentProject.students());
+      subscribers.addAll(_parentProject.professors());
+      subscribers.addAll(_parentProject.courseRepresentatives());
 
-    for (Person p : subscribers)
-      p.addSurveyObserver(new SurveyObserver(this));
+      for (Person p : subscribers)
+        p.addSurveyObserver(new SurveyObserver(this));
+    }
   }
 
   void close() throws IllegalSurveyCloseException {
