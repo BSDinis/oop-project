@@ -2,7 +2,6 @@ package sth;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.text.ParseException;
 
 import java.util.Comparator;
 
@@ -13,16 +12,12 @@ import java.util.Collection;
 import java.util.TreeSet;
 import java.util.List;
 import java.util.LinkedList;
-import java.util.ArrayList;
 
 import java.util.Locale;
 import java.text.Collator;
-import java.text.RuleBasedCollator;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
 
 import sth.exceptions.BadEntryException;
 import sth.exceptions.DisciplineNotFoundException;
@@ -356,20 +351,42 @@ class School implements Serializable {
     return result;
   }
 
-  void createProject(int id, String disciplineName, String projectName) 
-      throws DisciplineNotFoundException, ProjectAlreadyExistsException {
-    Professor prof = getProfessorById(id);
-    Discipline d = prof.getDiscipline(disciplineName);
-    d.addProject(projectName);
-  }
-
+  /**
+   * Get list of students in a discipline (has to be a professor)
+   *
+   * @param id
+   * @param disciplineName
+   */
   Collection<Student> disciplineStudents(int id, String disciplineName)
     throws DisciplineNotFoundException {
-    Professor prof = getProfessorById(id);
+    Professor prof = getProfessorById(id); // FIXME 
     Discipline d = prof.getDiscipline(disciplineName);
     return d.getStudents();
   }
 
+
+  /**
+   * Create a project for a user (has to be a professor)
+   *
+   * @param id
+   * @param disciplineName
+   * @param projectName
+   */
+  void createProject(int id, String disciplineName, String projectName) 
+      throws DisciplineNotFoundException, ProjectAlreadyExistsException {
+    Professor prof = getProfessorById(id); // FIXME
+    Discipline d = prof.getDiscipline(disciplineName);
+    d.addProject(projectName);
+  }
+
+
+  /**
+   * Get collection of students in a discipline (has to be a professor)
+   *
+   * @param id
+   * @param disciplineName
+   * @param projectName
+   */
   Collection<String> projectSubmissions(int id, String disciplineName, String projectName)
     throws ProjectNotFoundException, DisciplineNotFoundException {
     Professor prof = getProfessorById(id);
@@ -377,6 +394,13 @@ class School implements Serializable {
     return p.getSubmissions();
   }
 
+  /**
+   * Close a project
+   *
+   * @param id
+   * @param disciplineName
+   * @param projectName
+   */
   void closeProject(int id, String disciplineName, String projectName)
     throws ProjectNotFoundException, DisciplineNotFoundException {
 
@@ -385,12 +409,13 @@ class School implements Serializable {
     p.close();
   }
 
-  void deliverProject(int id, String disciplineName, String projectName, String submission) 
-    throws ProjectNotFoundException, DisciplineNotFoundException, ProjectNotOpenException {
-    Student student = getStudentById(id);
-    student.submitProject(disciplineName, projectName, submission); 
-  }
-
+  /**
+   * Create a project
+   *
+   * @param id
+   * @param disciplineName
+   * @param projectName
+   */
   void createSurvey(int id, String disciplineName, String projectName) 
     throws ProjectNotFoundException, DisciplineNotFoundException, SurveyAlreadyCreatedException {
     Student rep = getRepresentativeById(id);
@@ -400,14 +425,14 @@ class School implements Serializable {
     p.createSurvey();
   }
 
-  void finishSurvey(int id, String disciplineName, String projectName)
-    throws ProjectNotFoundException, DisciplineNotFoundException, SurveyNotFoundException, IllegalSurveyFinishException {
-    Student rep = getRepresentativeById(id);
-    Course course = rep.getCourse();
-    Survey s = course.getSurvey(disciplineName, projectName);
-    s.finish();
-  }
 
+  /**
+   * Open a Survey
+   *
+   * @param id
+   * @param disciplineName
+   * @param projectName
+   */
   void openSurvey(int id, String disciplineName, String projectName)
     throws ProjectNotFoundException, DisciplineNotFoundException, SurveyNotFoundException, IllegalSurveyOpenException {
     Student rep = getRepresentativeById(id);
@@ -416,6 +441,14 @@ class School implements Serializable {
     s.open();
   }
 
+
+  /**
+   * Close a Survey
+   *
+   * @param id
+   * @param disciplineName
+   * @param projectName
+   */
   void closeSurvey(int id, String disciplineName, String projectName)
     throws ProjectNotFoundException, DisciplineNotFoundException, SurveyNotFoundException , IllegalSurveyCloseException {
     Student rep = getRepresentativeById(id);
@@ -424,6 +457,14 @@ class School implements Serializable {
     s.close();
   }
 
+
+  /**
+   * Cancel a Survey
+   *
+   * @param id
+   * @param disciplineName
+   * @param projectName
+   */
   void cancelSurvey(int id, String disciplineName, String projectName)
     throws ProjectNotFoundException, DisciplineNotFoundException, SurveyNotFoundException, SurveyNotEmptyException, FinishedSurveyException {
     Student rep = getRepresentativeById(id);
@@ -432,13 +473,29 @@ class School implements Serializable {
     s.cancel();
   }
 
-  void answerSurvey(int id, String disciplineName, String projectName, int hours, String comment)
-    throws ProjectNotFoundException, DisciplineNotFoundException, SurveyNotFoundException {
-    Student student = getStudentById(id);
-    Survey s = student.getSurvey(disciplineName, projectName);
-    s.addResponse(getStudentById(id), hours, comment);
+
+  /**
+   * Finish a Survey
+   *
+   * @param id
+   * @param disciplineName
+   * @param projectName
+   */
+  void finishSurvey(int id, String disciplineName, String projectName)
+    throws ProjectNotFoundException, DisciplineNotFoundException, SurveyNotFoundException, IllegalSurveyFinishException {
+    Student rep = getRepresentativeById(id);
+    Course course = rep.getCourse();
+    Survey s = course.getSurvey(disciplineName, projectName);
+    s.finish();
   }
 
+
+  /**
+   * Get all the surveys from a discipline
+   *
+   * @param id
+   * @param disciplineName
+   */
   Collection<Survey> disciplineSurveys(int id, String disciplineName) 
     throws DisciplineNotFoundException {
     Student rep = getRepresentativeById(id);
@@ -447,6 +504,45 @@ class School implements Serializable {
     return d.getSurveys();
   } 
 
+
+  /**
+   * Submit a project
+   *
+   * @param id
+   * @param disciplineName
+   * @param projectName
+   * @param submission
+   */
+  void deliverProject(int id, String disciplineName, String projectName, String submission) 
+    throws ProjectNotFoundException, DisciplineNotFoundException, ProjectNotOpenException {
+    Student student = getStudentById(id);
+    student.submitProject(disciplineName, projectName, submission); 
+  }
+
+  /**
+   * Answer aa survey
+   *
+   * @param id
+   * @param disciplineName
+   * @param projectName
+   * @param hours
+   * @param comment
+   */
+  void answerSurvey(int id, String disciplineName, String projectName, int hours, String comment)
+    throws ProjectNotFoundException, DisciplineNotFoundException, SurveyNotFoundException {
+    Student student = getStudentById(id);
+    Survey s = student.getSurvey(disciplineName, projectName);
+    s.addResponse(getStudentById(id), hours, comment);
+  }
+
+
+  /**
+   * Get a survey
+   *
+   * @param id
+   * @param disciplineName
+   * @param projectName
+   */
   Survey getSurvey(int id, String disciplineName, String projectName)
     throws ProjectNotFoundException, DisciplineNotFoundException, SurveyNotFoundException {
     PersonWithDisciplines person = null;
