@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Professor implementation.
  */
-public class Professor 
+class Professor 
   extends PersonWithDisciplines 
   implements Serializable {
 

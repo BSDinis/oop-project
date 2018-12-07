@@ -10,7 +10,7 @@ import sth.exceptions.SurveyNotFoundException;
 import sth.exceptions.SurveyAlreadyCreatedException;
 import java.io.Serializable;
 
-public class Project implements Serializable {
+class Project implements Serializable {
   private String _name;
   private Discipline _discipline;
   private String _description;
@@ -69,18 +69,18 @@ public class Project implements Serializable {
 
   String disciplineName() { return _discipline.name(); }
 
-  public boolean isOpen() { return _open; }
+  boolean isOpen() { return _open; }
 
-  public Collection<String> getSubmissions() { 
+  Collection<String> getSubmissions() { 
     Collection<String> sub = new LinkedList<>();
     for (Map.Entry<Integer, String> entry : _submissions.entrySet())
       sub.add(entry.getKey() + "|" + entry.getValue());
     return sub; 
   }
 
-  public boolean hasSubmissionFrom(Student s) { return (_submissions.containsKey(s.id())); }
+  boolean hasSubmissionFrom(Student s) { return (_submissions.containsKey(s.id())); }
 
-  public int submissionNumber() { return _submissions.size(); }
+  int submissionNumber() { return _submissions.size(); }
 
   Collection<Professor> getProfessors() { return _discipline.getProfessors(); }
   Collection<Student> getStudents() { return _discipline.getStudents(); }

@@ -28,14 +28,6 @@ public class Person
     return descriptor + "|" + String.valueOf(id()) + "|" + phoneNumber() + "|" + name();
   }
 
-  public int id() { return _id; }
-  public String name() { return _name; }
-  public String phoneNumber() { return _phoneNumber; }
-  public int compareTo(Person other) { return id() - other.id(); }
-  public String toString() { 
-    return print(new DisciplineDefaultPrinter());
-  }
-
   void addSurveyObserver(SurveyObserver s) { _surveyViewers.add(s); } 
 
   Collection<SurveyNotification> flushNotifications() {
@@ -45,6 +37,14 @@ public class Person
     }
 
     return notifs;
+  }
+
+  public int id() { return _id; }
+  public String name() { return _name; }
+  public String phoneNumber() { return _phoneNumber; }
+  public int compareTo(Person other) { return id() - other.id(); }
+  public String toString() { 
+    return print(new DisciplineDefaultPrinter());
   }
 
   public boolean equals(Object o) { return o instanceof Person && equals((Person) o); }

@@ -2,7 +2,7 @@ package sth;
 
 import java.io.Serializable;
 
-public class Staffer 
+class Staffer 
   extends Person 
   implements Serializable {
 

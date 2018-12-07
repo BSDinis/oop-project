@@ -11,9 +11,7 @@ import sth.exceptions.ProjectNotFoundException;
 import sth.exceptions.SurveyNotFoundException;
 
 
-/* methods are package on purpose */
-
-public class Course 
+class Course 
   implements Serializable {
 
   private String _name;

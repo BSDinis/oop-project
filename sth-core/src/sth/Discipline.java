@@ -22,7 +22,7 @@ import java.util.TreeMap;
 
 /* methods are package on purpose */
 
-public class Discipline 
+class Discipline 
   implements Serializable {
 
   private String _name;
