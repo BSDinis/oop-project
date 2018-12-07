@@ -16,21 +16,23 @@ public class Student
 
   Student(String n, String pN, int id, School s) { super(n, pN, id, s); }
 
-  // Refactor
   Course getCourse() { return _course; }
+
   void enrollInCourse(Course c) { _course = c; }
+
   void enrollInDiscipline(Discipline d) 
     throws EnrollmentLimitReachedException { 
 
-    if (disciplines().size() == 6) 
+    Collection<Discipline> col = getDisciplines();
+    if (col.size() == 6) 
       throw new EnrollmentLimitReachedException(id(), d.name());
 
     addDiscipline(d);
   }
 
-  Project project(String disciplineName, String projectName) 
+  Project getProject(String disciplineName, String projectName) 
     throws DisciplineNotFoundException, ProjectNotFoundException {
-    Project p = super.project(disciplineName, projectName);
+    Project p = super.getProject(disciplineName, projectName);
     if (!p.hasSubmissionFrom(this)) 
       throw new ProjectNotFoundException(disciplineName, projectName);
 
@@ -39,37 +41,7 @@ public class Student
 
   void submitProject(String disciplineName, String projectName, String submission) 
     throws ProjectNotFoundException, DisciplineNotFoundException, ProjectNotOpenException {
-    Project p = super.project(disciplineName, projectName);
+    Project p = super.getProject(disciplineName, projectName);
     p.acceptSubmission(this, submission);
-  }
-  
-  // Refactor
-  Collection<Discipline> getCourseDisciplines() {
-    return _course.disciplines(); // invariant: course is not null
-  }
-
-  // Refactor
-  Discipline getCourseDiscipline(String discipline) 
-      throws DisciplineNotFoundException {
-    Collection<Discipline> disciplines = getCourseDisciplines();
-    for (Discipline d : disciplines)
-      if (d.name().equals(discipline))
-        return d;
-
-    throw new DisciplineNotFoundException(discipline);
-  }
-
-  // Refactor
-  Project getCourseProject(String discipline, String project) 
-      throws DisciplineNotFoundException, ProjectNotFoundException {
-    Discipline d = getCourseDiscipline(discipline);
-    return d.project(project);
-  }
-
-  // Refactor
-  Survey getCourseSurvey(String discipline, String project) 
-      throws DisciplineNotFoundException, ProjectNotFoundException, SurveyNotFoundException {
-    Project p = getCourseProject(discipline, project);
-    return p.survey();
   }
 }

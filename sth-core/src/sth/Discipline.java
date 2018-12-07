@@ -53,8 +53,8 @@ public class Discipline
     _students.put(s.id(), s);
   }
 
-  Collection<Student> students() { return _students.values(); }
-  Collection<Professor> professors() { return _professors.values(); }
+  Collection<Student> getStudents() { return _students.values(); }
+  Collection<Professor> getProfessors() { return _professors.values(); }
   Collection<Student> getCourseRepresentatives() { return _course.getRepresentatives(); }
                                                                 
   void addProject(String name) 
@@ -66,7 +66,7 @@ public class Discipline
 
   boolean hasProject(String name) { return _projects.containsKey(name); }
 
-  Project project(String name)
+  Project getProject(String name)
     throws ProjectNotFoundException
   { 
     if (!hasProject(name)) 
@@ -75,15 +75,15 @@ public class Discipline
     return _projects.get(name); 
   }
 
-  Collection<Project> projects() { return _projects.values(); }
+  Collection<Project> getProjects() { return _projects.values(); }
 
-  Collection<Survey> surveys() { 
+  Collection<Survey> getSurveys() { 
     Collection<Survey> surveys = new LinkedList<>();
-    Collection<Project> projects = projects();
+    Collection<Project> projects = getProjects();
     for (Project p : projects) {
       if (p.hasSurvey()) {
         try {
-          surveys.add(p.survey());
+          surveys.add(p.getSurvey());
         }
         catch (SurveyNotFoundException e) {
           // ignored because verification was made

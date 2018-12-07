@@ -48,7 +48,7 @@ public class Project implements Serializable {
 
   boolean hasSurvey() { return _survey != null; }
 
-  Survey survey()
+  Survey getSurvey()
     throws SurveyNotFoundException
   { 
     if (!hasSurvey()) throw new SurveyNotFoundException(disciplineName(), _name);
@@ -82,7 +82,7 @@ public class Project implements Serializable {
 
   public int submissionNumber() { return _submissions.size(); }
 
-  Collection<Professor> professors() { return _discipline.professors(); }
-  Collection<Student> students() { return _discipline.students(); }
+  Collection<Professor> getProfessors() { return _discipline.getProfessors(); }
+  Collection<Student> getStudents() { return _discipline.getStudents(); }
   Collection<Student> getCourseRepresentatives() { return _discipline.getCourseRepresentatives(); }
 }

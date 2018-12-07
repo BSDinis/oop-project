@@ -48,7 +48,7 @@ class PersonWithDisciplines
     _disciplines.remove(d.name()); 
   }
 
-  List<Discipline> disciplines() { 
+  List<Discipline> getDisciplines() { 
     Collection<LinkedList<Discipline>> lists = _disciplines.values();
     List<Discipline> linearized = new LinkedList<>();
     for (LinkedList<Discipline> l : lists)
@@ -57,7 +57,7 @@ class PersonWithDisciplines
     return linearized; 
   }
 
-  Discipline discipline(String name) 
+  Discipline getDiscipline(String name) 
     throws DisciplineNotFoundException {
     LinkedList<Discipline> list = _disciplines.get(name);
     if (list == null) 
@@ -66,22 +66,22 @@ class PersonWithDisciplines
     return list.peekFirst();
   }
 
-  Project project(String discipline, String project) 
+  Project getProject(String discipline, String project) 
     throws DisciplineNotFoundException, ProjectNotFoundException {
-    Discipline d = discipline(discipline);
-    return d.project(project);
+    Discipline d = getDiscipline(discipline);
+    return d.getProject(project);
   }
 
-  Survey survey(String discipline, String project) 
+  Survey getSurvey(String discipline, String project) 
     throws DisciplineNotFoundException, ProjectNotFoundException, SurveyNotFoundException {
-    Project p = project(discipline, project);
-    return p.survey();
+    Project p = getProject(discipline, project);
+    return p.getSurvey();
   }
 
   String print(DisciplinePrinter printer) {
     String repr = super.print(printer);
     
-    List<Discipline> disciplineList = disciplines();
+    List<Discipline> disciplineList = getDisciplines();
     Collections.sort(disciplineList, new Comparator<Discipline>() {
         public int compare(Discipline d1, Discipline d2) { 
           Collator c = Collator.getInstance(Locale.getDefault());

@@ -6,6 +6,9 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import sth.exceptions.TooManyRepresentativesException;
+import sth.exceptions.DisciplineNotFoundException;
+import sth.exceptions.ProjectNotFoundException;
+import sth.exceptions.SurveyNotFoundException;
 
 
 /* methods are package on purpose */
@@ -29,9 +32,25 @@ public class Course
 
   boolean hasDiscipline(String name) { return _disciplines.containsKey(name); }
 
-  Discipline getDiscipline(String name) { return _disciplines.get(name); } 
+  Discipline getDiscipline(String name) throws DisciplineNotFoundException { 
+    if (!hasDiscipline(name)) throw new DisciplineNotFoundException(name);  
+    return _disciplines.get(name); 
+  } 
 
-  Collection<Discipline> disciplines() { return _disciplines.values(); }
+  Project getProject(String disciplineName, String projectName) 
+      throws DisciplineNotFoundException, ProjectNotFoundException { 
+    Discipline d = getDiscipline(disciplineName);
+    return d.getProject(projectName); 
+  } 
+
+  Survey getSurvey(String disciplineName, String projectName) 
+      throws DisciplineNotFoundException, ProjectNotFoundException, SurveyNotFoundException { 
+    Project p = getProject(disciplineName, projectName);
+    return p.getSurvey();
+  } 
+
+
+  Collection<Discipline> getDisciplines() { return _disciplines.values(); }
 
   boolean hasRepresentative(int id) { return _representatives.containsKey(id); }
 

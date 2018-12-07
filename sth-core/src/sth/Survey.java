@@ -136,8 +136,8 @@ public class Survey
 
       Set<Person> subscribers = new TreeSet<>();
 
-      subscribers.addAll(_parentProject.students());
-      subscribers.addAll(_parentProject.professors());
+      subscribers.addAll(_parentProject.getStudents());
+      subscribers.addAll(_parentProject.getProfessors());
       subscribers.addAll(_parentProject.getCourseRepresentatives());
 
       for (Person p : subscribers)
