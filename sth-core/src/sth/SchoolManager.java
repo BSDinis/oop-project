@@ -96,8 +96,9 @@ public class SchoolManager {
 
     _school = newSchool;
     _filename = datafile;
-    _needUpdate = true;
-    return getLoggedIn().flushNotifications();
+    Collection<SurveyNotification> notifs = _school.flushPersonNotifications(getLoggedId());
+    _needUpdate |= notifs != null; // going for strictly necessary updates
+    return notifs;
   }
 
   /**
@@ -109,7 +110,9 @@ public class SchoolManager {
     if (!_school.lookupId(id)) throw new NoSuchPersonIdException(id);
 
     setLoggedId(id);
-    return getLoggedIn().flushNotifications();
+    Collection<SurveyNotification> notifs = _school.flushPersonNotifications(id);
+    _needUpdate |= notifs != null; // given the current specification people never have notfis on login; you can never be to careful though
+    return notifs;
   }
 
   public void logout() {
@@ -124,10 +127,6 @@ public class SchoolManager {
     return _filename != null;
   }
 
-
-  Person getLoggedIn() {
-    return _school.getPersonById(getLoggedId()); 
-  }
 
   public String getLoggedPersonDescription() {
     return _school.getPersonDescription(getLoggedId());
@@ -165,8 +164,8 @@ public class SchoolManager {
     _needUpdate |= _school.changePhoneNumber(getLoggedId(), newNumber);
   }
 
-  public Collection<Person> searchPerson(String name) {
-    return _school.getPersonByName(name);
+  public Collection<String> getPersonDescription(String name) {
+    return _school.getPersonDescriptionByName(name);
   }
 
   public Collection<Person> allPersons() {

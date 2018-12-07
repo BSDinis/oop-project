@@ -243,6 +243,16 @@ class School implements Serializable {
     return p;
   }
 
+  /**
+   * Flush someone's notifications
+   *
+   * @return Collection<SurveyNotification>
+   */
+  Collection<SurveyNotification> flushPersonNotifications(int id) {
+    Person p = getPersonById(id);
+    if (p == null) return null;
+    return p.flushNotifications();
+  }
 
   /**
    * Get description of a person 
@@ -321,22 +331,27 @@ class School implements Serializable {
   Course getCourseByName(String name) { return _courses.get(name); }
 
   /**
-   * Get people by a common name
+   * Get people descriptions by a common name
    *
-   * @return Collection of People
+   * @return Collection of String
    */
-  Collection<Person> getPersonByName(String name) {
-    Collection<Person> result = new TreeSet<Person>(new Comparator<Person>() {
+  Collection<String> getPersonDescriptionByName(String name) {
+    // using tree set for ordering
+    Collection<Person> peopleSet = new TreeSet<>(new Comparator<Person>() {
       public int compare(Person p1, Person p2) {
-          Collator c = Collator.getInstance(Locale.getDefault());
-          return c.compare(p1.name(), p2.name());
-        }
+        Collator c = Collator.getInstance(Locale.getDefault());
+        return c.compare(p1.name(), p2.name());
+      }
     });
 
     for (Person p : people()) {
       if (p.name().contains(name))
-        result.add(p);
+        peopleSet.add(p);
     }
+
+    Collection<String> result = new LinkedList<>();
+    for (Person p : peopleSet)
+      result.add(p.toString());
 
     return result;
   }
