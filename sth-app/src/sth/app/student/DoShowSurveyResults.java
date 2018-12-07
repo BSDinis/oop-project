@@ -44,14 +44,14 @@ public class DoShowSurveyResults extends Command<SchoolManager> {
       public String print(Survey.Finished s) {
         String res = defaultFormat(s.disciplineName(), s.projectName()) + '\n';
         res += " * Número de respostas: " + s.responsesNumber() + "\n";
-        res += " * Tempos de resolução (horas) (médio): " + s.medHours();
+        res += " * Tempo médio (horas): " + s.medHours();
         return res;
       }
     }
 
     _form.parse();
     try {
-      Survey s = _receiver.studentGetSurvey( _disciplineName.value(), _projectName.value()); 
+      Survey s = _receiver.getSurvey( _disciplineName.value(), _projectName.value()); 
       SurveyPrinter printer = new SurveyStudentPrinter();
       _display.addLine(s.print(printer)); 
       _display.display();

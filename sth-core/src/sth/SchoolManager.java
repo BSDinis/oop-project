@@ -40,10 +40,6 @@ public class SchoolManager {
   private int getLoggedId() { return _loggedId; }
   private void setLoggedId(int id) { _loggedId = id; }
 
-  private Student getRepresentativeLoggedIn() { return _school.getRepresentativeById(getLoggedId()); }
-  private Student getStudentLoggedIn() { return _school.getStudentById(getLoggedId()); }
-  private Professor getProfessorLoggedIn() { return _school.getProfessorById(getLoggedId()); }
-
   /**
    * @param datafile
    * @throws ImportFileException
@@ -56,6 +52,11 @@ public class SchoolManager {
     } catch (IOException | BadEntryException e) {
       throw new ImportFileException(e);
     }
+  }
+
+  public void save() 
+    throws IOException {
+    save(getFilename());
   }
 
   public void save(String datafile) 
@@ -84,7 +85,7 @@ public class SchoolManager {
       ois.close();
     }
     catch (FileNotFoundException e) {
-      throw new FileNotFoundException(e.getMessage()); // do not convert FileNotFound to ImportFile
+      throw new FileNotFoundException(datafile); // send filename that caused
     }
     catch (IOException | ClassNotFoundException e) {
       throw new ImportFileException(e); 
@@ -95,8 +96,9 @@ public class SchoolManager {
 
     _school = newSchool;
     _filename = datafile;
-    _needUpdate = true;
-    return getLoggedIn().flushNotifications();
+    Collection<SurveyNotification> notifs = _school.flushPersonNotifications(getLoggedId());
+    _needUpdate |= notifs != null; // going for strictly necessary updates
+    return notifs;
   }
 
   /**
@@ -108,14 +110,16 @@ public class SchoolManager {
     if (!_school.lookupId(id)) throw new NoSuchPersonIdException(id);
 
     setLoggedId(id);
-    return getLoggedIn().flushNotifications();
+    Collection<SurveyNotification> notifs = _school.flushPersonNotifications(id);
+    _needUpdate |= notifs != null; // given the current specification people never have notfis on login; you can never be to careful though
+    return notifs;
   }
 
   public void logout() {
     setLoggedId(-1);
   }
 
-  public String getFilename() {
+  String getFilename() {
     return _filename;
   }
 
@@ -124,61 +128,44 @@ public class SchoolManager {
   }
 
 
-  public Person getLoggedIn() {
-    return _school.getPersonById(getLoggedId()); 
+  public String getLoggedPersonDescription() {
+    return _school.getPersonDescription(getLoggedId());
   }
 
   /**
    * @return true when the currently logged in person is an administrative
    */
   public boolean hasAdministrative() {
-    if (getLoggedId() != -1)
-      return _school.isAdministrative(getLoggedId());
-    else
-      return false;
+    return getLoggedId() != -1 && _school.isAdministrative(getLoggedId());
   }
 
   /**
    * @return true when the currently getLogged in person is a professor
    */
   public boolean hasProfessor() {
-    if (getLoggedId() != -1)
-      return _school.isProfessor(getLoggedId());
-    else
-      return false;
+    return getLoggedId() != -1 && _school.isProfessor(getLoggedId());
   }
 
   /**
    * @return true when the currently getLogged in person is a student
    */
   public boolean hasStudent() {
-    if (getLoggedId() != -1)
-      return _school.isStudent(getLoggedId());
-    else
-      return false;
+    return getLoggedId() != -1 && _school.isStudent(getLoggedId());
   }
 
   /**
    * @return true when the currently getLogged in person is a representative
    */
   public boolean hasRepresentative() {
-    if (getLoggedId() != -1)
-      return _school.isRepresentative(getLoggedId());
-    else
-      return false;
+    return getLoggedId() != -1 && _school.isRepresentative(getLoggedId());
   }
 
   public void changePhoneNumber(String newNumber) {
-    Person p = getLoggedIn();
-    if (p != null) {
-      // in principle, the logged in person exists; this is being over cautious
-      p.changePhoneNumber(newNumber);
-      _needUpdate = true;
-    }
+    _needUpdate |= _school.changePhoneNumber(getLoggedId(), newNumber);
   }
 
-  public Collection<Person> searchPerson(String name) {
-    return _school.getPersonByName(name);
+  public Collection<String> getPersonDescription(String name) {
+    return _school.getPersonDescriptionByName(name);
   }
 
   public Collection<Person> allPersons() {
@@ -187,108 +174,76 @@ public class SchoolManager {
 
   public void createProject(String disciplineName, String projectName) 
       throws DisciplineNotFoundException, ProjectAlreadyExistsException {
-    Professor prof = getProfessorLoggedIn();
-    Discipline d = prof.discipline(disciplineName);
-    d.addProject(projectName);
+    _school.createProject(getLoggedId(), disciplineName, projectName);
     _needUpdate = true;
   }
 
   public Collection<Student> disciplineStudents(String disciplineName)
     throws DisciplineNotFoundException {
-    Professor prof = getProfessorLoggedIn();
-    Discipline d = prof.discipline(disciplineName);
-    return d.students();
+    return _school.disciplineStudents(getLoggedId(), disciplineName);
   }
 
   public Collection<String> projectSubmissions(String disciplineName, String projectName)
     throws ProjectNotFoundException, DisciplineNotFoundException {
-
-    Professor prof = getProfessorLoggedIn();
-    Project p = prof.project(disciplineName, projectName);
-    return p.getSubmissions();
+    return _school.projectSubmissions(getLoggedId(), disciplineName, projectName);
   }
 
   public void closeProject(String disciplineName, String projectName)
     throws ProjectNotFoundException, DisciplineNotFoundException {
 
-    Professor prof = getProfessorLoggedIn();
-    Project p = prof.project(disciplineName, projectName);
-    p.close();
+    _school.closeProject(getLoggedId(), disciplineName, projectName);
     _needUpdate = true;
   }
 
   public void deliverProject(String disciplineName, String projectName, String submission) 
     throws ProjectNotFoundException, DisciplineNotFoundException, ProjectNotOpenException {
-    Student student = getStudentLoggedIn();
-    student.submitProject(disciplineName, projectName, submission); 
+    _school.deliverProject(getLoggedId(), disciplineName, projectName, submission);
     _needUpdate = true;
   }
 
   public void createSurvey(String disciplineName, String projectName) 
     throws ProjectNotFoundException, DisciplineNotFoundException, SurveyAlreadyCreatedException {
-    Student rep = getRepresentativeLoggedIn();
-    Project p = rep.getCourseProject(disciplineName, projectName);
-    if (!p.isOpen()) throw new ProjectNotFoundException(disciplineName, projectName);
-    p.createSurvey();
+    _school.createSurvey(getLoggedId(), disciplineName, projectName);
     _needUpdate = true;
   }
 
   public void finishSurvey(String disciplineName, String projectName)
     throws ProjectNotFoundException, DisciplineNotFoundException, SurveyNotFoundException, IllegalSurveyFinishException {
-    Student rep = getRepresentativeLoggedIn();
-    Survey s = rep.getCourseSurvey(disciplineName, projectName);
-    s.finish();
+    _school.finishSurvey(getLoggedId(), disciplineName, projectName);
     _needUpdate = true;
   }
 
   public void openSurvey(String disciplineName, String projectName)
     throws ProjectNotFoundException, DisciplineNotFoundException, SurveyNotFoundException, IllegalSurveyOpenException {
-    Student rep = getRepresentativeLoggedIn();
-    Survey s = rep.getCourseSurvey(disciplineName, projectName);
-    s.open();
+    _school.openSurvey(getLoggedId(), disciplineName, projectName);
     _needUpdate = true;
   }
 
   public void closeSurvey(String disciplineName, String projectName)
     throws ProjectNotFoundException, DisciplineNotFoundException, SurveyNotFoundException , IllegalSurveyCloseException {
-    Student rep = getRepresentativeLoggedIn();
-    Survey s = rep.getCourseSurvey(disciplineName, projectName);
-    s.close();
+    _school.closeSurvey(getLoggedId(), disciplineName, projectName);
     _needUpdate = true;
   }
 
   public void cancelSurvey(String disciplineName, String projectName)
     throws ProjectNotFoundException, DisciplineNotFoundException, SurveyNotFoundException, SurveyNotEmptyException, FinishedSurveyException {
-    Student rep = getRepresentativeLoggedIn();
-    Survey s = rep.getCourseSurvey(disciplineName, projectName);
-    s.cancel();
-    _needUpdate = true;
-  }
-
-  public void answerSurvey(String disciplineName, String projectName, int hours, String comment)
-    throws ProjectNotFoundException, DisciplineNotFoundException, SurveyNotFoundException {
-    Student student = getStudentLoggedIn();
-    Survey s = student.survey(disciplineName, projectName);
-    s.addResponse(getStudentLoggedIn(), hours, comment);
+    _school.cancelSurvey(getLoggedId(), disciplineName, projectName);
     _needUpdate = true;
   }
 
   public Collection<Survey> disciplineSurveys(String disciplineName) 
     throws DisciplineNotFoundException {
-    Student rep = getRepresentativeLoggedIn();
-    Discipline d = rep.getCourseDiscipline(disciplineName);
-    return d.surveys();
-  } // FIXME
+    return _school.disciplineSurveys(getLoggedId(), disciplineName);
+  } 
 
-  public Survey studentGetSurvey(String disciplineName, String projectName)
+  public void answerSurvey(String disciplineName, String projectName, int hours, String comment)
     throws ProjectNotFoundException, DisciplineNotFoundException, SurveyNotFoundException {
-    Student student = getStudentLoggedIn();
-    return student.survey(disciplineName, projectName);
+    _school.answerSurvey(getLoggedId(), disciplineName, projectName, hours, comment);
+    _needUpdate = true;
   }
-  public Survey professorGetSurvey(String disciplineName, String projectName)
+
+  public Survey getSurvey(String disciplineName, String projectName)
     throws ProjectNotFoundException, DisciplineNotFoundException, SurveyNotFoundException {
-    Professor prof = getProfessorLoggedIn();
-    return prof.survey(disciplineName, projectName);
+    return _school.getSurvey(getLoggedId(), disciplineName, projectName);
   }
-  // more to do
 }

@@ -28,7 +28,18 @@ import sth.exceptions.BadEntryException;
 import sth.exceptions.DisciplineNotFoundException;
 import sth.exceptions.DuplicatePersonException;
 import sth.exceptions.DuplicateCourseException;
-import sth.exceptions.DisciplineNotFoundException;
+
+import sth.exceptions.ProjectNotOpenException;
+import sth.exceptions.ProjectNotFoundException;
+import sth.exceptions.ProjectAlreadyExistsException;
+
+import sth.exceptions.IllegalSurveyCloseException;
+import sth.exceptions.IllegalSurveyFinishException;
+import sth.exceptions.IllegalSurveyOpenException;
+import sth.exceptions.SurveyAlreadyCreatedException;
+import sth.exceptions.FinishedSurveyException;
+import sth.exceptions.SurveyNotEmptyException;
+import sth.exceptions.SurveyNotFoundException;
 
 
 /**
@@ -233,6 +244,28 @@ class School implements Serializable {
   }
 
   /**
+   * Flush someone's notifications
+   *
+   * @return Collection<SurveyNotification>
+   */
+  Collection<SurveyNotification> flushPersonNotifications(int id) {
+    Person p = getPersonById(id);
+    if (p == null) return null;
+    return p.flushNotifications();
+  }
+
+  /**
+   * Get description of a person 
+   *
+   * @return String
+   */
+  String getPersonDescription(int id) {
+    Person p = getPersonById(id);
+    if (p == null) return null;
+    return p.toString();
+  }
+
+  /**
    * Get a staffer by their id
    *
    * @return Staffer
@@ -241,6 +274,20 @@ class School implements Serializable {
     return _staffers.get(id);
   }
 
+  /**
+   * Change person's phone number
+   *
+   * @return boolean success of change
+   */
+  boolean changePhoneNumber(int id, String newNumber) {
+    Person p = getPersonById(id);
+    if (p != null) {
+      // in principle, the logged in person exists; this is being over cautious
+      p.changePhoneNumber(newNumber);
+      return true;
+    }
+    return false;
+  }
   /**
    * Get a representative by their id
    *
@@ -284,24 +331,123 @@ class School implements Serializable {
   Course getCourseByName(String name) { return _courses.get(name); }
 
   /**
-   * Get people by a common name
+   * Get people descriptions by a common name
    *
-   * @return Collection of People
+   * @return Collection of String
    */
-  Collection<Person> getPersonByName(String name) {
-    Collection<Person> result = new TreeSet<Person>(new Comparator<Person>() {
+  Collection<String> getPersonDescriptionByName(String name) {
+    // using tree set for ordering
+    Collection<Person> peopleSet = new TreeSet<>(new Comparator<Person>() {
       public int compare(Person p1, Person p2) {
-          Collator c = Collator.getInstance(Locale.getDefault());
-          return c.compare(p1.name(), p2.name());
-        }
+        Collator c = Collator.getInstance(Locale.getDefault());
+        return c.compare(p1.name(), p2.name());
+      }
     });
 
     for (Person p : people()) {
       if (p.name().contains(name))
-        result.add(p);
+        peopleSet.add(p);
     }
+
+    Collection<String> result = new LinkedList<>();
+    for (Person p : peopleSet)
+      result.add(p.toString());
 
     return result;
   }
 
+  void createProject(int id, String disciplineName, String projectName) 
+      throws DisciplineNotFoundException, ProjectAlreadyExistsException {
+    Professor prof = getProfessorById(id);
+    Discipline d = prof.discipline(disciplineName);
+    d.addProject(projectName);
+  }
+
+  Collection<Student> disciplineStudents(int id, String disciplineName)
+    throws DisciplineNotFoundException {
+    Professor prof = getProfessorById(id);
+    Discipline d = prof.discipline(disciplineName);
+    return d.students();
+  }
+
+  Collection<String> projectSubmissions(int id, String disciplineName, String projectName)
+    throws ProjectNotFoundException, DisciplineNotFoundException {
+    Professor prof = getProfessorById(id);
+    Project p = prof.project(disciplineName, projectName);
+    return p.getSubmissions();
+  }
+
+  void closeProject(int id, String disciplineName, String projectName)
+    throws ProjectNotFoundException, DisciplineNotFoundException {
+
+    Professor prof = getProfessorById(id);
+    Project p = prof.project(disciplineName, projectName);
+    p.close();
+  }
+
+  void deliverProject(int id, String disciplineName, String projectName, String submission) 
+    throws ProjectNotFoundException, DisciplineNotFoundException, ProjectNotOpenException {
+    Student student = getStudentById(id);
+    student.submitProject(disciplineName, projectName, submission); 
+  }
+
+  void createSurvey(int id, String disciplineName, String projectName) 
+    throws ProjectNotFoundException, DisciplineNotFoundException, SurveyAlreadyCreatedException {
+    Student rep = getRepresentativeById(id);
+    Project p = rep.getCourseProject(disciplineName, projectName);
+    if (!p.isOpen()) throw new ProjectNotFoundException(disciplineName, projectName);
+    p.createSurvey();
+  }
+
+  void finishSurvey(int id, String disciplineName, String projectName)
+    throws ProjectNotFoundException, DisciplineNotFoundException, SurveyNotFoundException, IllegalSurveyFinishException {
+    Student rep = getRepresentativeById(id);
+    Survey s = rep.getCourseSurvey(disciplineName, projectName);
+    s.finish();
+  }
+
+  void openSurvey(int id, String disciplineName, String projectName)
+    throws ProjectNotFoundException, DisciplineNotFoundException, SurveyNotFoundException, IllegalSurveyOpenException {
+    Student rep = getRepresentativeById(id);
+    Survey s = rep.getCourseSurvey(disciplineName, projectName);
+    s.open();
+  }
+
+  void closeSurvey(int id, String disciplineName, String projectName)
+    throws ProjectNotFoundException, DisciplineNotFoundException, SurveyNotFoundException , IllegalSurveyCloseException {
+    Student rep = getRepresentativeById(id);
+    Survey s = rep.getCourseSurvey(disciplineName, projectName);
+    s.close();
+  }
+
+  void cancelSurvey(int id, String disciplineName, String projectName)
+    throws ProjectNotFoundException, DisciplineNotFoundException, SurveyNotFoundException, SurveyNotEmptyException, FinishedSurveyException {
+    Student rep = getRepresentativeById(id);
+    Survey s = rep.getCourseSurvey(disciplineName, projectName);
+    s.cancel();
+  }
+
+  void answerSurvey(int id, String disciplineName, String projectName, int hours, String comment)
+    throws ProjectNotFoundException, DisciplineNotFoundException, SurveyNotFoundException {
+    Student student = getStudentById(id);
+    Survey s = student.survey(disciplineName, projectName);
+    s.addResponse(getStudentById(id), hours, comment);
+  }
+
+  Collection<Survey> disciplineSurveys(int id, String disciplineName) 
+    throws DisciplineNotFoundException {
+    Student rep = getRepresentativeById(id);
+    Discipline d = rep.getCourseDiscipline(disciplineName);
+    return d.surveys();
+  } // FIXME
+
+  Survey getSurvey(int id, String disciplineName, String projectName)
+    throws ProjectNotFoundException, DisciplineNotFoundException, SurveyNotFoundException {
+    PersonWithDisciplines person = null;
+    if (isStudent(id)) person = getStudentById(id);
+    else if (isProfessor(id)) person = getProfessorById(id);
+    else throw new SurveyNotFoundException(disciplineName, projectName); // this should never happen
+
+    return person.survey(disciplineName, projectName);
+  }
 }
